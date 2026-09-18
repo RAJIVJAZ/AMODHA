@@ -12,7 +12,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-gold/20 bg-white/95 backdrop-blur">
       <div className="container-site flex items-center justify-between py-2.5">
         <Link href="/" onClick={() => setIsOpen(false)} aria-label={`${siteConfig.name} home`}>
-          <BrandBadge title="Amodha" subtitle="Dairy Products" tone="brown" width={148} height={62} />
+          <BrandBadge title="Amodha" subtitle="Dairy Products" tone="paisley" width={148} height={62} />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">

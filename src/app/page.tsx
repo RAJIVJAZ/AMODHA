@@ -104,7 +104,7 @@ export default function HomePage() {
                   <BrandBadge
                     title="Amodha"
                     subtitle={`Since ${siteConfig.founded}`}
-                    tone="brown"
+                    tone="paisley"
                     width={260}
                     height={108}
                   />

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { footerNav, siteConfig } from "@/lib/site";
 import { BrandBadge } from "@/components/ui/brand-badge";
@@ -31,7 +32,16 @@ export function Footer() {
     <footer className="bg-brown text-cream">
       <div className="container-site grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-6">
         <div className="sm:col-span-2 lg:col-span-2">
-          <BrandBadge title="Amodha" subtitle="Dairy Products" tone="cream" width={168} height={70} />
+          <div className="flex flex-wrap items-center gap-4">
+            <BrandBadge title="Amodha" subtitle="Dairy Products" tone="paisley" width={168} height={70} />
+            <Image
+              src="/logos/mithaiwallah.png"
+              alt="Mithaiwallah Sweet Corner"
+              width={140}
+              height={76}
+              className="h-[52px] w-auto"
+            />
+          </div>
           <p className="font-subheading mt-3 italic text-gold-light">{siteConfig.sweetBrand}</p>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream/80">
             Premium dairy products and handcrafted sweets, manufactured in Prayagraj using traditional
