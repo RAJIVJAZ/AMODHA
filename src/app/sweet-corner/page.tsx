@@ -17,30 +17,29 @@ export const metadata: Metadata = {
 export default function SweetCornerPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-brown py-24 text-white sm:py-32">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_15%_25%,rgba(212,160,23,0.35),transparent_45%),radial-gradient(circle_at_85%_80%,rgba(198,40,40,0.3),transparent_45%)]"
-        />
-        <div aria-hidden="true" className="bg-diamond-pattern absolute inset-0 opacity-[0.08]" />
+      <section className="relative overflow-hidden bg-blush py-24 sm:py-32">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-primary-light/50 blur-3xl" />
         <div className="container-site relative flex flex-col items-center gap-6 text-center">
-          <Image
-            src="/logos/mithaiwallah.png"
-            alt="Mithaiwallah Sweet Corner"
-            width={582}
-            height={318}
-            priority
-            className="h-[112px] w-auto drop-shadow-lg"
-          />
-          <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+          <div className="sticker-shadow rounded-2xl border-[2.5px] border-ink bg-white p-3">
+            <Image
+              src="/logos/mithaiwallah.png"
+              alt="Mithaiwallah Sweet Corner"
+              width={582}
+              height={318}
+              priority
+              className="h-24 w-auto sm:h-28"
+            />
+          </div>
+          <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-5xl md:text-6xl">
             India&rsquo;s Premium Sweet Gifting Destination
           </h1>
-          <p className="text-balance max-w-2xl text-lg text-cream/90 sm:text-xl">
+          <p className="text-balance max-w-2xl text-lg text-ink/70 sm:text-xl">
             Wholesale, retail, corporate and wedding gifting solutions — handcrafted sweets made fresh in
             Prayagraj.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
-            <ButtonLink href="#catalog" variant="secondary">
+            <ButtonLink href="#catalog" variant="primary">
               Browse Catalog
             </ButtonLink>
             <ButtonLink href="/corporate-gifting" variant="outline">
@@ -64,16 +63,19 @@ export default function SweetCornerPage() {
             <Link
               key={sweet.slug}
               href={`/sweet-corner/${sweet.slug}`}
-              className="group flex flex-col justify-between rounded-2xl border border-gold/25 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-lg hover:shadow-gold/10"
+              className="sticker-shadow group flex flex-col justify-between rounded-3xl border-[2.5px] border-ink bg-white p-6 transition-all duration-150 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--color-ink)]"
             >
               <div>
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-cream text-2xl ring-1 ring-gold/30">
+                <div
+                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-ink text-2xl"
+                  style={{ backgroundColor: sweet.color }}
+                >
                   🍬
                 </div>
-                <h3 className="text-xl font-bold text-brown">{sweet.name}</h3>
+                <h3 className="font-heading text-xl font-bold text-ink">{sweet.name}</h3>
                 <p className="mt-2 text-sm text-dark/70">{sweet.shortDescription}</p>
               </div>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-accent-red">
+              <span className="font-heading mt-5 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-accent">
                 View Details
                 <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
                   →
@@ -84,13 +86,13 @@ export default function SweetCornerPage() {
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
           <SectionHeading eyebrow="Gift Boxes" title="Hampers & Custom Boxes" align="center" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {hamperCategories.map((category) => (
-              <div key={category.slug} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gold/15">
-                <h3 className="text-lg font-bold text-brown">{category.name}</h3>
+              <div key={category.slug} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-white p-6">
+                <h3 className="font-heading text-lg font-bold text-ink">{category.name}</h3>
                 <p className="mt-2 text-sm text-dark/65">{category.description}</p>
               </div>
             ))}

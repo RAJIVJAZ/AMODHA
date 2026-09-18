@@ -31,6 +31,7 @@ export default function DairyProductsPage() {
               name={product.name}
               description={product.shortDescription}
               icon={product.motif}
+              color={product.color}
             />
           ))}
         </div>

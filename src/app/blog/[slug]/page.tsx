@@ -62,10 +62,10 @@ export default async function BlogPostPage({
 
       <article className="container-site py-14 sm:py-20">
         <div className="mx-auto max-w-3xl">
-          <span className="text-xs font-semibold uppercase tracking-wide text-gold-dark">
+          <span className="text-xs font-semibold uppercase tracking-wide text-primary-dark">
             {post.category}
           </span>
-          <h1 className="mt-2 text-3xl font-bold text-brown sm:text-4xl">{post.title}</h1>
+          <h1 className="mt-2 text-3xl font-bold text-ink sm:text-4xl">{post.title}</h1>
           <div className="mt-3 flex items-center gap-3 text-sm text-dark/50">
             <time dateTime={post.date}>
               {new Date(post.date).toLocaleDateString("en-IN", {
@@ -86,9 +86,9 @@ export default async function BlogPostPage({
       </article>
 
       {related.length ? (
-        <section className="bg-cream py-14 sm:py-20">
+        <section className="bg-blush py-14 sm:py-20">
           <div className="container-site">
-            <h2 className="text-2xl font-bold text-brown">Related Reading</h2>
+            <h2 className="text-2xl font-bold text-ink">Related Reading</h2>
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
               {related.map((item) => (
                 <Link
@@ -96,7 +96,7 @@ export default async function BlogPostPage({
                   href={`/blog/${item.slug}`}
                   className="rounded-2xl bg-white p-6 shadow-sm transition-transform hover:-translate-y-1"
                 >
-                  <h3 className="font-bold text-brown">{item.title}</h3>
+                  <h3 className="font-bold text-ink">{item.title}</h3>
                   <p className="mt-2 text-sm text-dark/65">{item.excerpt}</p>
                 </Link>
               ))}

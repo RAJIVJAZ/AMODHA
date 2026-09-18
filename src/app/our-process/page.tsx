@@ -67,19 +67,19 @@ export default function OurProcessPage() {
           {stages.map((stage, index) => (
             <div
               key={stage.title}
-              className="grid grid-cols-1 gap-6 rounded-3xl border border-gold/20 bg-white p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:items-start"
+              className="sticker-shadow grid grid-cols-1 gap-6 rounded-3xl border-[2.5px] border-ink bg-white p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:items-start"
             >
-              <span className="font-heading text-4xl font-bold text-gold/40 lg:text-5xl">
+              <span className="font-heading text-4xl font-bold text-primary/40 lg:text-5xl">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <div>
-                <h2 className="text-2xl font-bold text-brown">{stage.title.replace(/^\d+\.\s*/, "")}</h2>
+                <h2 className="text-2xl font-bold text-ink">{stage.title.replace(/^\d+\.\s*/, "")}</h2>
                 <p className="mt-2 text-dark/70">{stage.description}</p>
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {stage.points.map((point) => (
                     <li
                       key={point}
-                      className="rounded-full bg-cream px-3 py-1.5 text-xs font-medium text-brown sm:text-sm"
+                      className="rounded-full border-2 border-ink/15 bg-blush px-3 py-1.5 text-xs font-medium text-ink sm:text-sm"
                     >
                       {point}
                     </li>
@@ -91,11 +91,11 @@ export default function OurProcessPage() {
         </div>
       </section>
 
-      <section className="bg-brown py-16 text-white sm:py-20">
+      <section className="bg-ink py-16 text-white sm:py-20">
         <div className="container-site text-center">
-          <span className="font-subheading text-lg italic text-gold-light">Factory Tour</span>
+          <span className="font-subheading text-lg italic text-primary-light">Factory Tour</span>
           <h2 className="mt-2 text-3xl font-bold sm:text-4xl">See Our Facility for Yourself</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-cream/85">
+          <p className="mx-auto mt-4 max-w-2xl text-blush/85">
             We welcome wholesale partners, corporate clients and distributors to visit our Prayagraj
             facility — from the milk collection floor to the quality lab, production area and packaging
             line.

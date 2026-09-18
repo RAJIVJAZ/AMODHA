@@ -34,14 +34,17 @@ export default function WholesalePage() {
     <>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Wholesale" }]} />
 
-      <section className="relative overflow-hidden bg-brown py-20 text-white sm:py-28">
-        <div aria-hidden="true" className="bg-diamond-pattern absolute inset-0 opacity-[0.08]" />
+      <section className="relative overflow-hidden bg-blush py-20 sm:py-28">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full bg-primary-light/50 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-accent/25 blur-3xl" />
         <div className="container-site relative flex flex-col items-center gap-6 text-center">
-          <span className="font-subheading text-lg italic text-gold-light">Wholesale & Distribution</span>
-          <h1 className="text-balance max-w-3xl text-4xl font-bold sm:text-5xl">
+          <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-primary-light px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
+            Wholesale & Distribution
+          </span>
+          <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
             Become an Amodha Wholesale Partner
           </h1>
-          <p className="max-w-2xl text-balance text-lg text-cream/90">
+          <p className="max-w-2xl text-balance text-lg text-ink/70">
             We supply consistent, high-quality dairy and mithai in bulk to sweet shop owners,
             distributors, hotels, restaurants and retail chains.
           </p>
@@ -52,23 +55,23 @@ export default function WholesalePage() {
         <SectionHeading eyebrow="Who We Partner With" title="Built for Every Kind of Trade Partner" />
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {segments.map((segment) => (
-            <div key={segment.title} className="rounded-2xl border border-gold/20 bg-cream p-6">
-              <h3 className="font-bold text-brown">{segment.title}</h3>
+            <div key={segment.title} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-blush p-6">
+              <h3 className="font-heading font-bold text-ink">{segment.title}</h3>
               <p className="mt-2 text-sm text-dark/65">{segment.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <SectionHeading align="left" eyebrow="Why Partner With Us" title="Dealer & Distributor Benefits" />
           </div>
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {benefits.map((benefit) => (
-              <li key={benefit} className="flex items-start gap-2 rounded-xl bg-white p-4 text-sm text-dark/75 ring-1 ring-gold/15">
-                <span className="mt-0.5 text-gold-dark" aria-hidden="true">✓</span>
+              <li key={benefit} className="flex items-start gap-2 rounded-xl border-2 border-ink bg-white p-4 text-sm text-dark/75">
+                <span className="mt-0.5 text-primary-dark" aria-hidden="true">✓</span>
                 {benefit}
               </li>
             ))}
@@ -102,7 +105,7 @@ export default function WholesalePage() {
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site max-w-3xl">
           <SectionHeading eyebrow="Questions" title="Dealer & Distributor FAQs" align="left" />
           <div className="mt-8">

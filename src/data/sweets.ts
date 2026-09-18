@@ -6,6 +6,7 @@ export type Sweet = {
   occasions: string[];
   packSizes: string[];
   keyword: string;
+  color: string;
 };
 
 export const sweets: Sweet[] = [
@@ -21,6 +22,7 @@ export const sweets: Sweet[] = [
     occasions: ["Corporate gifting", "Wedding hampers", "Festive boxes", "Wholesale to sweet shops"],
     packSizes: ["250 g", "500 g", "1 kg", "Bulk trays (5 kg)"],
     keyword: "Milk Cake Manufacturer Prayagraj",
+    color: "#f6c453",
   },
   {
     slug: "kalakand",
@@ -33,6 +35,7 @@ export const sweets: Sweet[] = [
     occasions: ["Corporate gifting", "Wedding hampers", "Festive boxes"],
     packSizes: ["250 g", "500 g", "1 kg"],
     keyword: "Kalakand Manufacturer UP",
+    color: "#e4defb",
   },
   {
     slug: "malai-barfi",
@@ -44,6 +47,7 @@ export const sweets: Sweet[] = [
     occasions: ["Festive gifting", "Wedding hampers", "Retail counters"],
     packSizes: ["250 g", "500 g", "1 kg"],
     keyword: "Malai Barfi Sweet Shop Supplier",
+    color: "#ffd7b5",
   },
   {
     slug: "peda",
@@ -55,6 +59,7 @@ export const sweets: Sweet[] = [
     occasions: ["Festive gifting", "Religious offerings/prasad", "Corporate boxes"],
     packSizes: ["250 g", "500 g", "1 kg", "Bulk (for temples/events)"],
     keyword: "Peda Manufacturer Prayagraj",
+    color: "#ffbf78",
   },
   {
     slug: "kunda",
@@ -67,6 +72,7 @@ export const sweets: Sweet[] = [
     occasions: ["Regional specialty gifting", "Festive orders", "Wholesale"],
     packSizes: ["250 g", "500 g", "1 kg tin"],
     keyword: "Kunda Sweet Prayagraj",
+    color: "#e3a377",
   },
   {
     slug: "bikaneri-cake",
@@ -78,6 +84,7 @@ export const sweets: Sweet[] = [
     occasions: ["Wholesale to sweet shops", "Corporate gifting", "Travel-friendly gifting"],
     packSizes: ["250 g", "500 g", "1 kg", "Bulk trays"],
     keyword: "Bikaneri Cake Wholesale Supplier",
+    color: "#f2a6b0",
   },
 ];
 

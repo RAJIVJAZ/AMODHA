@@ -6,8 +6,7 @@ import { TrustBar } from "@/components/ui/trust-bar";
 import { ProductCard } from "@/components/ui/product-card";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { CtaSection } from "@/components/ui/cta-section";
-import { BrandBadge } from "@/components/ui/brand-badge";
-import { CinematicHero } from "@/components/three/cinematic-hero";
+import { Logo } from "@/components/ui/logo";
 import { dairyProducts } from "@/data/dairy-products";
 import { sweets } from "@/data/sweets";
 import { testimonials } from "@/data/testimonials";
@@ -30,42 +29,47 @@ const processSteps = [
 export default function HomePage() {
   return (
     <>
-      <section className="relative isolate flex min-h-[88vh] items-center overflow-hidden bg-brown text-white">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(212,160,23,0.35),transparent_45%),radial-gradient(circle_at_80%_75%,rgba(198,40,40,0.25),transparent_45%)]"
-        />
-        <div aria-hidden="true" className="bg-diamond-pattern absolute inset-0 opacity-[0.08]" />
-        <CinematicHero />
-        <div className="container-site relative z-10 flex flex-col items-center gap-8 py-28 text-center">
-          <span className="font-subheading rounded-full border border-gold/40 px-4 py-1.5 text-sm italic tracking-wide text-gold-light">
-            Manufactured with Trust in Prayagraj, Uttar Pradesh
+      <section className="relative isolate overflow-hidden bg-blush">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-primary-light/60 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-16 top-10 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-primary/25 blur-3xl" />
+
+        <div className="container-site relative flex flex-col items-center gap-8 py-20 text-center sm:py-28">
+          <span className="font-heading sticker-shadow-sm inline-block rounded-full border-2 border-ink bg-white px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
+            Made fresh in Prayagraj, Uttar Pradesh
           </span>
-          <h1 className="text-balance max-w-4xl text-4xl font-bold leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl">
-            Pure Dairy. Traditional Sweets.
+          <h1 className="text-balance max-w-4xl text-5xl font-bold leading-[1.05] text-ink sm:text-6xl md:text-7xl">
+            Pure Dairy.
             <br />
-            <span className="text-gold-light">Crafted with Trust.</span>
+            <span className="text-primary-dark">Traditional Sweets.</span>
           </h1>
-          <p className="text-balance max-w-2xl text-lg text-cream/90 sm:text-xl">
-            Premium dairy products and handcrafted sweets manufactured in Prayagraj using traditional
-            methods and modern hygiene standards.
+          <p className="text-balance max-w-xl text-lg text-ink/70 sm:text-xl">
+            Bilona-churned ghee and handcrafted mithai, made the slow way — one product, one bold flavour
+            at a time.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
-            <ButtonLink href="/dairy-products" variant="secondary">
-              Shop Dairy Products
+            <ButtonLink href="/dairy-products" variant="primary">
+              Shop Dairy
             </ButtonLink>
-            <ButtonLink href="/sweet-corner" variant="primary">
+            <ButtonLink href="/sweet-corner" variant="secondary">
               Explore Sweet Corner
             </ButtonLink>
-            <ButtonLink href="/our-process" variant="outline">
-              Watch Factory Tour
-            </ButtonLink>
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 pr-16 sm:gap-4 sm:pr-0">
+            {dairyProducts.map((product) => (
+              <Link
+                key={product.slug}
+                href={`/dairy-products/${product.slug}`}
+                className="sticker-shadow-sm flex h-16 w-16 items-center justify-center rounded-full border-2 border-ink text-2xl transition-transform hover:-translate-y-1 sm:h-20 sm:w-20 sm:text-3xl"
+                style={{ backgroundColor: product.color }}
+                aria-label={product.name}
+              >
+                <span aria-hidden="true">{product.motif}</span>
+              </Link>
+            ))}
           </div>
         </div>
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-10 bg-[repeating-linear-gradient(45deg,var(--color-gold)_0,var(--color-gold)_1px,transparent_1px,transparent_14px)] opacity-20"
-        />
       </section>
 
       <TrustBar />
@@ -97,21 +101,14 @@ export default function HomePage() {
             </div>
           </div>
           <div className="order-1 lg:order-2">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-cream via-gold-light/40 to-brown/20 shadow-lg">
+            <div className="sticker-shadow relative aspect-[4/5] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink bg-gradient-to-br from-primary-light/50 via-blush to-accent/20">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-diamond-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-                <div className="rotate-[-6deg] opacity-25">
-                  <BrandBadge
-                    title="Amodha"
-                    subtitle={`Since ${siteConfig.founded}`}
-                    tone="paisley"
-                    width={260}
-                    height={108}
-                  />
+                <div className="rotate-[-6deg] opacity-40">
+                  <Logo size="lg" tagline={`Since ${siteConfig.founded}`} />
                 </div>
               </div>
-              <div className="absolute bottom-5 left-5 right-5 rounded-2xl bg-white/90 p-4 backdrop-blur">
-                <p className="font-subheading text-lg italic text-brown">
+              <div className="sticker-shadow-sm absolute bottom-5 left-5 right-5 rounded-2xl border-2 border-ink bg-white p-4">
+                <p className="font-subheading text-lg italic text-ink">
                   &ldquo;Same milk. Same family. Since {siteConfig.founded}.&rdquo;
                 </p>
               </div>
@@ -120,10 +117,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-cream py-20 sm:py-28">
+      <section className="bg-blush py-20 sm:py-28">
         <div className="container-site flex flex-col gap-12">
           <SectionHeading
-            eyebrow="Dairy Range"
+            eyebrow="Shop Dairy"
             title="Farm-Fresh Dairy, Made the Traditional Way"
             description="From hand-churned bilona ghee to fresh paneer cut daily — every product starts with milk from our own farmer network."
           />
@@ -135,6 +132,7 @@ export default function HomePage() {
                 name={product.name}
                 description={product.shortDescription}
                 icon={product.motif}
+                color={product.color}
               />
             ))}
           </div>
@@ -153,17 +151,18 @@ export default function HomePage() {
             title="Handcrafted Mithai, Made Fresh Daily"
             description="Traditional recipes, premium ingredients, and the same khoya we make for our own dairy range."
           />
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {sweets.map((sweet) => (
               <Link
                 key={sweet.slug}
                 href={`/sweet-corner/${sweet.slug}`}
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-gold/20 bg-white p-5 text-center transition-all hover:-translate-y-1 hover:border-gold hover:shadow-lg hover:shadow-gold/10"
+                className="sticker-shadow-sm group flex flex-col items-center gap-3 rounded-2xl border-2 border-ink p-5 text-center transition-all hover:-translate-y-1"
+                style={{ backgroundColor: sweet.color }}
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cream text-2xl ring-1 ring-gold/30">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-white text-2xl">
                   🍬
                 </div>
-                <span className="text-sm font-semibold text-brown">{sweet.name}</span>
+                <span className="font-heading text-sm font-bold text-ink">{sweet.name}</span>
               </Link>
             ))}
           </div>
@@ -175,13 +174,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-brown py-20 text-white sm:py-28">
+      <section className="bg-ink py-20 text-white sm:py-28">
         <div className="container-site grid grid-cols-1 gap-8 lg:grid-cols-2">
-          <div className="flex flex-col justify-between gap-6 rounded-3xl border border-gold/25 bg-white/5 p-8">
+          <div className="sticker-shadow flex flex-col justify-between gap-6 rounded-3xl border-[2.5px] border-white/20 bg-white/5 p-8">
             <div>
-              <span className="font-subheading text-lg italic text-gold-light">For Businesses</span>
+              <span className="font-subheading text-lg italic text-primary-light">For Businesses</span>
               <h3 className="mt-2 text-3xl font-bold">Corporate Gifting</h3>
-              <p className="mt-3 text-cream/85">
+              <p className="mt-3 text-blush/85">
                 Luxury gift boxes with custom branding, bulk order capacity and Pan-India delivery — for
                 client gifting, employee rewards and festive corporate hampers.
               </p>
@@ -190,11 +189,11 @@ export default function HomePage() {
               Get Custom Quote
             </ButtonLink>
           </div>
-          <div className="flex flex-col justify-between gap-6 rounded-3xl border border-gold/25 bg-white/5 p-8">
+          <div className="sticker-shadow flex flex-col justify-between gap-6 rounded-3xl border-[2.5px] border-white/20 bg-white/5 p-8">
             <div>
-              <span className="font-subheading text-lg italic text-gold-light">For Celebrations</span>
+              <span className="font-subheading text-lg italic text-primary-light">For Celebrations</span>
               <h3 className="mt-2 text-3xl font-bold">Wedding Gifting</h3>
-              <p className="mt-3 text-cream/85">
+              <p className="mt-3 text-blush/85">
                 Premium wedding hampers with bride & groom name customisation, theme-matched packaging
                 and return-gift solutions your guests will remember.
               </p>
@@ -215,11 +214,11 @@ export default function HomePage() {
           />
           <ol className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {processSteps.map((step, index) => (
-              <li key={step.title} className="flex flex-col gap-3 rounded-2xl bg-cream p-6">
-                <span className="font-heading text-3xl font-bold text-gold-dark">
+              <li key={step.title} className="sticker-shadow-sm flex flex-col gap-3 rounded-2xl border-2 border-ink bg-blush p-6">
+                <span className="font-heading text-3xl font-bold text-primary-dark">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="font-semibold text-brown">{step.title}</span>
+                <span className="font-heading font-bold text-ink">{step.title}</span>
                 <span className="text-sm text-dark/65">{step.description}</span>
               </li>
             ))}
@@ -232,11 +231,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-cream py-20 sm:py-28">
+      <section className="bg-blush py-20 sm:py-28">
         <div className="container-site flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-lg">
-            <span className="font-subheading text-lg italic text-gold-dark">Wholesale & Distribution</span>
-            <h2 className="mt-2 text-3xl font-bold text-brown sm:text-4xl">
+            <span className="font-subheading text-lg italic text-primary-dark">Wholesale & Distribution</span>
+            <h2 className="mt-2 text-3xl font-bold text-ink sm:text-4xl">
               Supplying Sweet Shops, Hotels & Distributors Across UP
             </h2>
             <p className="mt-4 text-dark/70">

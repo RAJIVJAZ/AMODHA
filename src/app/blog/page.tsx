@@ -28,12 +28,12 @@ export default function BlogPage() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="group flex flex-col rounded-2xl border border-gold/20 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-lg hover:shadow-gold/10"
+              className="group flex flex-col sticker-shadow rounded-2xl border-2 border-ink bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0_0_var(--color-ink)]"
             >
-              <span className="text-xs font-semibold uppercase tracking-wide text-gold-dark">
+              <span className="text-xs font-semibold uppercase tracking-wide text-primary-dark">
                 {post.category}
               </span>
-              <h2 className="mt-2 text-xl font-bold text-brown">{post.title}</h2>
+              <h2 className="mt-2 text-xl font-bold text-ink">{post.title}</h2>
               <p className="mt-3 flex-1 text-sm text-dark/70">{post.excerpt}</p>
               <div className="mt-5 flex items-center justify-between text-xs text-dark/50">
                 <time dateTime={post.date}>

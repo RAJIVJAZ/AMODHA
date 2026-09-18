@@ -7,9 +7,9 @@ type TestimonialCardProps = {
 
 export function TestimonialCard({ name, role, quote, rating }: TestimonialCardProps) {
   return (
-    <figure className="flex h-full flex-col justify-between rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gold/15">
+    <figure className="sticker-shadow flex h-full flex-col justify-between rounded-2xl border-2 border-ink bg-white p-6">
       <div>
-        <div aria-label={`${rating} out of 5 stars`} className="mb-3 flex gap-0.5 text-gold">
+        <div aria-label={`${rating} out of 5 stars`} className="mb-3 flex gap-0.5 text-accent">
           {Array.from({ length: 5 }).map((_, i) => (
             <span key={i} aria-hidden="true">
               {i < rating ? "★" : "☆"}
@@ -20,8 +20,8 @@ export function TestimonialCard({ name, role, quote, rating }: TestimonialCardPr
           &ldquo;{quote}&rdquo;
         </blockquote>
       </div>
-      <figcaption className="mt-5 border-t border-gold/15 pt-4">
-        <div className="font-semibold text-brown">{name}</div>
+      <figcaption className="mt-5 border-t-2 border-dashed border-ink/15 pt-4">
+        <div className="font-heading font-bold text-ink">{name}</div>
         <div className="text-sm text-dark/60">{role}</div>
       </figcaption>
     </figure>

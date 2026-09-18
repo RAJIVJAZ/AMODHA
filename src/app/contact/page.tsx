@@ -53,22 +53,22 @@ export default function ContactPage() {
               href={card.href}
               target={card.href.startsWith("http") ? "_blank" : undefined}
               rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="rounded-2xl border border-gold/20 bg-cream p-6 text-center transition-colors hover:border-gold"
+              className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-blush p-6 text-center transition-transform hover:-translate-y-1"
             >
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-gold-dark">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-dark">
                 {card.title}
               </h3>
-              <p className="mt-2 text-sm font-medium text-brown">{card.value}</p>
+              <p className="mt-2 text-sm font-medium text-ink">{card.value}</p>
             </a>
           ))}
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-start">
           <div className="flex flex-col gap-6">
             <div>
-              <h2 className="text-2xl font-bold text-brown">Our Facility</h2>
+              <h2 className="text-2xl font-bold text-ink">Our Facility</h2>
               <address className="mt-2 not-italic text-dark/70">
                 {siteConfig.address.line1}
                 <br />
@@ -79,7 +79,7 @@ export default function ContactPage() {
                 India
               </address>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-gold/20">
+            <div className="sticker-shadow overflow-hidden rounded-2xl border-2 border-ink">
               <iframe
                 title="Amodha Dairy Products location on Google Maps"
                 src={siteConfig.mapsEmbedUrl}

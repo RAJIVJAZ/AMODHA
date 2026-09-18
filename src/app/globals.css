@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --color-gold: #d4a017;
-  --color-gold-light: #e8c158;
-  --color-gold-dark: #a67b0f;
-  --color-brown: #5c2c06;
-  --color-brown-light: #7a3d0d;
-  --color-cream: #fff8e7;
-  --color-cream-dark: #f5ecd4;
+  --color-primary: #30a8d8;
+  --color-primary-light: #78d8f0;
+  --color-primary-dark: #1f7a9e;
+  --color-ink: #16323f;
+  --color-ink-light: #2f5568;
+  --color-blush: #fff0f0;
+  --color-blush-dark: #ffe1e1;
   --color-white: #ffffff;
-  --color-accent-red: #c62828;
-  --color-accent-red-dark: #a01f1f;
-  --color-dark: #111111;
+  --color-accent: #ff6b4a;
+  --color-accent-dark: #e04f30;
+  --color-dark: #17202a;
 
   --background: var(--color-white);
   --foreground: var(--color-dark);
@@ -21,23 +21,24 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-gold: var(--color-gold);
-  --color-gold-light: var(--color-gold-light);
-  --color-gold-dark: var(--color-gold-dark);
-  --color-brown: var(--color-brown);
-  --color-brown-light: var(--color-brown-light);
-  --color-cream: var(--color-cream);
-  --color-cream-dark: var(--color-cream-dark);
-  --color-accent-red: var(--color-accent-red);
-  --color-accent-red-dark: var(--color-accent-red-dark);
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-ink: var(--color-ink);
+  --color-ink-light: var(--color-ink-light);
+  --color-blush: var(--color-blush);
+  --color-blush-dark: var(--color-blush-dark);
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
   --color-dark: var(--color-dark);
 
-  --font-heading: var(--font-playfair);
-  --font-subheading: var(--font-cormorant);
+  --font-heading: var(--font-fredoka);
+  --font-subheading: var(--font-fraunces);
   --font-sans: var(--font-inter);
 
   --animate-fade-up: fade-up 0.7s ease-out forwards;
   --animate-marquee: marquee 32s linear infinite;
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 
   @keyframes fade-up {
     from {
@@ -58,6 +59,17 @@
       transform: translateX(-50%);
     }
   }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }
 
 body {
@@ -75,8 +87,8 @@ h1, h2, h3, h4 {
 }
 
 ::selection {
-  background: var(--color-gold);
-  color: var(--color-brown);
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .container-site {
@@ -93,8 +105,16 @@ h1, h2, h3, h4 {
 }
 
 .bg-diamond-pattern {
-  background-image: radial-gradient(var(--color-gold) 0.6px, transparent 0.6px);
+  background-image: radial-gradient(var(--color-primary) 0.6px, transparent 0.6px);
   background-size: 18px 18px;
+}
+
+.sticker-shadow {
+  box-shadow: 3px 3px 0 0 var(--color-ink);
+}
+
+.sticker-shadow-sm {
+  box-shadow: 2px 2px 0 0 var(--color-ink);
 }
 
 .text-balance {

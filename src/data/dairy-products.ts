@@ -1,4 +1,3 @@
-export type ProductSceneKind = "pour" | "sizzle" | "churn" | "splash" | "swirl" | "ripple" | "reduce";
 
 export type DairyProduct = {
   slug: string;
@@ -9,8 +8,8 @@ export type DairyProduct = {
   packSizes: string[];
   keyword: string;
   motif: string;
-  sceneKind: ProductSceneKind;
   sceneCaption: string;
+  color: string;
 };
 
 export const dairyProducts: DairyProduct[] = [
@@ -33,8 +32,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["200 ml", "500 ml", "1 litre", "5 litre (bulk)", "15 litre (catering)"],
     keyword: "Bilona Ghee Manufacturer Prayagraj",
     motif: "🫙",
-    sceneKind: "pour",
     sceneCaption: "Hand-churned. Slow-poured. Pure.",
+    color: "#f9d976",
   },
   {
     slug: "paneer",
@@ -55,8 +54,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["200 g", "500 g", "1 kg", "5 kg (HoReCa)", "10 kg (bulk/wholesale)"],
     keyword: "Paneer Supplier Uttar Pradesh",
     motif: "🧊",
-    sceneKind: "sizzle",
     sceneCaption: "Cut fresh. Cooks firm. Never frozen.",
+    color: "#eaf6fb",
   },
   {
     slug: "butter",
@@ -75,8 +74,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["100 g", "500 g", "1 kg", "5 kg (bakery/bulk)"],
     keyword: "White Butter Manufacturer Prayagraj",
     motif: "🧈",
-    sceneKind: "churn",
     sceneCaption: "Churned slow, from fresh cream — nothing reconstituted.",
+    color: "#fde68a",
   },
   {
     slug: "milk",
@@ -95,8 +94,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["500 ml", "1 litre", "5 litre (bulk can)", "20 litre (institutional)"],
     keyword: "Fresh Milk Supplier Prayagraj",
     motif: "🥛",
-    sceneKind: "splash",
     sceneCaption: "Farm to chiller within hours — tested, then poured.",
+    color: "#bfe8f5",
   },
   {
     slug: "cream",
@@ -114,8 +113,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["200 ml", "500 ml", "1 litre", "5 litre (bulk)"],
     keyword: "Fresh Dairy Cream Supplier UP",
     motif: "🍦",
-    sceneKind: "swirl",
     sceneCaption: "Thick, rich, and whipped fresh — no stabilisers.",
+    color: "#ffd9e8",
   },
   {
     slug: "curd",
@@ -133,8 +132,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["200 g", "400 g", "1 kg", "5 kg (bulk)"],
     keyword: "Curd Dahi Manufacturer Prayagraj",
     motif: "🥣",
-    sceneKind: "ripple",
     sceneCaption: "Set the traditional way — smooth, thick, mildly tangy.",
+    color: "#d7f2df",
   },
   {
     slug: "khoya",
@@ -152,8 +151,8 @@ export const dairyProducts: DairyProduct[] = [
     packSizes: ["500 g", "1 kg", "5 kg (bulk)", "10 kg (wholesale)"],
     keyword: "Khoya Mawa Supplier Prayagraj",
     motif: "🍮",
-    sceneKind: "reduce",
     sceneCaption: "Slow-reduced from whole milk — the base of every great mithai.",
+    color: "#f0c9a0",
   },
 ];
 

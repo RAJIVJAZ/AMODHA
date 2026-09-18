@@ -32,14 +32,17 @@ export default function WeddingGiftingPage() {
     <>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Wedding Gifting" }]} />
 
-      <section className="relative overflow-hidden bg-brown py-20 text-white sm:py-28">
-        <div aria-hidden="true" className="bg-diamond-pattern absolute inset-0 opacity-[0.08]" />
+      <section className="relative overflow-hidden bg-blush py-20 sm:py-28">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-primary-light/50 blur-3xl" />
         <div className="container-site relative flex flex-col items-center gap-6 text-center">
-          <span className="font-subheading text-lg italic text-gold-light">For Celebrations</span>
-          <h1 className="text-balance max-w-3xl text-4xl font-bold sm:text-5xl">
+          <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-accent px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-white">
+            For Celebrations
+          </span>
+          <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
             Wedding Gifting Your Guests Will Remember
           </h1>
-          <p className="max-w-2xl text-balance text-lg text-cream/90">
+          <p className="max-w-2xl text-balance text-lg text-ink/70">
             Premium hampers with bride and groom customisation, theme-matched packaging, and mithai made
             fresh for your big day.
           </p>
@@ -50,24 +53,24 @@ export default function WeddingGiftingPage() {
         <SectionHeading eyebrow="Make It Personal" title="Customisation Options" />
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {customisationList.map((item) => (
-            <div key={item.label} className="rounded-2xl border border-gold/20 bg-cream p-6">
-              <h3 className="font-bold text-brown">{item.label}</h3>
+            <div key={item.label} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-blush p-6">
+              <h3 className="font-heading font-bold text-ink">{item.label}</h3>
               <p className="mt-2 text-sm text-dark/65">{item.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
           <SectionHeading eyebrow="Planning Made Simple" title="How Wedding Gifting Works" />
           <ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {steps.map((step, index) => (
-              <li key={step.title} className="rounded-2xl bg-white p-6">
-                <span className="font-heading text-3xl font-bold text-gold-dark">
+              <li key={step.title} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-white p-6">
+                <span className="font-heading text-3xl font-bold text-primary-dark">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-2 font-semibold text-brown">{step.title}</h3>
+                <h3 className="font-heading mt-2 font-bold text-ink">{step.title}</h3>
                 <p className="mt-1 text-sm text-dark/65">{step.description}</p>
               </li>
             ))}

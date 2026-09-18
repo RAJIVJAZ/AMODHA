@@ -4,7 +4,6 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
 import { ProductCard } from "@/components/ui/product-card";
-import { ProductScene } from "@/components/three/product-scene";
 import { dairyProducts, getDairyProduct } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
@@ -70,10 +69,13 @@ export default async function DairyProductPage({
       <section className="container-site py-14 sm:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
           <div>
-            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-cream text-5xl ring-1 ring-gold/30">
+            <div
+              className="sticker-shadow flex h-24 w-24 items-center justify-center rounded-2xl border-2 border-ink text-5xl"
+              style={{ backgroundColor: product.color }}
+            >
               <span aria-hidden="true">{product.motif}</span>
             </div>
-            <h1 className="mt-6 text-4xl font-bold text-brown sm:text-5xl">{product.name}</h1>
+            <h1 className="mt-6 text-4xl font-bold text-ink sm:text-5xl">{product.name}</h1>
             <p className="mt-4 text-lg text-dark/70">{product.shortDescription}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href="/contact" variant="primary">
@@ -86,25 +88,25 @@ export default async function DairyProductPage({
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="rounded-2xl border border-gold/20 bg-white p-6">
-              <h2 className="text-lg font-bold text-brown">Available Pack Sizes</h2>
+            <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
+              <h2 className="font-heading text-lg font-bold text-ink">Available Pack Sizes</h2>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {product.packSizes.map((size) => (
                   <li
                     key={size}
-                    className="rounded-full bg-cream px-3 py-1.5 text-sm font-medium text-brown"
+                    className="rounded-full border-2 border-ink/15 bg-blush px-3 py-1.5 text-sm font-medium text-ink"
                   >
                     {size}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-gold/20 bg-white p-6">
-              <h2 className="text-lg font-bold text-brown">Why Choose Our {product.name}</h2>
+            <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
+              <h2 className="font-heading text-lg font-bold text-ink">Why Choose Our {product.name}</h2>
               <ul className="mt-3 flex flex-col gap-2">
                 {product.highlights.map((highlight) => (
                   <li key={highlight} className="flex items-start gap-2 text-sm text-dark/70">
-                    <span className="mt-0.5 text-gold-dark" aria-hidden="true">
+                    <span className="mt-0.5 text-primary-dark" aria-hidden="true">
                       ✓
                     </span>
                     {highlight}
@@ -115,16 +117,14 @@ export default async function DairyProductPage({
           </div>
         </div>
 
-        <div className="relative mt-14 h-[52vh] min-h-[360px] overflow-hidden rounded-3xl bg-gradient-to-br from-brown via-brown to-black">
-          <ProductScene kind={product.sceneKind} />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 p-6 sm:p-8">
-            <p className="font-subheading text-xl italic text-gold-light sm:text-2xl">
-              {product.sceneCaption}
-            </p>
-            <p className="mt-1 max-w-md text-sm text-cream/70">
-              Scroll to watch — a stylized preview, not filmed footage.
-            </p>
-          </div>
+        <div
+          className="sticker-shadow relative mt-14 flex min-h-[280px] flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-[2.5px] border-ink px-6 py-16 text-center sm:min-h-[340px]"
+          style={{ backgroundColor: product.color }}
+        >
+          <span aria-hidden="true" className="text-7xl sm:text-8xl">
+            {product.motif}
+          </span>
+          <p className="font-heading text-2xl font-bold text-ink sm:text-3xl">{product.sceneCaption}</p>
         </div>
 
         <div className="mt-14 flex flex-col gap-4 text-dark/75">
@@ -134,9 +134,9 @@ export default async function DairyProductPage({
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
-          <h2 className="text-2xl font-bold text-brown sm:text-3xl">Explore More Dairy Products</h2>
+          <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">Explore More Dairy Products</h2>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {related.map((item) => (
               <ProductCard
@@ -145,6 +145,7 @@ export default async function DairyProductPage({
                 name={item.name}
                 description={item.shortDescription}
                 icon={item.motif}
+                color={item.color}
               />
             ))}
           </div>

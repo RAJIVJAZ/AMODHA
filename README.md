@@ -13,7 +13,7 @@ order/lead storage yet.
 
 - [Next.js](https://nextjs.org) (App Router, TypeScript)
 - [Tailwind CSS v4](https://tailwindcss.com)
-- `next/font` with Playfair Display, Cormorant Garamond and Inter
+- `next/font` with Fredoka, Fraunces and Inter
 
 ## Getting Started
 
@@ -34,11 +34,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Content & Design
 
-- Color system, typography and copy follow the brand brief: gold/brown/cream palette,
-  Playfair Display headings, Cormorant Garamond subheadings, Inter body text.
-- No photography/video assets were supplied, so hero and feature sections use CSS-based
-  gradients/patterns rather than placeholder stock photos. Swap in real facility/product
-  photography and drone/factory-tour video via the marked hero and gallery sections.
+- Bold DTC design system inspired by [OLIPOP](https://drinkolipop.com): color-blocked sections,
+  a blue/coral/blush palette (`src/app/globals.css` tokens: `primary`, `accent`, `blush`, `ink`),
+  thick 2–2.5px borders with an offset "sticker" drop-shadow on cards/buttons (`.sticker-shadow`
+  / `.sticker-shadow-sm` utilities), and Fredoka (bold rounded display) + Fraunces (warm serif
+  accent) + Inter (body) type. OLIPOP's own fonts (Alias Ano, Windsor) are paid/unlicensed, so
+  Fredoka/Fraunces are close free substitutes.
+- Each dairy product and sweet carries its own accent `color` (`src/data/dairy-products.ts`,
+  `src/data/sweets.ts`) for the per-SKU color-blocked shop grid, mirroring OLIPOP's per-flavor
+  color coding.
+- No photography/video assets were supplied, so hero sections use CSS blob backgrounds rather
+  than product photography. The real Mithaiwallah Sweet Corner logo (`public/logos/mithaiwallah.png`)
+  is used as supplied; Amodha's own badge/wordmark is a coded lockup, not sourced from a design file.
 - Update business details (address, phone, WhatsApp number, socials, map) in `src/lib/site.ts`.
 
 ## SEO

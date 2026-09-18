@@ -78,22 +78,22 @@ export default function AboutPage() {
         <SectionHeading eyebrow="What We Stand For" title="Our Values" align="center" />
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {values.map((value) => (
-            <div key={value.title} className="rounded-2xl border border-gold/20 bg-cream p-6">
-              <h3 className="text-xl font-bold text-brown">{value.title}</h3>
+            <div key={value.title} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-blush p-6">
+              <h3 className="text-xl font-bold text-ink">{value.title}</h3>
               <p className="mt-2 text-sm text-dark/70">{value.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-cream py-14 sm:py-20">
+      <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
           <SectionHeading eyebrow="Our Journey" title="Milestones" align="center" />
-          <ol className="mx-auto mt-10 flex max-w-3xl flex-col gap-6 border-l-2 border-gold/40 pl-6">
+          <ol className="mx-auto mt-10 flex max-w-3xl flex-col gap-6 border-l-[3px] border-ink pl-6">
             {milestones.map((milestone) => (
               <li key={milestone.year} className="relative">
-                <span className="absolute -left-[1.95rem] top-1 h-3 w-3 rounded-full bg-gold" aria-hidden="true" />
-                <span className="font-heading text-lg font-bold text-gold-dark">{milestone.year}</span>
+                <span className="absolute -left-[1.95rem] top-1 h-3 w-3 rounded-full bg-primary" aria-hidden="true" />
+                <span className="font-heading text-lg font-bold text-primary-dark">{milestone.year}</span>
                 <p className="mt-1 text-dark/75">{milestone.event}</p>
               </li>
             ))}

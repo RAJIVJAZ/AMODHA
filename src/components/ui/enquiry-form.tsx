@@ -40,8 +40,8 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
   }
 
   return (
-    <div className="rounded-2xl border border-gold/20 bg-white p-6 shadow-sm sm:p-8">
-      <h2 className="text-2xl font-bold text-brown">{title}</h2>
+    <div className="sticker-shadow rounded-3xl border-[2.5px] border-ink bg-white p-6 sm:p-8">
+      <h2 className="font-heading text-2xl font-bold text-ink">{title}</h2>
       {description ? <p className="mt-2 text-sm text-dark/70">{description}</p> : null}
 
       <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -50,9 +50,9 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
             key={field.name}
             className={field.type === "textarea" ? "sm:col-span-2 flex flex-col gap-1.5" : "flex flex-col gap-1.5"}
           >
-            <label htmlFor={field.name} className="text-sm font-semibold text-brown">
+            <label htmlFor={field.name} className="text-sm font-semibold text-ink">
               {field.label}
-              {field.required ? <span className="text-accent-red"> *</span> : null}
+              {field.required ? <span className="text-accent"> *</span> : null}
             </label>
             {field.type === "textarea" ? (
               <textarea
@@ -61,7 +61,7 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
                 required={field.required}
                 rows={4}
                 onChange={(e) => handleChange(field.name, e.target.value)}
-                className="rounded-lg border border-gold/30 px-3 py-2.5 text-sm text-dark focus:border-gold focus:outline-none"
+                className="rounded-xl border-2 border-ink/30 px-3 py-2.5 text-sm text-dark focus:border-primary focus:outline-none"
               />
             ) : field.type === "select" ? (
               <select
@@ -70,7 +70,7 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
                 required={field.required}
                 defaultValue=""
                 onChange={(e) => handleChange(field.name, e.target.value)}
-                className="rounded-lg border border-gold/30 px-3 py-2.5 text-sm text-dark focus:border-gold focus:outline-none"
+                className="rounded-xl border-2 border-ink/30 px-3 py-2.5 text-sm text-dark focus:border-primary focus:outline-none"
               >
                 <option value="" disabled>
                   Select an option
@@ -88,7 +88,7 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
                 type={field.type ?? "text"}
                 required={field.required}
                 onChange={(e) => handleChange(field.name, e.target.value)}
-                className="rounded-lg border border-gold/30 px-3 py-2.5 text-sm text-dark focus:border-gold focus:outline-none"
+                className="rounded-xl border-2 border-ink/30 px-3 py-2.5 text-sm text-dark focus:border-primary focus:outline-none"
               />
             )}
           </div>
@@ -97,14 +97,14 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
         <div className="sm:col-span-2">
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-red px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-accent-red-dark sm:w-auto"
+            className="font-heading sticker-shadow inline-flex w-full items-center justify-center gap-2 rounded-full border-[2.5px] border-ink bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)] sm:w-auto"
           >
             Send via WhatsApp
           </button>
           <p className="mt-3 text-xs text-dark/50">
             Submitting opens WhatsApp with your details pre-filled so our team can respond directly. You
             can also email us at{" "}
-            <a href={`mailto:${siteConfig.contact.email}`} className="text-accent-red hover:underline">
+            <a href={`mailto:${siteConfig.contact.email}`} className="text-accent hover:underline">
               {siteConfig.contact.email}
             </a>
             .

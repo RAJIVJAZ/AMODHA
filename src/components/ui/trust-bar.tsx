@@ -10,11 +10,14 @@ const trustItems = [
 
 export function TrustBar() {
   return (
-    <section aria-label="Why customers trust Amodha" className="border-y border-gold/20 bg-cream">
-      <div className="container-site grid grid-cols-2 gap-6 py-10 text-center sm:grid-cols-3 md:grid-cols-5">
+    <section aria-label="Why customers trust Amodha" className="bg-primary-light/30 py-10">
+      <div className="container-site grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
         {trustItems.map((item) => (
-          <div key={item.label} className="flex flex-col items-center gap-1">
-            <span className="text-2xl font-bold text-brown sm:text-3xl">{item.value}</span>
+          <div
+            key={item.label}
+            className="sticker-shadow-sm flex flex-col items-center gap-1 rounded-2xl border-2 border-ink bg-white px-3 py-5 text-center"
+          >
+            <span className="font-heading text-2xl font-bold text-ink sm:text-3xl">{item.value}</span>
             <span className="text-xs font-medium uppercase tracking-wide text-dark/60 sm:text-sm">
               {item.label}
             </span>
