@@ -4,7 +4,7 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
 import { ProductCard } from "@/components/ui/product-card";
-import { GheeScene } from "@/components/three/ghee-scene";
+import { ProductScene } from "@/components/three/product-scene";
 import { dairyProducts, getDairyProduct } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
@@ -115,19 +115,17 @@ export default async function DairyProductPage({
           </div>
         </div>
 
-        {product.slug === "ghee" ? (
-          <div className="relative mt-14 h-[52vh] min-h-[360px] overflow-hidden rounded-3xl bg-gradient-to-br from-brown via-brown to-black">
-            <GheeScene />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 p-6 sm:p-8">
-              <p className="font-subheading text-xl italic text-gold-light sm:text-2xl">
-                Hand-churned. Slow-poured. Pure.
-              </p>
-              <p className="mt-1 max-w-md text-sm text-cream/70">
-                Scroll to watch the pour — a stylized preview of our bilona process, not filmed footage.
-              </p>
-            </div>
+        <div className="relative mt-14 h-[52vh] min-h-[360px] overflow-hidden rounded-3xl bg-gradient-to-br from-brown via-brown to-black">
+          <ProductScene kind={product.sceneKind} />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 p-6 sm:p-8">
+            <p className="font-subheading text-xl italic text-gold-light sm:text-2xl">
+              {product.sceneCaption}
+            </p>
+            <p className="mt-1 max-w-md text-sm text-cream/70">
+              Scroll to watch — a stylized preview, not filmed footage.
+            </p>
           </div>
-        ) : null}
+        </div>
 
         <div className="mt-14 flex flex-col gap-4 text-dark/75">
           {product.description.map((paragraph, index) => (
