@@ -1,11 +1,19 @@
 
+export type PackSize = {
+  label: string;
+  /** Price in INR. Indicative — update with real pricing before going live. */
+  price: number;
+  /** false = bulk/institutional size, routed to a wholesale enquiry instead of the cart. */
+  purchasable: boolean;
+};
+
 export type DairyProduct = {
   slug: string;
   name: string;
   shortDescription: string;
   description: string[];
   highlights: string[];
-  packSizes: string[];
+  packSizes: PackSize[];
   keyword: string;
   motif: string;
   sceneCaption: string;
@@ -29,7 +37,13 @@ export const dairyProducts: DairyProduct[] = [
       "Rich, grainy texture with authentic aroma",
       "FSSAI certified manufacturing facility",
     ],
-    packSizes: ["200 ml", "500 ml", "1 litre", "5 litre (bulk)", "15 litre (catering)"],
+    packSizes: [
+      { label: "200 ml", price: 320, purchasable: true },
+      { label: "500 ml", price: 750, purchasable: true },
+      { label: "1 litre", price: 1450, purchasable: true },
+      { label: "5 litre (bulk)", price: 6800, purchasable: false },
+      { label: "15 litre (catering)", price: 19500, purchasable: false },
+    ],
     keyword: "Bilona Ghee Manufacturer Prayagraj",
     motif: "🫙",
     sceneCaption: "Hand-churned. Slow-poured. Pure.",
@@ -51,7 +65,13 @@ export const dairyProducts: DairyProduct[] = [
       "Available loose (bulk) and vacuum-packed (retail)",
       "Consistent fat percentage for hotel & restaurant use",
     ],
-    packSizes: ["200 g", "500 g", "1 kg", "5 kg (HoReCa)", "10 kg (bulk/wholesale)"],
+    packSizes: [
+      { label: "200 g", price: 110, purchasable: true },
+      { label: "500 g", price: 260, purchasable: true },
+      { label: "1 kg", price: 500, purchasable: true },
+      { label: "5 kg (HoReCa)", price: 2350, purchasable: false },
+      { label: "10 kg (bulk/wholesale)", price: 4500, purchasable: false },
+    ],
     keyword: "Paneer Supplier Uttar Pradesh",
     motif: "🧊",
     sceneCaption: "Cut fresh. Cooks firm. Never frozen.",
@@ -71,7 +91,12 @@ export const dairyProducts: DairyProduct[] = [
       "Bulk formats for bakeries and sweet shops",
       "Cold-chain delivery",
     ],
-    packSizes: ["100 g", "500 g", "1 kg", "5 kg (bakery/bulk)"],
+    packSizes: [
+      { label: "100 g", price: 85, purchasable: true },
+      { label: "500 g", price: 400, purchasable: true },
+      { label: "1 kg", price: 780, purchasable: true },
+      { label: "5 kg (bakery/bulk)", price: 3700, purchasable: false },
+    ],
     keyword: "White Butter Manufacturer Prayagraj",
     motif: "🧈",
     sceneCaption: "Churned slow, from fresh cream — nothing reconstituted.",
@@ -91,7 +116,12 @@ export const dairyProducts: DairyProduct[] = [
       "Full-cream, toned & double-toned variants",
       "Daily doorstep and bulk institutional supply",
     ],
-    packSizes: ["500 ml", "1 litre", "5 litre (bulk can)", "20 litre (institutional)"],
+    packSizes: [
+      { label: "500 ml", price: 35, purchasable: true },
+      { label: "1 litre", price: 65, purchasable: true },
+      { label: "5 litre (bulk can)", price: 300, purchasable: false },
+      { label: "20 litre (institutional)", price: 1150, purchasable: false },
+    ],
     keyword: "Fresh Milk Supplier Prayagraj",
     motif: "🥛",
     sceneCaption: "Farm to chiller within hours — tested, then poured.",
@@ -110,7 +140,12 @@ export const dairyProducts: DairyProduct[] = [
       "No stabilisers or thickening agents",
       "Retail and bulk hospitality packs",
     ],
-    packSizes: ["200 ml", "500 ml", "1 litre", "5 litre (bulk)"],
+    packSizes: [
+      { label: "200 ml", price: 90, purchasable: true },
+      { label: "500 ml", price: 210, purchasable: true },
+      { label: "1 litre", price: 400, purchasable: true },
+      { label: "5 litre (bulk)", price: 1850, purchasable: false },
+    ],
     keyword: "Fresh Dairy Cream Supplier UP",
     motif: "🍦",
     sceneCaption: "Thick, rich, and whipped fresh — no stabilisers.",
@@ -129,7 +164,12 @@ export const dairyProducts: DairyProduct[] = [
       "Smooth texture, naturally mild tang",
       "Retail cups and bulk catering tubs",
     ],
-    packSizes: ["200 g", "400 g", "1 kg", "5 kg (bulk)"],
+    packSizes: [
+      { label: "200 g", price: 35, purchasable: true },
+      { label: "400 g", price: 65, purchasable: true },
+      { label: "1 kg", price: 150, purchasable: true },
+      { label: "5 kg (bulk)", price: 680, purchasable: false },
+    ],
     keyword: "Curd Dahi Manufacturer Prayagraj",
     motif: "🥣",
     sceneCaption: "Set the traditional way — smooth, thick, mildly tangy.",
@@ -148,7 +188,12 @@ export const dairyProducts: DairyProduct[] = [
       "Consistent grain & moisture for mithai making",
       "Trusted by other halwais and sweet shops",
     ],
-    packSizes: ["500 g", "1 kg", "5 kg (bulk)", "10 kg (wholesale)"],
+    packSizes: [
+      { label: "500 g", price: 280, purchasable: true },
+      { label: "1 kg", price: 540, purchasable: true },
+      { label: "5 kg (bulk)", price: 2550, purchasable: false },
+      { label: "10 kg (wholesale)", price: 5000, purchasable: false },
+    ],
     keyword: "Khoya Mawa Supplier Prayagraj",
     motif: "🍮",
     sceneCaption: "Slow-reduced from whole milk — the base of every great mithai.",

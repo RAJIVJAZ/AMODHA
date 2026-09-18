@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { mainNav, siteConfig } from "@/lib/site";
 import { Logo } from "@/components/ui/logo";
+import { CartLink } from "@/components/layout/cart-link";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,35 +28,39 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/sweet-corner"
-            className="font-heading sticker-shadow rounded-full border-[2.5px] border-ink bg-accent px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)]"
-          >
-            Sweet Corner
-          </Link>
-        </div>
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-3 lg:flex">
+            <Link
+              href="/sweet-corner"
+              className="font-heading sticker-shadow rounded-full border-[2.5px] border-ink bg-accent px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)]"
+            >
+              Sweet Corner
+            </Link>
+          </div>
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-md text-ink lg:hidden"
-          aria-expanded={isOpen}
-          aria-controls="mobile-nav"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          onClick={() => setIsOpen((v) => !v)}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            {isOpen ? (
-              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            ) : (
-              <>
-                <path d="M4 7h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M4 12h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M4 17h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-              </>
-            )}
-          </svg>
-        </button>
+          <CartLink onClick={() => setIsOpen(false)} />
+
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-md text-ink lg:hidden"
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            onClick={() => setIsOpen((v) => !v)}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              {isOpen ? (
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              ) : (
+                <>
+                  <path d="M4 7h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M4 12h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M4 17h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {isOpen ? (

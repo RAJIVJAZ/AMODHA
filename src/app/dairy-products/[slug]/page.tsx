@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
 import { ProductCard } from "@/components/ui/product-card";
+import { AddToCart } from "@/components/ui/add-to-cart";
 import { dairyProducts, getDairyProduct } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
@@ -36,6 +37,7 @@ export default async function DairyProductPage({
   if (!product) notFound();
 
   const related = dairyProducts.filter((p) => p.slug !== product.slug).slice(0, 3);
+  const purchasablePrices = product.packSizes.filter((p) => p.purchasable).map((p) => p.price);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -47,6 +49,8 @@ export default async function DairyProductPage({
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "INR",
+      lowPrice: Math.min(...purchasablePrices),
+      highPrice: Math.max(...purchasablePrices),
       availability: "https://schema.org/InStock",
       seller: { "@type": "Organization", name: siteConfig.name },
     },
@@ -78,29 +82,22 @@ export default async function DairyProductPage({
             <h1 className="mt-6 text-4xl font-bold text-ink sm:text-5xl">{product.name}</h1>
             <p className="mt-4 text-lg text-dark/70">{product.shortDescription}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/contact" variant="primary">
-                Enquire Now
+              <ButtonLink href="/contact" variant="ghost">
+                Ask a Question
               </ButtonLink>
-              <ButtonLink href="/wholesale" variant="ghost">
+              <ButtonLink href="/wholesale" variant="outline">
                 Wholesale Pricing
               </ButtonLink>
             </div>
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
-              <h2 className="font-heading text-lg font-bold text-ink">Available Pack Sizes</h2>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {product.packSizes.map((size) => (
-                  <li
-                    key={size}
-                    className="rounded-full border-2 border-ink/15 bg-blush px-3 py-1.5 text-sm font-medium text-ink"
-                  >
-                    {size}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <AddToCart
+              slug={product.slug}
+              productName={product.name}
+              icon={product.motif}
+              packSizes={product.packSizes}
+            />
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
               <h2 className="font-heading text-lg font-bold text-ink">Why Choose Our {product.name}</h2>
               <ul className="mt-3 flex flex-col gap-2">
