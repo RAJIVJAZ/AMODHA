@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial, Sparkles } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Mesh } from "three";
+import { useReducedMotion, useWebglSupported } from "@/lib/use-webgl-capability";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,24 +68,8 @@ function Scene({ reducedMotion }: { reducedMotion: boolean }) {
 
 export function CinematicHeroCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [reducedMotion, setReducedMotion] = useState(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-  const [supported] = useState(() => {
-    try {
-      const canvas = document.createElement("canvas");
-      return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
-    } catch {
-      return false;
-    }
-  });
-
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReducedMotion(motionQuery.matches);
-    motionQuery.addEventListener("change", onChange);
-    return () => motionQuery.removeEventListener("change", onChange);
-  }, []);
+  const reducedMotion = useReducedMotion();
+  const supported = useWebglSupported();
 
   useEffect(() => {
     if (!containerRef.current || reducedMotion) return;
