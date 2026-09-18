@@ -3,18 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { mainNav, siteConfig } from "@/lib/site";
+import { BrandBadge } from "@/components/ui/brand-badge";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-gold/20 bg-white/95 backdrop-blur">
-      <div className="container-site flex items-center justify-between py-3">
-        <Link href="/" className="flex flex-col leading-none" onClick={() => setIsOpen(false)}>
-          <span className="font-heading text-2xl font-bold text-brown sm:text-3xl">Amodha</span>
-          <span className="font-subheading text-[11px] italic tracking-wide text-gold-dark sm:text-xs">
-            Dairy Products
-          </span>
+      <div className="container-site flex items-center justify-between py-2.5">
+        <Link href="/" onClick={() => setIsOpen(false)} aria-label={`${siteConfig.name} home`}>
+          <BrandBadge title="Amodha" subtitle="Dairy Products" tone="brown" width={148} height={62} />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">

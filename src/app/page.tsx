@@ -6,6 +6,7 @@ import { TrustBar } from "@/components/ui/trust-bar";
 import { ProductCard } from "@/components/ui/product-card";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { CtaSection } from "@/components/ui/cta-section";
+import { BrandBadge } from "@/components/ui/brand-badge";
 import { dairyProducts } from "@/data/dairy-products";
 import { sweets } from "@/data/sweets";
 import { testimonials } from "@/data/testimonials";
@@ -97,9 +98,15 @@ export default function HomePage() {
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-cream via-gold-light/40 to-brown/20 shadow-lg">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="bg-diamond-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-                <span className="font-heading rotate-[-6deg] text-6xl font-bold text-brown/20 sm:text-8xl">
-                  Amodha
-                </span>
+                <div className="rotate-[-6deg] opacity-25">
+                  <BrandBadge
+                    title="Amodha"
+                    subtitle={`Since ${siteConfig.founded}`}
+                    tone="brown"
+                    width={260}
+                    height={108}
+                  />
+                </div>
               </div>
               <div className="absolute bottom-5 left-5 right-5 rounded-2xl bg-white/90 p-4 backdrop-blur">
                 <p className="font-subheading text-lg italic text-brown">

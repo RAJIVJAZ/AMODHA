@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { CtaSection } from "@/components/ui/cta-section";
 import { sweets, hamperCategories } from "@/data/sweets";
 import { siteConfig } from "@/lib/site";
+import { BrandBadge } from "@/components/ui/brand-badge";
 
 export const metadata: Metadata = {
   title: `${siteConfig.sweetBrand} | Premium Sweet Gifting Destination`,
@@ -23,9 +24,7 @@ export default function SweetCornerPage() {
         />
         <div aria-hidden="true" className="bg-diamond-pattern absolute inset-0 opacity-[0.08]" />
         <div className="container-site relative flex flex-col items-center gap-6 text-center">
-          <span className="font-subheading rounded-full border border-gold/40 px-4 py-1.5 text-sm italic tracking-wide text-gold-light">
-            {siteConfig.sweetBrand}
-          </span>
+          <BrandBadge title="Mithaiwallah" subtitle="Sweet Corner" tone="cream" width={240} height={100} />
           <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
             India&rsquo;s Premium Sweet Gifting Destination
           </h1>
