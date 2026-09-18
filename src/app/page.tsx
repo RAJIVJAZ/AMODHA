@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { CtaSection } from "@/components/ui/cta-section";
 import { BrandBadge } from "@/components/ui/brand-badge";
+import { CinematicHero } from "@/components/three/cinematic-hero";
 import { dairyProducts } from "@/data/dairy-products";
 import { sweets } from "@/data/sweets";
 import { testimonials } from "@/data/testimonials";
@@ -35,7 +36,8 @@ export default function HomePage() {
           className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(212,160,23,0.35),transparent_45%),radial-gradient(circle_at_80%_75%,rgba(198,40,40,0.25),transparent_45%)]"
         />
         <div aria-hidden="true" className="bg-diamond-pattern absolute inset-0 opacity-[0.08]" />
-        <div className="container-site relative flex flex-col items-center gap-8 py-28 text-center">
+        <CinematicHero />
+        <div className="container-site relative z-10 flex flex-col items-center gap-8 py-28 text-center">
           <span className="font-subheading rounded-full border border-gold/40 px-4 py-1.5 text-sm italic tracking-wide text-gold-light">
             Manufactured with Trust in Prayagraj, Uttar Pradesh
           </span>
