@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { CtaSection } from "@/components/ui/cta-section";
@@ -60,6 +61,16 @@ export default function OurProcessPage() {
           title="From Farm to Factory to Your Table"
           description="Every product we make passes through six stages of careful, documented process — combining traditional technique with modern food-safety standards."
         />
+        <div className="sticker-shadow relative mt-10 aspect-[21/9] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
+          <Image
+            src="/images/sweet-corner/ghee-pour-quality.webp"
+            alt="Pure desi ghee being poured over a Milk Cake with Kalakand and Barfi in the background"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
       </section>
 
       <section className="container-site pb-14 sm:pb-20">
@@ -92,14 +103,25 @@ export default function OurProcessPage() {
       </section>
 
       <section className="bg-ink py-16 text-white sm:py-20">
-        <div className="container-site text-center">
-          <span className="font-subheading text-lg italic text-primary-light">Factory Tour</span>
-          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">See Our Facility for Yourself</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-blush/85">
-            We welcome wholesale partners, corporate clients and distributors to visit our Prayagraj
-            facility — from the milk collection floor to the quality lab, production area and packaging
-            line.
-          </p>
+        <div className="container-site grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+          <div className="text-center lg:text-left">
+            <span className="font-subheading text-lg italic text-primary-light">Factory Tour</span>
+            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">See Our Facility for Yourself</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-blush/85 lg:mx-0">
+              We welcome wholesale partners, corporate clients and distributors to visit our Prayagraj
+              facility — from the milk collection floor to the quality lab, production area and packaging
+              line.
+            </p>
+          </div>
+          <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-white/20">
+            <Image
+              src="/images/sweet-corner/production-facility.webp"
+              alt="Mithaiwallah production facility with masked, gloved staff preparing sweets in large steel kadhais"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 

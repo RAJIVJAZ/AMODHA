@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { EnquiryForm } from "@/components/ui/enquiry-form";
@@ -48,17 +49,29 @@ export default function CorporateGiftingPage() {
       <section className="relative overflow-hidden bg-blush py-20 sm:py-28">
         <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full bg-primary-light/50 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-accent/25 blur-3xl" />
-        <div className="container-site relative flex flex-col items-center gap-6 text-center">
-          <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-primary-light px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
-            For Businesses
-          </span>
-          <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
-            Corporate Gifting That Reflects Your Brand
-          </h1>
-          <p className="max-w-2xl text-balance text-lg text-ink/70">
-            Luxury gift boxes with custom branding, bulk order capacity and Pan-India delivery — for
-            client gifting, employee rewards, and festive corporate gifting programs.
-          </p>
+        <div className="container-site relative grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+          <div className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
+            <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-primary-light px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
+              For Businesses
+            </span>
+            <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
+              Corporate Gifting That Reflects Your Brand
+            </h1>
+            <p className="max-w-2xl text-balance text-lg text-ink/70">
+              Luxury gift boxes with custom branding, bulk order capacity and Pan-India delivery — for
+              client gifting, employee rewards, and festive corporate gifting programs.
+            </p>
+          </div>
+          <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
+            <Image
+              src="/images/sweet-corner/corporate-gift-hamper.webp"
+              alt="Mithaiwallah premium corporate gift hamper with ribbon bow, gift tag and an assortment box of sweets"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
@@ -80,6 +93,15 @@ export default function CorporateGiftingPage() {
         <div className="container-site grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div>
             <SectionHeading align="left" eyebrow="Packaging" title="Packaging Options" />
+            <div className="sticker-shadow-sm relative mt-6 aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-ink">
+              <Image
+                src="/images/sweet-corner/packaging-ivory-gold.webp"
+                alt="Ivory Mithaiwallah gift box with gold foil branding and a champagne satin ribbon bow"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
             <div className="mt-6 flex flex-wrap gap-2">
               {packagingOptions.map((option) => (
                 <span key={option} className="rounded-full border-2 border-ink bg-white px-4 py-2 text-sm font-medium text-ink">

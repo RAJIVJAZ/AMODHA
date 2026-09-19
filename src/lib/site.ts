@@ -79,6 +79,8 @@ export const footerNav = {
   sweets: [
     { label: "Milk Cake", href: "/sweet-corner/milk-cake" },
     { label: "Kalakand", href: "/sweet-corner/kalakand" },
+    { label: "Chocolate Barfi", href: "/sweet-corner/chocolate-barfi" },
+    { label: "Doda Barfi", href: "/sweet-corner/doda-barfi" },
     { label: "Malai Barfi", href: "/sweet-corner/malai-barfi" },
     { label: "Peda", href: "/sweet-corner/peda" },
     { label: "Kunda", href: "/sweet-corner/kunda" },

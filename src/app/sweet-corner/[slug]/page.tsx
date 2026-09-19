@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -42,6 +43,7 @@ export default async function SweetDetailPage({
     "@type": "Product",
     name: sweet.name,
     description: sweet.shortDescription,
+    ...(sweet.image ? { image: `${siteConfig.url}${sweet.image}` } : {}),
     brand: { "@type": "Brand", name: siteConfig.sweetBrand },
     manufacturer: { "@type": "Organization", name: siteConfig.name },
     offers: {
@@ -69,12 +71,18 @@ export default async function SweetDetailPage({
       <section className="container-site py-14 sm:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
           <div>
-            <div
-              className="sticker-shadow flex h-24 w-24 items-center justify-center rounded-2xl border-2 border-ink text-5xl"
-              style={{ backgroundColor: sweet.color }}
-            >
-              🍬
-            </div>
+            {sweet.image ? (
+              <div className="sticker-shadow relative aspect-square w-full max-w-md overflow-hidden rounded-3xl border-2 border-ink">
+                <Image src={sweet.image} alt={sweet.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+              </div>
+            ) : (
+              <div
+                className="sticker-shadow flex h-24 w-24 items-center justify-center rounded-2xl border-2 border-ink text-5xl"
+                style={{ backgroundColor: sweet.color }}
+              >
+                🍬
+              </div>
+            )}
             <h1 className="mt-6 text-4xl font-bold text-ink sm:text-5xl">{sweet.name}</h1>
             <p className="mt-4 text-lg text-dark/70">{sweet.shortDescription}</p>
             <div className="mt-8 flex flex-wrap gap-3">

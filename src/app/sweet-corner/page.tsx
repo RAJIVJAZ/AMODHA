@@ -49,6 +49,16 @@ export default function SweetCornerPage() {
               Wedding Gifting
             </ButtonLink>
           </div>
+          <div className="sticker-shadow mt-4 w-full max-w-xl overflow-hidden rounded-3xl border-[2.5px] border-ink">
+            <Image
+              src="/images/sweet-corner/assorted-gift-box.webp"
+              alt="Mithaiwallah premium sweet box assortment with Milk Cake, Kalakand, Chocolate Barfi, Doda Barfi and Peda"
+              width={1370}
+              height={1148}
+              priority
+              className="h-auto w-full object-cover"
+            />
+          </div>
         </div>
       </section>
 
@@ -63,24 +73,40 @@ export default function SweetCornerPage() {
             <Link
               key={sweet.slug}
               href={`/sweet-corner/${sweet.slug}`}
-              className="sticker-shadow group flex flex-col justify-between rounded-3xl border-[2.5px] border-ink bg-white p-6 transition-all duration-150 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--color-ink)]"
+              className="sticker-shadow group flex flex-col justify-between overflow-hidden rounded-3xl border-[2.5px] border-ink bg-white transition-all duration-150 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--color-ink)]"
             >
-              <div>
-                <div
-                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-ink text-2xl"
-                  style={{ backgroundColor: sweet.color }}
-                >
-                  🍬
+              {sweet.image ? (
+                <div className="relative aspect-[4/3] w-full border-b-2 border-ink">
+                  <Image
+                    src={sweet.image}
+                    alt={sweet.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover"
+                  />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-ink">{sweet.name}</h3>
-                <p className="mt-2 text-sm text-dark/70">{sweet.shortDescription}</p>
-              </div>
-              <span className="font-heading mt-5 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-accent">
-                View Details
-                <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
-                  →
+              ) : (
+                <div className="p-6 pb-0">
+                  <div
+                    className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-ink text-2xl"
+                    style={{ backgroundColor: sweet.color }}
+                  >
+                    🍬
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-1 flex-col justify-between p-6">
+                <div>
+                  <h3 className="font-heading text-xl font-bold text-ink">{sweet.name}</h3>
+                  <p className="mt-2 text-sm text-dark/70">{sweet.shortDescription}</p>
+                </div>
+                <span className="font-heading mt-5 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-accent">
+                  View Details
+                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
                 </span>
-              </span>
+              </div>
             </Link>
           ))}
         </div>
@@ -89,13 +115,24 @@ export default function SweetCornerPage() {
       <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
           <SectionHeading eyebrow="Gift Boxes" title="Hampers & Custom Boxes" align="center" />
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {hamperCategories.map((category) => (
-              <div key={category.slug} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-white p-6">
-                <h3 className="font-heading text-lg font-bold text-ink">{category.name}</h3>
-                <p className="mt-2 text-sm text-dark/65">{category.description}</p>
-              </div>
-            ))}
+          <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+            <div className="sticker-shadow relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border-2 border-ink">
+              <Image
+                src="/images/sweet-corner/packaging-maroon-hamper.webp"
+                alt="Maroon and gold Mithaiwallah festive hamper open with sweets, jars and a gift tag"
+                fill
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {hamperCategories.map((category) => (
+                <div key={category.slug} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-white p-6">
+                  <h3 className="font-heading text-lg font-bold text-ink">{category.name}</h3>
+                  <p className="mt-2 text-sm text-dark/65">{category.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <ButtonLink href="/corporate-gifting" variant="primary">

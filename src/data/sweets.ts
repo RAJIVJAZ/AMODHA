@@ -7,6 +7,7 @@ export type Sweet = {
   packSizes: string[];
   keyword: string;
   color: string;
+  image?: string;
 };
 
 export const sweets: Sweet[] = [
@@ -23,6 +24,7 @@ export const sweets: Sweet[] = [
     packSizes: ["250 g", "500 g", "1 kg", "Bulk trays (5 kg)"],
     keyword: "Milk Cake Manufacturer Prayagraj",
     color: "#f6c453",
+    image: "/images/sweet-corner/milk-cake.webp",
   },
   {
     slug: "kalakand",
@@ -36,6 +38,35 @@ export const sweets: Sweet[] = [
     packSizes: ["250 g", "500 g", "1 kg"],
     keyword: "Kalakand Manufacturer UP",
     color: "#e4defb",
+    image: "/images/sweet-corner/kalakand.webp",
+  },
+  {
+    slug: "chocolate-barfi",
+    name: "Chocolate Barfi",
+    shortDescription: "Cocoa-rich khoya barfi finished with silver leaf, almonds and pistachios.",
+    description: [
+      "Our Chocolate Barfi blends fresh khoya with real cocoa for a rich, fudgy square that bridges classic mithai and modern taste, finished with silver leaf and a scatter of almonds and pistachios.",
+      "A popular choice for gifting boxes where customers want something familiar with a contemporary twist.",
+    ],
+    occasions: ["Corporate gifting", "Wedding hampers", "Festive boxes"],
+    packSizes: ["250 g", "500 g", "1 kg"],
+    keyword: "Chocolate Barfi Manufacturer Prayagraj",
+    color: "#c99b6f",
+    image: "/images/sweet-corner/chocolate-barfi.webp",
+  },
+  {
+    slug: "doda-barfi",
+    name: "Doda Barfi",
+    shortDescription: "Classic slow-reduced milk barfi with a firm, grainy texture and deep ghee aroma.",
+    description: [
+      "Doda Barfi is prepared through a long, slow reduction of milk and khoya, building a firm, grainy texture and a deep, roasted aroma that sets it apart from softer barfi varieties.",
+      "Finished with almonds and pistachios, it's a favourite for customers who prefer a denser, more traditional bite.",
+    ],
+    occasions: ["Festive gifting", "Wedding hampers", "Wholesale to sweet shops"],
+    packSizes: ["250 g", "500 g", "1 kg", "Bulk trays"],
+    keyword: "Doda Barfi Sweet Shop Supplier",
+    color: "#d9b978",
+    image: "/images/sweet-corner/doda-barfi.webp",
   },
   {
     slug: "malai-barfi",

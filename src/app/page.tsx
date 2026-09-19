@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -159,9 +160,15 @@ export default function HomePage() {
                 className="sticker-shadow-sm group flex flex-col items-center gap-3 rounded-2xl border-2 border-ink p-5 text-center transition-all hover:-translate-y-1"
                 style={{ backgroundColor: sweet.color }}
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-white text-2xl">
-                  🍬
-                </div>
+                {sweet.image ? (
+                  <div className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-ink">
+                    <Image src={sweet.image} alt="" fill sizes="56px" className="object-cover" />
+                  </div>
+                ) : (
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-white text-2xl">
+                    🍬
+                  </div>
+                )}
                 <span className="font-heading text-sm font-bold text-ink">{sweet.name}</span>
               </Link>
             ))}

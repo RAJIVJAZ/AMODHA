@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { EnquiryForm } from "@/components/ui/enquiry-form";
@@ -37,17 +38,29 @@ export default function WholesalePage() {
       <section className="relative overflow-hidden bg-blush py-20 sm:py-28">
         <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full bg-primary-light/50 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-accent/25 blur-3xl" />
-        <div className="container-site relative flex flex-col items-center gap-6 text-center">
-          <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-primary-light px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
-            Wholesale & Distribution
-          </span>
-          <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
-            Become an Amodha Wholesale Partner
-          </h1>
-          <p className="max-w-2xl text-balance text-lg text-ink/70">
-            We supply consistent, high-quality dairy and mithai in bulk to sweet shop owners,
-            distributors, hotels, restaurants and retail chains.
-          </p>
+        <div className="container-site relative grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+          <div className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
+            <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-primary-light px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
+              Wholesale & Distribution
+            </span>
+            <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
+              Become an Amodha Wholesale Partner
+            </h1>
+            <p className="max-w-2xl text-balance text-lg text-ink/70">
+              We supply consistent, high-quality dairy and mithai in bulk to sweet shop owners,
+              distributors, hotels, restaurants and retail chains.
+            </p>
+          </div>
+          <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
+            <Image
+              src="/images/sweet-corner/wholesale-partner-handshake.webp"
+              alt="A Mithaiwallah shop owner shaking hands with a delivery partner over stacked branded cartons at the sweet shop counter"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 
