@@ -19,7 +19,7 @@ export const siteConfig = {
     },
     plant: {
       label: "Manufacturing Plant",
-      line1: "53/2, Surreal Sahini, Naribari",
+      line1: "53/2, Surwal Sahini, Naribari",
       line2: "Rewa Road",
       city: "Prayagraj",
       state: "Uttar Pradesh",
@@ -42,9 +42,9 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/company/amodhadairy",
   },
   mapsEmbedUrl:
-    "https://www.google.com/maps?q=53/2+Surreal+Sahini+Naribari+Rewa+Road+Prayagraj+212106&output=embed",
+    "https://www.google.com/maps?q=53/2+Surwal+Sahini+Naribari+Rewa+Road+Prayagraj+212106&output=embed",
   mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=53%2F2+Surreal+Sahini+Naribari+Rewa+Road+Prayagraj+212106",
+    "https://www.google.com/maps/search/?api=1&query=53%2F2+Surwal+Sahini+Naribari+Rewa+Road+Prayagraj+212106",
   officeMapsUrl:
     "https://www.google.com/maps/search/?api=1&query=594A%2F371A+Mutthiganj+Salikgram+Jaiswal+Nagar+Prayagraj+211003",
   founded: "1998",
