@@ -50,10 +50,10 @@ export function Footer() {
             methods and modern hygiene standards.
           </p>
           <address className="mt-5 not-italic text-sm leading-relaxed text-blush/80">
-            {siteConfig.address.line1}
+            {siteConfig.address.plant.line1}
             <br />
-            {siteConfig.address.line2}, {siteConfig.address.city}, {siteConfig.address.state} -{" "}
-            {siteConfig.address.postalCode}
+            {siteConfig.address.plant.line2}, {siteConfig.address.plant.city}, {siteConfig.address.plant.state}{" "}
+            - {siteConfig.address.plant.postalCode}
           </address>
           <a
             href={siteConfig.mapsUrl}

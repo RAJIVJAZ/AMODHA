@@ -8,17 +8,29 @@ export const siteConfig = {
   url: "https://www.amodhadairy.com",
   locale: "en_IN",
   address: {
-    line1: "Amodha Dairy Products & Mithaiwallah Sweet Corner",
-    line2: "Naini Industrial Area",
-    city: "Prayagraj",
-    state: "Uttar Pradesh",
-    postalCode: "211008",
-    country: "India",
+    office: {
+      label: "Registered Office",
+      line1: "594A/371A, Mutthiganj, Salikgram",
+      line2: "Jaiswal Nagar",
+      city: "Prayagraj",
+      state: "Uttar Pradesh",
+      postalCode: "211003",
+      country: "India",
+    },
+    plant: {
+      label: "Manufacturing Plant",
+      line1: "53/2, Surreal Sahini, Naribari",
+      line2: "Rewa Road",
+      city: "Prayagraj",
+      state: "Uttar Pradesh",
+      postalCode: "212106",
+      country: "India",
+    },
   },
   contact: {
-    phone: "+91 98765 43210",
-    phoneHref: "+919876543210",
-    whatsapp: "919876543210",
+    phone: "+91 70074 24542",
+    phoneHref: "+917007424542",
+    whatsapp: "917007424542",
     email: "hello@amodhadairy.com",
     dealerEmail: "dealers@amodhadairy.com",
     corporateEmail: "corporate@amodhadairy.com",
@@ -30,8 +42,11 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/company/amodhadairy",
   },
   mapsEmbedUrl:
-    "https://www.google.com/maps?q=Naini+Industrial+Area+Prayagraj+Uttar+Pradesh&output=embed",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Naini+Industrial+Area+Prayagraj",
+    "https://www.google.com/maps?q=53/2+Surreal+Sahini+Naribari+Rewa+Road+Prayagraj+212106&output=embed",
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=53%2F2+Surreal+Sahini+Naribari+Rewa+Road+Prayagraj+212106",
+  officeMapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=594A%2F371A+Mutthiganj+Salikgram+Jaiswal+Nagar+Prayagraj+211003",
   founded: "1998",
   stats: {
     farmers: "1000+",

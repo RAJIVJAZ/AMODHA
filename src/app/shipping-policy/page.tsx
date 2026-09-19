@@ -17,7 +17,7 @@ export default function ShippingPolicyPage() {
         {
           heading: "1. Dispatch Locations",
           body: [
-            `All orders are dispatched from our manufacturing facility in ${siteConfig.address.line2}, ${siteConfig.address.city}, ${siteConfig.address.state}.`,
+            `All orders are dispatched from our manufacturing facility in ${siteConfig.address.plant.line2}, ${siteConfig.address.plant.city}, ${siteConfig.address.plant.state}.`,
           ],
         },
         {

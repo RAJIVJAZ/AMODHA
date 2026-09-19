@@ -29,7 +29,7 @@ const contactCards = [
   },
   {
     title: "Visit Us",
-    value: `${siteConfig.address.line2}, ${siteConfig.address.city}, ${siteConfig.address.state}`,
+    value: `${siteConfig.address.plant.line2}, ${siteConfig.address.plant.city}, ${siteConfig.address.plant.state}`,
     href: siteConfig.mapsUrl,
   },
 ];
@@ -68,20 +68,21 @@ export default function ContactPage() {
         <div className="container-site grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-start">
           <div className="flex flex-col gap-6">
             <div>
-              <h2 className="text-2xl font-bold text-ink">Our Facility</h2>
+              <h2 className="text-2xl font-bold text-ink">Our Manufacturing Plant</h2>
               <address className="mt-2 not-italic text-dark/70">
-                {siteConfig.address.line1}
+                {siteConfig.address.plant.line1}
                 <br />
-                {siteConfig.address.line2}
+                {siteConfig.address.plant.line2}
                 <br />
-                {siteConfig.address.city}, {siteConfig.address.state} - {siteConfig.address.postalCode}
+                {siteConfig.address.plant.city}, {siteConfig.address.plant.state} -{" "}
+                {siteConfig.address.plant.postalCode}
                 <br />
                 India
               </address>
             </div>
             <div className="sticker-shadow overflow-hidden rounded-2xl border-2 border-ink">
               <iframe
-                title="Amodha Dairy Products location on Google Maps"
+                title="Amodha Dairy Products manufacturing plant on Google Maps"
                 src={siteConfig.mapsEmbedUrl}
                 width="100%"
                 height="320"
@@ -89,6 +90,27 @@ export default function ContactPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 className="block"
               />
+            </div>
+            <div className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-white p-5">
+              <h2 className="font-heading text-lg font-bold text-ink">Registered Office</h2>
+              <address className="mt-2 not-italic text-sm text-dark/70">
+                {siteConfig.address.office.line1}
+                <br />
+                {siteConfig.address.office.line2}
+                <br />
+                {siteConfig.address.office.city}, {siteConfig.address.office.state} -{" "}
+                {siteConfig.address.office.postalCode}
+                <br />
+                India
+              </address>
+              <a
+                href={siteConfig.officeMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block text-sm font-semibold text-primary-dark hover:underline"
+              >
+                View on Google Maps →
+              </a>
             </div>
           </div>
           <EnquiryForm
