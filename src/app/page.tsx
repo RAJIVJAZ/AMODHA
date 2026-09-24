@@ -6,7 +6,6 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { TrustBar } from "@/components/ui/trust-bar";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { CtaSection } from "@/components/ui/cta-section";
-import { Logo } from "@/components/ui/logo";
 import { dairyProducts } from "@/data/dairy-products";
 import { sweets, hamperCategories } from "@/data/sweets";
 import { testimonials } from "@/data/testimonials";
@@ -37,9 +36,9 @@ export default function HomePage() {
           <div className="sticker-shadow rounded-2xl border-[2.5px] border-ink bg-white p-3">
             <Image
               src="/logos/mithaiwallah.png"
-              alt="Mithaiwallah Sweet Corner"
-              width={582}
-              height={318}
+              alt="Mithai Wallah"
+              width={900}
+              height={507}
               priority
               className="h-24 w-auto sm:h-28"
             />
@@ -109,7 +108,13 @@ export default function HomePage() {
             <div className="sticker-shadow relative aspect-[4/5] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink bg-gradient-to-br from-primary-light/50 via-blush to-accent/20">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="rotate-[-6deg] opacity-40">
-                  <Logo size="lg" tagline={`Since ${siteConfig.founded}`} />
+                  <Image
+                    src="/logos/mithaiwallah.png"
+                    alt="Mithai Wallah"
+                    width={900}
+                    height={507}
+                    className="h-auto w-64 sm:w-80"
+                  />
                 </div>
               </div>
               <div className="sticker-shadow-sm absolute bottom-5 left-5 right-5 rounded-2xl border-2 border-ink bg-white p-4">

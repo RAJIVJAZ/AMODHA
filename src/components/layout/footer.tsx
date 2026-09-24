@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerNav, siteConfig } from "@/lib/site";
-import { Logo } from "@/components/ui/logo";
 
 const socialLinks = [
   { label: "Instagram", href: siteConfig.social.instagram },
@@ -32,19 +31,14 @@ export function Footer() {
     <footer className="bg-ink text-blush">
       <div className="container-site grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-6">
         <div className="sm:col-span-2 lg:col-span-2">
-          <div className="flex flex-wrap items-center gap-4">
-            <Logo size="md" tone="white" />
-            <div className="sticker-shadow rounded-xl border-[2px] border-white/20 bg-white p-1.5">
-              <Image
-                src="/logos/mithaiwallah.png"
-                alt="Mithaiwallah Sweet Corner"
-                width={140}
-                height={76}
-                className="h-11 w-auto"
-              />
-            </div>
-          </div>
-          <p className="font-subheading mt-3 italic text-primary-light">{siteConfig.sweetBrand}</p>
+          <Image
+            src="/logos/mithaiwallah.png"
+            alt="Mithai Wallah"
+            width={900}
+            height={507}
+            className="h-14 w-auto"
+          />
+          <p className="font-subheading mt-3 italic text-primary-light">By {siteConfig.shortName}</p>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-blush/80">
             Premium dairy products and handcrafted sweets, manufactured in Prayagraj using traditional
             methods and modern hygiene standards.

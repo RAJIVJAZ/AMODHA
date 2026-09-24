@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { mainNav, siteConfig } from "@/lib/site";
-import { Logo } from "@/components/ui/logo";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,8 +11,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b-[2.5px] border-ink bg-white">
       <div className="container-site flex items-center justify-between py-3">
-        <Link href="/" onClick={() => setIsOpen(false)} aria-label={`${siteConfig.name} home`}>
-          <Logo size="md" />
+        <Link href="/" onClick={() => setIsOpen(false)} aria-label={`${siteConfig.sweetBrand} home`}>
+          <Image
+            src="/logos/mithaiwallah.png"
+            alt="Mithai Wallah"
+            width={900}
+            height={507}
+            priority
+            className="h-11 w-auto sm:h-12"
+          />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">
