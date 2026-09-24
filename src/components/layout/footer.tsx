@@ -31,14 +31,25 @@ export function Footer() {
     <footer className="bg-ink text-blush">
       <div className="container-site grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-6">
         <div className="sm:col-span-2 lg:col-span-2">
-          <Image
-            src="/logos/mithaiwallah.png"
-            alt="Mithai Wallah"
-            width={900}
-            height={507}
-            className="h-14 w-auto"
-          />
-          <p className="font-subheading mt-3 italic text-primary-light">By {siteConfig.shortName}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Image
+              src="/logos/mithaiwallah.png"
+              alt="Mithai Wallah"
+              width={900}
+              height={507}
+              className="h-14 w-auto"
+            />
+            <span className="text-blush/50" aria-hidden="true">
+              ×
+            </span>
+            <Image
+              src="/logos/amodha.png"
+              alt="Amodha"
+              width={900}
+              height={374}
+              className="h-9 w-auto"
+            />
+          </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-blush/80">
             Premium dairy products and handcrafted sweets, manufactured in Prayagraj using traditional
             methods and modern hygiene standards.

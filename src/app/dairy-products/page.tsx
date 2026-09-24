@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProductCard } from "@/components/ui/product-card";
@@ -21,6 +22,18 @@ export default function DairyProductsPage() {
         <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-10 h-72 w-72 rounded-full bg-primary-light/50 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-accent/25 blur-3xl" />
         <div className="container-site relative">
+          <div className="mb-8 flex justify-center">
+            <div className="sticker-shadow rounded-2xl border-[2.5px] border-ink bg-white p-3">
+              <Image
+                src="/logos/amodha.png"
+                alt="Amodha"
+                width={900}
+                height={374}
+                priority
+                className="h-16 w-auto sm:h-20"
+              />
+            </div>
+          </div>
           <SectionHeading
             eyebrow="Amodha Dairy — Coming Soon"
             title="Farm-Fresh Dairy, On Its Way to You"

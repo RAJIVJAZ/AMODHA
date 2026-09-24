@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -94,7 +95,14 @@ export default async function DairyProductPage({
 
           <div className="flex flex-col gap-6">
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6 text-center">
-              <h2 className="font-heading text-lg font-bold text-ink">{product.name} Is On Its Way</h2>
+              <Image
+                src="/logos/amodha.png"
+                alt="Amodha"
+                width={900}
+                height={374}
+                className="mx-auto h-10 w-auto"
+              />
+              <h2 className="font-heading mt-4 text-lg font-bold text-ink">{product.name} Is On Its Way</h2>
               <p className="font-subheading mt-3 text-lg italic text-primary-dark">
                 &ldquo;{siteConfig.comingSoonQuote}&rdquo;
               </p>
