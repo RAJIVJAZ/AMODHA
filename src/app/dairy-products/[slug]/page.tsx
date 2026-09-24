@@ -4,7 +4,6 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
 import { ProductCard } from "@/components/ui/product-card";
-import { AddToCart } from "@/components/ui/add-to-cart";
 import { dairyProducts, getDairyProduct } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
@@ -21,8 +20,8 @@ export async function generateMetadata({
   const product = getDairyProduct(slug);
   if (!product) return {};
   return {
-    title: `${product.name} Manufacturer | ${product.keyword}`,
-    description: product.shortDescription,
+    title: `${product.name} — Coming Soon | ${product.keyword}`,
+    description: `${product.shortDescription} ${siteConfig.comingSoonQuote}`,
     alternates: { canonical: `/dairy-products/${product.slug}` },
   };
 }
@@ -37,7 +36,6 @@ export default async function DairyProductPage({
   if (!product) notFound();
 
   const related = dairyProducts.filter((p) => p.slug !== product.slug).slice(0, 3);
-  const purchasablePrices = product.packSizes.filter((p) => p.purchasable).map((p) => p.price);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -47,11 +45,9 @@ export default async function DairyProductPage({
     brand: { "@type": "Brand", name: siteConfig.name },
     manufacturer: { "@type": "Organization", name: siteConfig.name },
     offers: {
-      "@type": "AggregateOffer",
+      "@type": "Offer",
       priceCurrency: "INR",
-      lowPrice: Math.min(...purchasablePrices),
-      highPrice: Math.max(...purchasablePrices),
-      availability: "https://schema.org/InStock",
+      availability: "https://schema.org/PreOrder",
       seller: { "@type": "Organization", name: siteConfig.name },
     },
   };
@@ -73,11 +69,16 @@ export default async function DairyProductPage({
       <section className="container-site py-14 sm:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
           <div>
-            <div
-              className="sticker-shadow flex h-24 w-24 items-center justify-center rounded-2xl border-2 border-ink text-5xl"
-              style={{ backgroundColor: product.color }}
-            >
-              <span aria-hidden="true">{product.motif}</span>
+            <div className="flex items-center gap-3">
+              <div
+                className="sticker-shadow flex h-24 w-24 items-center justify-center rounded-2xl border-2 border-ink text-5xl"
+                style={{ backgroundColor: product.color }}
+              >
+                <span aria-hidden="true">{product.motif}</span>
+              </div>
+              <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-accent px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
+                Coming Soon
+              </span>
             </div>
             <h1 className="mt-6 text-4xl font-bold text-ink sm:text-5xl">{product.name}</h1>
             <p className="mt-4 text-lg text-dark/70">{product.shortDescription}</p>
@@ -92,12 +93,15 @@ export default async function DairyProductPage({
           </div>
 
           <div className="flex flex-col gap-6">
-            <AddToCart
-              slug={product.slug}
-              productName={product.name}
-              icon={product.motif}
-              packSizes={product.packSizes}
-            />
+            <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6 text-center">
+              <h2 className="font-heading text-lg font-bold text-ink">{product.name} Is On Its Way</h2>
+              <p className="font-subheading mt-3 text-lg italic text-primary-dark">
+                &ldquo;{siteConfig.comingSoonQuote}&rdquo;
+              </p>
+              <ButtonLink href="/contact" variant="primary" className="mt-5">
+                Get Notified at Launch
+              </ButtonLink>
+            </div>
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
               <h2 className="font-heading text-lg font-bold text-ink">Why Choose Our {product.name}</h2>
               <ul className="mt-3 flex flex-col gap-2">
@@ -143,6 +147,7 @@ export default async function DairyProductPage({
                 description={item.shortDescription}
                 icon={item.motif}
                 color={item.color}
+                badge="Coming Soon"
               />
             ))}
           </div>
@@ -150,8 +155,8 @@ export default async function DairyProductPage({
       </section>
 
       <CtaSection
-        title={`Order ${product.name} for Your Business`}
-        description="Retail, wholesale and institutional supply available with consistent quality and reliable dispatch."
+        title={`Want ${product.name} for Your Business?`}
+        description="Talk to our team now about wholesale and institutional supply timelines, or wait for the retail launch."
         primaryCta={{ label: "Contact Sales", href: "/contact" }}
         secondaryCta={{ label: "Wholesale Enquiry", href: "/wholesale" }}
       />

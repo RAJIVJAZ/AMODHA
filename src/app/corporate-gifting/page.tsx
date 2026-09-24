@@ -168,7 +168,7 @@ export default function CorporateGiftingPage() {
         title="Let's Design a Gift Box Your Clients Will Remember"
         description="Talk to our corporate gifting team about branding, packaging and delivery timelines."
         primaryCta={{ label: "Get Custom Quote", href: "#quote" }}
-        secondaryCta={{ label: "Explore Sweet Corner", href: "/sweet-corner" }}
+        secondaryCta={{ label: "Explore Sweet Corner", href: "/" }}
       />
     </>
   );

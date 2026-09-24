@@ -4,25 +4,25 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { TrustBar } from "@/components/ui/trust-bar";
-import { ProductCard } from "@/components/ui/product-card";
 import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { CtaSection } from "@/components/ui/cta-section";
 import { Logo } from "@/components/ui/logo";
 import { dairyProducts } from "@/data/dairy-products";
-import { sweets } from "@/data/sweets";
+import { sweets, hamperCategories } from "@/data/sweets";
 import { testimonials } from "@/data/testimonials";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Premium Dairy & Traditional Sweets Manufacturer in Prayagraj",
-  description: siteConfig.description,
+  title: `${siteConfig.sweetBrand} | Premium Sweet Gifting Destination`,
+  description:
+    "Mithaiwallah Sweet Corner by Amodha — India's premium sweet gifting destination for retail, wholesale, corporate and wedding gifting. Milk cake, kalakand, barfi, peda, kunda and custom hampers. Amodha's dairy range is coming soon.",
   alternates: { canonical: "/" },
 };
 
 const processSteps = [
   { title: "Milk Collection", description: "Fresh milk collected daily from 1,000+ partner farmers near Prayagraj." },
   { title: "Quality Testing", description: "Every batch tested for fat, SNF and purity before it enters our facility." },
-  { title: "Bilona & Production", description: "Traditional hand-churned methods for ghee, alongside modern hygienic processing." },
+  { title: "Khoya Reduction", description: "Traditional slow-reduction methods, alongside modern hygienic processing." },
   { title: "Sweet Making", description: "Our halwais craft milk cake, kalakand, peda and more fresh in-house daily." },
   { title: "Packaging & Dispatch", description: "Hygienic packing and same-day dispatch to retail, wholesale and gifting orders." },
 ];
@@ -30,45 +30,50 @@ const processSteps = [
 export default function HomePage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-blush">
-        <div aria-hidden="true" className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-primary-light/60 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute -right-16 top-10 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-primary/25 blur-3xl" />
-
-        <div className="container-site relative flex flex-col items-center gap-8 py-20 text-center sm:py-28">
+      <section className="relative overflow-hidden bg-blush py-24 sm:py-32">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-primary-light/50 blur-3xl" />
+        <div className="container-site relative flex flex-col items-center gap-6 text-center">
+          <div className="sticker-shadow rounded-2xl border-[2.5px] border-ink bg-white p-3">
+            <Image
+              src="/logos/mithaiwallah.png"
+              alt="Mithaiwallah Sweet Corner"
+              width={582}
+              height={318}
+              priority
+              className="h-24 w-auto sm:h-28"
+            />
+          </div>
           <span className="font-heading sticker-shadow-sm inline-block rounded-full border-2 border-ink bg-white px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
-            Made fresh in Prayagraj, Uttar Pradesh
+            By Amodha — Made fresh in Prayagraj, Uttar Pradesh
           </span>
-          <h1 className="text-balance max-w-4xl text-5xl font-bold leading-[1.05] text-ink sm:text-6xl md:text-7xl">
-            Pure Dairy.
-            <br />
-            <span className="text-primary-dark">Traditional Sweets.</span>
+          <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-5xl md:text-6xl">
+            India&rsquo;s Premium Sweet Gifting Destination
           </h1>
-          <p className="text-balance max-w-xl text-lg text-ink/70 sm:text-xl">
-            Bilona-churned ghee and handcrafted mithai, made the slow way — one product, one bold flavour
-            at a time.
+          <p className="text-balance max-w-2xl text-lg text-ink/70 sm:text-xl">
+            Wholesale, retail, corporate and wedding gifting solutions — handcrafted sweets made fresh in
+            Prayagraj.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
-            <ButtonLink href="/dairy-products" variant="primary">
-              Shop Dairy
+            <ButtonLink href="#catalog" variant="primary">
+              Browse Catalog
             </ButtonLink>
-            <ButtonLink href="/sweet-corner" variant="secondary">
-              Explore Sweet Corner
+            <ButtonLink href="/corporate-gifting" variant="outline">
+              Corporate Gifting
+            </ButtonLink>
+            <ButtonLink href="/wedding-gifting" variant="outline">
+              Wedding Gifting
             </ButtonLink>
           </div>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 pr-16 sm:gap-4 sm:pr-0">
-            {dairyProducts.map((product) => (
-              <Link
-                key={product.slug}
-                href={`/dairy-products/${product.slug}`}
-                className="sticker-shadow-sm flex h-16 w-16 items-center justify-center rounded-full border-2 border-ink text-2xl transition-transform hover:-translate-y-1 sm:h-20 sm:w-20 sm:text-3xl"
-                style={{ backgroundColor: product.color }}
-                aria-label={product.name}
-              >
-                <span aria-hidden="true">{product.motif}</span>
-              </Link>
-            ))}
+          <div className="sticker-shadow mt-4 w-full max-w-xl overflow-hidden rounded-3xl border-[2.5px] border-ink">
+            <Image
+              src="/images/sweet-corner/assorted-gift-box.webp"
+              alt="Mithaiwallah premium sweet box assortment with Milk Cake, Kalakand, Chocolate Barfi, Doda Barfi and Peda"
+              width={1370}
+              height={1148}
+              priority
+              className="h-auto w-full object-cover"
+            />
           </div>
         </div>
       </section>
@@ -84,16 +89,15 @@ export default function HomePage() {
               title="A Legacy Built on Milk, Trust and Tradition"
             />
             <p className="text-dark/75">
-              Amodha began with a simple belief: that dairy products and mithai taste best when made the
-              way they always have been — patiently, honestly, and from milk you can trust. Since{" "}
-              {siteConfig.founded}, we&rsquo;ve built a network of over 1,000 partner farmers around Prayagraj,
-              collecting fresh milk daily and processing it in our own facility rather than buying from
-              anonymous suppliers.
+              Amodha began with a simple belief: that mithai tastes best when made the way it always has
+              been — patiently, honestly, and from milk you can trust. Since {siteConfig.founded}, we&rsquo;ve
+              built a network of over 1,000 partner farmers around Prayagraj, collecting fresh milk daily
+              and processing it in our own facility rather than buying from anonymous suppliers.
             </p>
             <p className="text-dark/75">
-              That same milk feeds two crafts under one roof — our dairy range, led by hand-churned bilona
-              ghee, and Mithaiwallah Sweet Corner, where our halwais turn fresh khoya into milk cake,
-              kalakand, peda and the Prayagraj specialty, Kunda, every single day.
+              That same milk is the heart of Mithaiwallah Sweet Corner, where our halwais turn fresh khoya
+              into milk cake, kalakand, peda and the Prayagraj specialty, Kunda, every single day. Amodha&rsquo;s
+              own dairy range — bilona ghee, paneer, butter and more — is coming soon.
             </p>
             <div>
               <ButtonLink href="/about" variant="ghost">
@@ -118,65 +122,79 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-blush py-20 sm:py-28">
+      <section id="catalog" className="bg-blush py-20 sm:py-28">
         <div className="container-site flex flex-col gap-12">
           <SectionHeading
-            eyebrow="Shop Dairy"
-            title="Farm-Fresh Dairy, Made the Traditional Way"
-            description="From hand-churned bilona ghee to fresh paneer cut daily — every product starts with milk from our own farmer network."
+            eyebrow="Our Sweets"
+            title="Handcrafted Mithai, Made Fresh Daily"
+            description="Each sweet is made in-house from fresh khoya, paneer and cream — the same quality we've supplied to sweet shops and families for years."
           />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {dairyProducts.map((product) => (
-              <ProductCard
-                key={product.slug}
-                href={`/dairy-products/${product.slug}`}
-                name={product.name}
-                description={product.shortDescription}
-                icon={product.motif}
-                color={product.color}
-              />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {sweets.map((sweet) => (
+              <Link
+                key={sweet.slug}
+                href={`/sweet-corner/${sweet.slug}`}
+                className="sticker-shadow group flex flex-col justify-between overflow-hidden rounded-3xl border-[2.5px] border-ink bg-white transition-all duration-150 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--color-ink)]"
+              >
+                {sweet.image ? (
+                  <div className="relative aspect-[4/3] w-full border-b-2 border-ink">
+                    <Image
+                      src={sweet.image}
+                      alt={sweet.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="p-6 pb-0">
+                    <div
+                      className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-ink text-2xl"
+                      style={{ backgroundColor: sweet.color }}
+                    >
+                      🍬
+                    </div>
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    <h3 className="font-heading text-xl font-bold text-ink">{sweet.name}</h3>
+                    <p className="mt-2 text-sm text-dark/70">{sweet.shortDescription}</p>
+                  </div>
+                  <span className="font-heading mt-5 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-accent">
+                    View Details
+                    <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
+                      →
+                    </span>
+                  </span>
+                </div>
+              </Link>
             ))}
-          </div>
-          <div className="text-center">
-            <ButtonLink href="/dairy-products" variant="ghost">
-              View All Dairy Products
-            </ButtonLink>
           </div>
         </div>
       </section>
 
       <section className="py-20 sm:py-28">
-        <div className="container-site flex flex-col gap-12">
-          <SectionHeading
-            eyebrow="Mithaiwallah Sweet Corner"
-            title="Handcrafted Mithai, Made Fresh Daily"
-            description="Traditional recipes, premium ingredients, and the same khoya we make for our own dairy range."
-          />
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {sweets.map((sweet) => (
-              <Link
-                key={sweet.slug}
-                href={`/sweet-corner/${sweet.slug}`}
-                className="sticker-shadow-sm group flex flex-col items-center gap-3 rounded-2xl border-2 border-ink p-5 text-center transition-all hover:-translate-y-1"
-                style={{ backgroundColor: sweet.color }}
-              >
-                {sweet.image ? (
-                  <div className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-ink">
-                    <Image src={sweet.image} alt="" fill sizes="56px" className="object-cover" />
-                  </div>
-                ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-white text-2xl">
-                    🍬
-                  </div>
-                )}
-                <span className="font-heading text-sm font-bold text-ink">{sweet.name}</span>
-              </Link>
-            ))}
-          </div>
-          <div className="text-center">
-            <ButtonLink href="/sweet-corner" variant="primary">
-              Explore Sweet Corner
-            </ButtonLink>
+        <div className="container-site">
+          <SectionHeading eyebrow="Gift Boxes" title="Hampers & Custom Boxes" align="center" />
+          <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+            <div className="sticker-shadow relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl border-2 border-ink">
+              <Image
+                src="/images/sweet-corner/packaging-maroon-hamper.webp"
+                alt="Maroon and gold Mithaiwallah festive hamper open with sweets, jars and a gift tag"
+                fill
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {hamperCategories.map((category) => (
+                <div key={category.slug} className="sticker-shadow-sm rounded-2xl border-2 border-ink bg-blush p-6">
+                  <h3 className="font-heading text-lg font-bold text-ink">{category.name}</h3>
+                  <p className="mt-2 text-sm text-dark/65">{category.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -246,9 +264,8 @@ export default function HomePage() {
               Supplying Sweet Shops, Hotels & Distributors Across UP
             </h2>
             <p className="mt-4 text-dark/70">
-              We supply consistent, high-quality dairy and mithai in bulk to sweet shop owners,
-              distributors, dealers, hotels and restaurants — with dedicated wholesale pricing and
-              reliable dispatch.
+              We supply consistent, high-quality mithai in bulk to sweet shop owners, distributors,
+              dealers, hotels and restaurants — with dedicated wholesale pricing and reliable dispatch.
             </p>
           </div>
           <ButtonLink href="/wholesale" variant="primary">
@@ -271,12 +288,52 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="relative overflow-hidden bg-ink py-20 text-white sm:py-28">
+        <div aria-hidden="true" className="bg-diamond-pattern pointer-events-none absolute inset-0 opacity-10" />
+        <div className="container-site relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div className="text-center lg:text-left">
+            <span className="font-subheading text-lg italic text-primary-light">Coming Soon</span>
+            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Amodha Dairy Is On Its Way</h2>
+            <p className="mt-4 max-w-xl text-blush/85">
+              Bilona ghee, fresh paneer, farm milk, cream, curd and more — the same trusted milk behind
+              Mithaiwallah Sweet Corner, coming soon direct to you.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-4 lg:justify-start">
+              <ButtonLink href="/dairy-products" variant="secondary">
+                Preview the Range
+              </ButtonLink>
+              <ButtonLink href="/contact" variant="outline">
+                Get Notified
+              </ButtonLink>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-6">
+            <div className="sticker-shadow rounded-3xl border-[2.5px] border-white/20 bg-white/5 p-8 text-center">
+              <p className="font-subheading text-2xl italic text-primary-light sm:text-3xl">
+                &ldquo;{siteConfig.comingSoonQuote}&rdquo;
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {dairyProducts.map((product) => (
+                <span
+                  key={product.slug}
+                  className="sticker-shadow-sm flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/20 bg-white/10 text-2xl grayscale sm:h-16 sm:w-16"
+                  aria-label={product.name}
+                >
+                  <span aria-hidden="true">{product.motif}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <CtaSection
         eyebrow="Visit Us"
         title="Taste the Difference Traditional Craft Makes"
         description="Order online, visit our retail partners, or connect with our team for wholesale and gifting enquiries."
         primaryCta={{ label: "Contact Us", href: "/contact" }}
-        secondaryCta={{ label: "Explore Sweet Corner", href: "/sweet-corner" }}
+        secondaryCta={{ label: "Amodha Dairy (Coming Soon)", href: "/dairy-products" }}
       />
     </>
   );

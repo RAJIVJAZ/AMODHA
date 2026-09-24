@@ -79,7 +79,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <FooterColumn title="Dairy Products" links={footerNav.products} />
+        <FooterColumn title="Dairy (Coming Soon)" links={footerNav.products} />
         <FooterColumn title="Sweet Corner" links={footerNav.sweets} />
         <FooterColumn title="Business" links={footerNav.business} />
         <div>

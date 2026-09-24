@@ -7,6 +7,7 @@ type ProductCardProps = {
   icon?: string;
   cta?: string;
   color?: string;
+  badge?: string;
 };
 
 export function ProductCard({
@@ -16,12 +17,18 @@ export function ProductCard({
   icon = "✦",
   cta = "Learn More",
   color = "#fff0f0",
+  badge,
 }: ProductCardProps) {
   return (
     <Link
       href={href}
-      className="sticker-shadow group flex flex-col justify-between rounded-3xl border-[2.5px] border-ink bg-white p-6 transition-all duration-150 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="sticker-shadow group relative flex flex-col justify-between rounded-3xl border-[2.5px] border-ink bg-white p-6 transition-all duration-150 hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
+      {badge ? (
+        <span className="font-heading absolute -right-2 -top-2 rounded-full border-2 border-ink bg-accent px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm">
+          {badge}
+        </span>
+      ) : null}
       <div>
         <div
           className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-ink text-3xl"

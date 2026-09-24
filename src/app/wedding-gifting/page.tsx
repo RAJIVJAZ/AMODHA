@@ -132,7 +132,7 @@ export default function WeddingGiftingPage() {
         title="Let's Make Your Wedding Gifting Unforgettable"
         description="From a small trial box to thousands of units — our wedding gifting team handles it all."
         primaryCta={{ label: "Design Your Wedding Box", href: "#design" }}
-        secondaryCta={{ label: "Browse Sweet Corner", href: "/sweet-corner" }}
+        secondaryCta={{ label: "Browse Sweet Corner", href: "/" }}
       />
     </>
   );

@@ -109,7 +109,7 @@ export default async function BlogPostPage({
         title="Taste the Amodha Difference"
         description="Explore our dairy range and Mithaiwallah Sweet Corner catalog."
         primaryCta={{ label: "Dairy Products", href: "/dairy-products" }}
-        secondaryCta={{ label: "Sweet Corner", href: "/sweet-corner" }}
+        secondaryCta={{ label: "Sweet Corner", href: "/" }}
       />
     </>
   );

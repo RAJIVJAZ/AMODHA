@@ -23,11 +23,11 @@ export default function CartPage() {
             </span>
             <p className="font-heading text-xl font-bold text-ink">Your cart is empty</p>
             <p className="max-w-sm text-sm text-dark/70">
-              Browse our dairy range and add a few favourites — bilona ghee, fresh paneer, farm milk
-              and more.
+              Amodha Dairy is coming soon — bilona ghee, fresh paneer, farm milk and more. Meanwhile,
+              explore Mithaiwallah Sweet Corner.
             </p>
-            <ButtonLink href="/dairy-products" variant="primary">
-              Shop Dairy Products
+            <ButtonLink href="/" variant="primary">
+              Explore Sweet Corner
             </ButtonLink>
           </div>
         ) : (

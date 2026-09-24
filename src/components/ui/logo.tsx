@@ -11,7 +11,7 @@ const sizes = {
   lg: { title: "text-4xl sm:text-5xl", tag: "text-sm", dot: "h-2.5 w-2.5" },
 };
 
-export function Logo({ size = "md", tone = "ink", tagline = "Dairy Products", className = "" }: LogoProps) {
+export function Logo({ size = "md", tone = "ink", tagline = "Mithaiwallah Sweet Corner", className = "" }: LogoProps) {
   const s = sizes[size];
   const titleColor = tone === "ink" ? "text-ink" : "text-white";
   const tagColor = tone === "ink" ? "text-primary-dark" : "text-primary-light";

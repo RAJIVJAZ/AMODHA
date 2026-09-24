@@ -81,9 +81,11 @@ export default function CheckoutPage() {
           🛒
         </span>
         <h1 className="text-3xl font-bold text-ink sm:text-4xl">Your Cart Is Empty</h1>
-        <p className="max-w-md text-dark/70">Add a few products before checking out.</p>
-        <ButtonLink href="/dairy-products" variant="primary">
-          Shop Dairy Products
+        <p className="max-w-md text-dark/70">
+          Amodha Dairy is coming soon. Meanwhile, explore Mithaiwallah Sweet Corner.
+        </p>
+        <ButtonLink href="/" variant="primary">
+          Explore Sweet Corner
         </ButtonLink>
       </section>
     );

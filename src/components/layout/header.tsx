@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { mainNav, siteConfig } from "@/lib/site";
 import { Logo } from "@/components/ui/logo";
-import { CartLink } from "@/components/layout/cart-link";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,14 +30,12 @@ export function Header() {
         <div className="flex items-center gap-3">
           <div className="hidden items-center gap-3 lg:flex">
             <Link
-              href="/sweet-corner"
+              href="/contact"
               className="font-heading sticker-shadow rounded-full border-[2.5px] border-ink bg-accent px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)]"
             >
-              Sweet Corner
+              Order Enquiry
             </Link>
           </div>
-
-          <CartLink onClick={() => setIsOpen(false)} />
 
           <button
             type="button"
@@ -79,11 +76,11 @@ export function Header() {
             ))}
             <li>
               <Link
-                href="/sweet-corner"
+                href="/contact"
                 onClick={() => setIsOpen(false)}
                 className="sticker-shadow mt-2 block rounded-full border-[2.5px] border-ink bg-accent px-4 py-2.5 text-center text-sm font-semibold uppercase tracking-wide text-white"
               >
-                Sweet Corner
+                Order Enquiry
               </Link>
             </li>
             <li>

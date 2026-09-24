@@ -63,7 +63,7 @@ export default async function SweetDetailPage({
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Sweet Corner", href: "/sweet-corner" },
+          { label: "Sweet Corner", href: "/" },
           { label: sweet.name },
         ]}
       />

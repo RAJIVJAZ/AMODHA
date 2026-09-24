@@ -4,7 +4,8 @@ export const siteConfig = {
   sweetBrand: "Mithaiwallah Sweet Corner",
   tagline: "Pure Dairy. Traditional Sweets. Crafted with Trust.",
   description:
-    "Premium dairy products and handcrafted sweets manufactured in Prayagraj using traditional methods and modern hygiene standards. Bilona ghee, paneer, milk cake, kalakand and more — for retail, wholesale, corporate and wedding gifting across India.",
+    "Handcrafted Mithaiwallah sweets manufactured in Prayagraj using traditional methods and modern hygiene standards — milk cake, kalakand, barfi, peda, kunda and more — for retail, wholesale, corporate and wedding gifting across India. Amodha's dairy range is coming soon.",
+  comingSoonQuote: "The purity you want will be arriving soon.",
   url: "https://www.amodhadairy.com",
   locale: "en_IN",
   address: {
