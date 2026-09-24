@@ -79,6 +79,7 @@ export const sweets: Sweet[] = [
     packSizes: ["250 g", "500 g", "1 kg"],
     keyword: "Malai Barfi Sweet Shop Supplier",
     color: "#ffd7b5",
+    image: "/images/sweet-corner/malai-barfi.webp",
   },
   {
     slug: "peda",
@@ -91,6 +92,7 @@ export const sweets: Sweet[] = [
     packSizes: ["250 g", "500 g", "1 kg", "Bulk (for temples/events)"],
     keyword: "Peda Manufacturer Prayagraj",
     color: "#ffbf78",
+    image: "/images/sweet-corner/peda.webp",
   },
   {
     slug: "kunda",
@@ -104,6 +106,7 @@ export const sweets: Sweet[] = [
     packSizes: ["250 g", "500 g", "1 kg tin"],
     keyword: "Kunda Sweet Prayagraj",
     color: "#e3a377",
+    image: "/images/sweet-corner/kunda.webp",
   },
   {
     slug: "bikaneri-cake",
@@ -116,6 +119,7 @@ export const sweets: Sweet[] = [
     packSizes: ["250 g", "500 g", "1 kg", "Bulk trays"],
     keyword: "Bikaneri Cake Wholesale Supplier",
     color: "#f2a6b0",
+    image: "/images/sweet-corner/bikaneri-cake.webp",
   },
 ];
 
