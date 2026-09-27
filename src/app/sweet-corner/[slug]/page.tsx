@@ -83,6 +83,15 @@ export default async function SweetDetailPage({
                 🍬
               </div>
             )}
+            {sweet.gallery && sweet.gallery.length > 0 ? (
+              <div className="mt-4 grid max-w-md grid-cols-2 gap-4">
+                {sweet.gallery.map((src) => (
+                  <div key={src} className="sticker-shadow-sm relative aspect-square overflow-hidden rounded-2xl border-2 border-ink">
+                    <Image src={src} alt={`${sweet.name} packaging`} fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            ) : null}
             <h1 className="mt-6 text-4xl font-bold text-ink sm:text-5xl">{sweet.name}</h1>
             <p className="mt-4 text-lg text-dark/70">{sweet.shortDescription}</p>
             <div className="mt-8 flex flex-wrap gap-3">

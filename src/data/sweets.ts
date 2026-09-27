@@ -8,6 +8,7 @@ export type Sweet = {
   keyword: string;
   color: string;
   image?: string;
+  gallery?: string[];
 };
 
 export const sweets: Sweet[] = [
@@ -134,6 +135,10 @@ export const sweets: Sweet[] = [
     keyword: "Premium Dry Fruit Gift Box Prayagraj",
     color: "#d9b978",
     image: "/images/sweet-corner/premium-dry-fruit-box.webp",
+    gallery: [
+      "/images/sweet-corner/premium-dry-fruit-box-2.webp",
+      "/images/sweet-corner/premium-dry-fruit-box-3.webp",
+    ],
   },
 ];
 
