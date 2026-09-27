@@ -4,6 +4,8 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { EnquiryForm } from "@/components/ui/enquiry-form";
 import { CtaSection } from "@/components/ui/cta-section";
+import { ProductCard } from "@/components/ui/product-card";
+import { getSweet } from "@/data/sweets";
 
 export const metadata: Metadata = {
   title: "Wedding Sweet Boxes | Premium Wedding Gifting & Return Gifts",
@@ -29,6 +31,8 @@ const steps = [
 ];
 
 export default function WeddingGiftingPage() {
+  const dryFruitBox = getSweet("premium-dry-fruit-box");
+
   return (
     <>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Wedding Gifting" }]} />
@@ -61,6 +65,27 @@ export default function WeddingGiftingPage() {
           </div>
         </div>
       </section>
+
+      {dryFruitBox ? (
+        <section className="container-site py-14 sm:py-20">
+          <SectionHeading
+            eyebrow="New for Weddings"
+            title="Premium Dry Fruit Box"
+            description="Pair your mithai boxes with a curated dry fruit gift box for guests and family — a premium return gift or add-on, available in bulk with MOQ 100 boxes."
+          />
+          <div className="mt-8 max-w-sm">
+            <ProductCard
+              href={`/sweet-corner/${dryFruitBox.slug}`}
+              name={dryFruitBox.name}
+              description={dryFruitBox.shortDescription}
+              icon="🌰"
+              color={dryFruitBox.color}
+              badge="MOQ 100 Boxes"
+              cta="View Details"
+            />
+          </div>
+        </section>
+      ) : null}
 
       <section className="container-site py-14 sm:py-20">
         <SectionHeading eyebrow="Make It Personal" title="Customisation Options" />

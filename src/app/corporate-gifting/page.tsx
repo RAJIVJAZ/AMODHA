@@ -4,6 +4,8 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { EnquiryForm } from "@/components/ui/enquiry-form";
 import { CtaSection } from "@/components/ui/cta-section";
+import { ProductCard } from "@/components/ui/product-card";
+import { getSweet } from "@/data/sweets";
 
 export const metadata: Metadata = {
   title: "Corporate Sweet Gift Boxes | Custom Branding & Bulk Orders",
@@ -42,6 +44,8 @@ const processSteps = [
 ];
 
 export default function CorporateGiftingPage() {
+  const dryFruitBox = getSweet("premium-dry-fruit-box");
+
   return (
     <>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Corporate Gifting" }]} />
@@ -74,6 +78,27 @@ export default function CorporateGiftingPage() {
           </div>
         </div>
       </section>
+
+      {dryFruitBox ? (
+        <section className="container-site py-14 sm:py-20">
+          <SectionHeading
+            eyebrow="New for Corporate Gifting"
+            title="Premium Dry Fruit Box"
+            description="Add a curated dry fruit box alongside your mithai hampers — a premium standalone gift or a mixed sweet-and-dry-fruit combo, available in bulk with MOQ 100 boxes."
+          />
+          <div className="mt-8 max-w-sm">
+            <ProductCard
+              href={`/sweet-corner/${dryFruitBox.slug}`}
+              name={dryFruitBox.name}
+              description={dryFruitBox.shortDescription}
+              icon="🌰"
+              color={dryFruitBox.color}
+              badge="MOQ 100 Boxes"
+              cta="View Details"
+            />
+          </div>
+        </section>
+      ) : null}
 
       <section className="container-site py-14 sm:py-20">
         <SectionHeading eyebrow="Who We Serve" title="Industries We Work With" />

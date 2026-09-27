@@ -121,6 +121,19 @@ export const sweets: Sweet[] = [
     color: "#f2a6b0",
     image: "/images/sweet-corner/bikaneri-cake.webp",
   },
+  {
+    slug: "premium-dry-fruit-box",
+    name: "Premium Dry Fruit Box",
+    shortDescription: "A curated gold gift box of almonds, cashews, walnuts and raisins — thoughtful inside, impressive outside.",
+    description: [
+      "Our Premium Dry Fruit Box brings together hand-picked almonds, cashews, walnuts and raisins in a compartmentalised gold gift box, designed to sit alongside our mithai hampers as a premium gifting option.",
+      "It's built for the same occasions our sweets are ordered for — corporate gifting and wedding hampers — for customers who want a mixed sweet-and-dry-fruit hamper or a standalone dry fruit gift box.",
+    ],
+    occasions: ["Corporate gifting", "Wedding hampers", "Festive gifting", "Bulk/MOQ orders"],
+    packSizes: ["500 g", "1 kg", "Bulk (MOQ 100 boxes)"],
+    keyword: "Premium Dry Fruit Gift Box Prayagraj",
+    color: "#d9b978",
+  },
 ];
 
 export function getSweet(slug: string) {
