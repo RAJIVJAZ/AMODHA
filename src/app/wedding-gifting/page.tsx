@@ -80,6 +80,7 @@ export default function WeddingGiftingPage() {
               description={dryFruitBox.shortDescription}
               icon="🌰"
               color={dryFruitBox.color}
+              image={dryFruitBox.image}
               badge="MOQ 100 Boxes"
               cta="View Details"
             />

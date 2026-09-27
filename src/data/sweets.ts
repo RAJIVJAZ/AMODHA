@@ -133,6 +133,7 @@ export const sweets: Sweet[] = [
     packSizes: ["500 g", "1 kg", "Bulk (MOQ 100 boxes)"],
     keyword: "Premium Dry Fruit Gift Box Prayagraj",
     color: "#d9b978",
+    image: "/images/sweet-corner/premium-dry-fruit-box.webp",
   },
 ];
 

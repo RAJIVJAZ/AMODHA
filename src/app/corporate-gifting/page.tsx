@@ -93,6 +93,7 @@ export default function CorporateGiftingPage() {
               description={dryFruitBox.shortDescription}
               icon="🌰"
               color={dryFruitBox.color}
+              image={dryFruitBox.image}
               badge="MOQ 100 Boxes"
               cta="View Details"
             />
