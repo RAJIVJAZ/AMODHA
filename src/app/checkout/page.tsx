@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type MouseEvent } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
@@ -11,9 +12,36 @@ import { siteConfig } from "@/lib/site";
 const inputClass =
   "rounded-xl border-2 border-ink/30 px-3 py-2.5 text-sm text-dark focus:border-primary focus:outline-none";
 
+type RazorpayHandlerResponse = {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayOptions = {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description?: string;
+  order_id: string;
+  prefill?: { name?: string; email?: string; contact?: string };
+  theme?: { color?: string };
+  handler: (response: RazorpayHandlerResponse) => void;
+  modal?: { ondismiss?: () => void };
+};
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+  }
+}
+
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
-  const [placed, setPlaced] = useState(false);
+  const [placedVia, setPlacedVia] = useState<"razorpay" | "whatsapp" | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -28,9 +56,7 @@ export default function CheckoutPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  function buildWhatsAppMessage(paymentNote: string) {
     const lines = [
       "New Order from amodhadairy.com",
       "",
@@ -47,25 +73,105 @@ export default function CheckoutPage() {
       `Delivery Address: ${form.address}, ${form.city} - ${form.pincode}`,
       form.notes ? `Notes: ${form.notes}` : "",
       "",
-      "Payment: To be confirmed with the team (COD / UPI on delivery).",
+      paymentNote,
     ].filter(Boolean);
+    return encodeURIComponent(lines.join("\n"));
+  }
 
-    const message = encodeURIComponent(lines.join("\n"));
+  function openWhatsAppWithOrder(paymentNote: string) {
+    const message = buildWhatsAppMessage(paymentNote);
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${message}`, "_blank", "noopener,noreferrer");
-    setPlaced(true);
+  }
+
+  function handleCodOrder(event: MouseEvent<HTMLButtonElement>) {
+    if (!event.currentTarget.form?.reportValidity()) return;
+    openWhatsAppWithOrder("Payment: To be confirmed with the team (COD / UPI on delivery).");
+    setPlacedVia("whatsapp");
     clearCart();
   }
 
-  if (placed) {
+  async function handlePayNow(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPaymentError(null);
+
+    if (!window.Razorpay) {
+      setPaymentError("Payment is still loading — please wait a moment and try again.");
+      return;
+    }
+
+    if (!event.currentTarget.reportValidity()) return;
+
+    setIsPaying(true);
+    try {
+      const orderRes = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: subtotal, receipt: `amodha_${Date.now()}` }),
+      });
+      if (!orderRes.ok) throw new Error("Could not start payment");
+      const order = await orderRes.json();
+
+      const razorpay = new window.Razorpay({
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "",
+        amount: order.amount,
+        currency: order.currency,
+        name: siteConfig.name,
+        description: "Order from Mithaiwallah Sweet Corner / Amodha Dairy",
+        order_id: order.id,
+        prefill: {
+          name: form.name,
+          email: form.email,
+          contact: form.phone,
+        },
+        theme: { color: "#ff6b4a" },
+        handler: async (response: RazorpayHandlerResponse) => {
+          try {
+            const verifyRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyData.verified) {
+              setPaymentError("We couldn't verify that payment. Please contact us before retrying.");
+              setIsPaying(false);
+              return;
+            }
+            openWhatsAppWithOrder(`Payment: Paid online via Razorpay (Payment ID: ${response.razorpay_payment_id}).`);
+            setPlacedVia("razorpay");
+            clearCart();
+          } finally {
+            setIsPaying(false);
+          }
+        },
+        modal: {
+          ondismiss: () => setIsPaying(false),
+        },
+      });
+      razorpay.open();
+    } catch {
+      setPaymentError("Something went wrong starting the payment. Please try again.");
+      setIsPaying(false);
+    }
+  }
+
+  if (placedVia) {
     return (
       <section className="container-site flex flex-col items-center gap-4 py-24 text-center">
         <span aria-hidden="true" className="text-5xl">
           ✅
         </span>
-        <h1 className="text-3xl font-bold text-ink sm:text-4xl">Order Sent!</h1>
+        <h1 className="text-3xl font-bold text-ink sm:text-4xl">
+          {placedVia === "razorpay" ? "Payment Successful!" : "Order Sent!"}
+        </h1>
         <p className="max-w-md text-dark/70">
-          We&rsquo;ve opened WhatsApp with your order details pre-filled — please send that message so
-          our team can confirm availability, delivery timing and payment (COD or UPI on delivery).
+          {placedVia === "razorpay"
+            ? "Your payment went through and we've opened WhatsApp with your order details pre-filled — please send that message so our team can confirm delivery timing."
+            : "We've opened WhatsApp with your order details pre-filled — please send that message so our team can confirm availability, delivery timing and payment (COD or UPI on delivery)."}
         </p>
         <ButtonLink href="/dairy-products" variant="primary">
           Continue Shopping
@@ -93,18 +199,18 @@ export default function CheckoutPage() {
 
   return (
     <>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
 
       <section className="container-site py-14 sm:py-20">
         <h1 className="text-3xl font-bold text-ink sm:text-4xl">Checkout</h1>
         <p className="mt-2 max-w-xl text-dark/70">
-          Fill in your delivery details below. Placing your order opens WhatsApp with everything
-          pre-filled so our team can confirm it directly with you — payment is settled as COD or UPI on
-          delivery.
+          Fill in your delivery details below, then pay securely online or place your order for Cash on
+          Delivery / UPI on delivery.
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-start">
-          <form onSubmit={handleSubmit} className="sticker-shadow flex flex-col gap-5 rounded-2xl border-2 border-ink bg-white p-6 sm:p-8">
+          <form onSubmit={handlePayNow} className="sticker-shadow flex flex-col gap-5 rounded-2xl border-2 border-ink bg-white p-6 sm:p-8">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="name" className="text-sm font-semibold text-ink">
@@ -112,6 +218,7 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   id="name"
+                  name="name"
                   required
                   value={form.name}
                   onChange={(e) => updateField("name", e.target.value)}
@@ -124,6 +231,7 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   id="phone"
+                  name="phone"
                   type="tel"
                   required
                   value={form.phone}
@@ -139,6 +247,7 @@ export default function CheckoutPage() {
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 value={form.email}
                 onChange={(e) => updateField("email", e.target.value)}
@@ -200,16 +309,26 @@ export default function CheckoutPage() {
               />
             </div>
 
+            {paymentError ? <p className="text-sm font-medium text-accent-dark">{paymentError}</p> : null}
+
             <button
               type="submit"
-              className="font-heading sticker-shadow mt-2 flex w-full items-center justify-center gap-2 rounded-full border-[2.5px] border-ink bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)] sm:w-auto"
+              disabled={isPaying}
+              className="font-heading sticker-shadow mt-2 flex w-full items-center justify-center gap-2 rounded-full border-[2.5px] border-ink bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
-              Place Order via WhatsApp — {formatInr(subtotal)}
+              {isPaying ? "Processing…" : `Pay Now — ${formatInr(subtotal)}`}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCodOrder}
+              className="font-heading flex w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-all hover:-translate-y-0.5 sm:w-auto"
+            >
+              Place Order for COD / UPI on Delivery
             </button>
             <p className="text-xs text-dark/50">
-              We don&rsquo;t process card/UPI payments on this site yet — your order is confirmed
-              directly with our team over WhatsApp, with payment as Cash on Delivery or UPI on
-              delivery.
+              Pay Now accepts cards, UPI and netbanking via Razorpay. Prefer to pay on delivery? Use the
+              second button — your order is confirmed directly with our team over WhatsApp.
             </p>
           </form>
 
