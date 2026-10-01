@@ -98,7 +98,7 @@ export default function CartPage() {
                 Proceed to Checkout
               </ButtonLink>
               <Link
-                href="/dairy-products"
+                href="/"
                 className="mt-3 block text-center text-sm font-semibold text-primary-dark hover:underline"
               >
                 Continue Shopping

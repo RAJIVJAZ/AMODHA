@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useCart } from "@/lib/cart-context";
 import { mainNav, siteConfig } from "@/lib/site";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { itemCount } = useCart();
 
   return (
     <header className="sticky top-0 z-50 border-b-[2.5px] border-ink bg-white">
@@ -35,6 +37,29 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/cart"
+            aria-label={`Cart, ${itemCount} item${itemCount === 1 ? "" : "s"}`}
+            className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-blush"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx="10" cy="21" r="1.5" fill="currentColor" />
+              <circle cx="18" cy="21" r="1.5" fill="currentColor" />
+            </svg>
+            {itemCount > 0 ? (
+              <span className="font-heading absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full border-2 border-white bg-accent px-1 text-[10px] font-bold text-white">
+                {itemCount}
+              </span>
+            ) : null}
+          </Link>
+
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               href="/contact"

@@ -1,10 +1,18 @@
+export type PackSize = {
+  label: string;
+  /** Price in INR. Indicative — update with real pricing before going live. */
+  price: number;
+  /** false = bulk/institutional size, routed to a wholesale enquiry instead of the cart. */
+  purchasable: boolean;
+};
+
 export type Sweet = {
   slug: string;
   name: string;
   shortDescription: string;
   description: string[];
   occasions: string[];
-  packSizes: string[];
+  packSizes: PackSize[];
   keyword: string;
   color: string;
   image?: string;
@@ -22,7 +30,12 @@ export const sweets: Sweet[] = [
       "It's one of our most requested items for gifting boxes and wholesale supply to sweet shops across Uttar Pradesh.",
     ],
     occasions: ["Corporate gifting", "Wedding hampers", "Festive boxes", "Wholesale to sweet shops"],
-    packSizes: ["250 g", "500 g", "1 kg", "Bulk trays (5 kg)"],
+    packSizes: [
+      { label: "250 g", price: 180, purchasable: true },
+      { label: "500 g", price: 340, purchasable: true },
+      { label: "1 kg", price: 650, purchasable: true },
+      { label: "Bulk trays (5 kg)", price: 3000, purchasable: false },
+    ],
     keyword: "Milk Cake Manufacturer Prayagraj",
     color: "#f6c453",
     image: "/images/sweet-corner/milk-cake.webp",
@@ -36,7 +49,11 @@ export const sweets: Sweet[] = [
       "We finish ours with a light garnish of pistachio and silver leaf for premium gifting orders, or plain for wholesale supply.",
     ],
     occasions: ["Corporate gifting", "Wedding hampers", "Festive boxes"],
-    packSizes: ["250 g", "500 g", "1 kg"],
+    packSizes: [
+      { label: "250 g", price: 200, purchasable: true },
+      { label: "500 g", price: 380, purchasable: true },
+      { label: "1 kg", price: 720, purchasable: true },
+    ],
     keyword: "Kalakand Manufacturer UP",
     color: "#e4defb",
     image: "/images/sweet-corner/kalakand.webp",
@@ -50,7 +67,11 @@ export const sweets: Sweet[] = [
       "A popular choice for gifting boxes where customers want something familiar with a contemporary twist.",
     ],
     occasions: ["Corporate gifting", "Wedding hampers", "Festive boxes"],
-    packSizes: ["250 g", "500 g", "1 kg"],
+    packSizes: [
+      { label: "250 g", price: 220, purchasable: true },
+      { label: "500 g", price: 420, purchasable: true },
+      { label: "1 kg", price: 800, purchasable: true },
+    ],
     keyword: "Chocolate Barfi Manufacturer Prayagraj",
     color: "#c99b6f",
     image: "/images/sweet-corner/chocolate-barfi.webp",
@@ -64,7 +85,12 @@ export const sweets: Sweet[] = [
       "Finished with almonds and pistachios, it's a favourite for customers who prefer a denser, more traditional bite.",
     ],
     occasions: ["Festive gifting", "Wedding hampers", "Wholesale to sweet shops"],
-    packSizes: ["250 g", "500 g", "1 kg", "Bulk trays"],
+    packSizes: [
+      { label: "250 g", price: 190, purchasable: true },
+      { label: "500 g", price: 360, purchasable: true },
+      { label: "1 kg", price: 680, purchasable: true },
+      { label: "Bulk trays", price: 3100, purchasable: false },
+    ],
     keyword: "Doda Barfi Sweet Shop Supplier",
     color: "#d9b978",
     image: "/images/sweet-corner/doda-barfi.webp",
@@ -77,7 +103,11 @@ export const sweets: Sweet[] = [
       "Made from fresh malai (cream) and khoya, our Malai Barfi has a soft, delicate texture that sets it apart from denser barfi varieties, finished with a light garnish of chopped nuts.",
     ],
     occasions: ["Festive gifting", "Wedding hampers", "Retail counters"],
-    packSizes: ["250 g", "500 g", "1 kg"],
+    packSizes: [
+      { label: "250 g", price: 210, purchasable: true },
+      { label: "500 g", price: 400, purchasable: true },
+      { label: "1 kg", price: 760, purchasable: true },
+    ],
     keyword: "Malai Barfi Sweet Shop Supplier",
     color: "#ffd7b5",
     image: "/images/sweet-corner/malai-barfi.webp",
@@ -90,7 +120,12 @@ export const sweets: Sweet[] = [
       "Our Peda is hand-shaped from freshly reduced khoya and finished with a hint of cardamom, staying true to the classic recipe that has made peda a festival and prasad favourite for generations.",
     ],
     occasions: ["Festive gifting", "Religious offerings/prasad", "Corporate boxes"],
-    packSizes: ["250 g", "500 g", "1 kg", "Bulk (for temples/events)"],
+    packSizes: [
+      { label: "250 g", price: 180, purchasable: true },
+      { label: "500 g", price: 340, purchasable: true },
+      { label: "1 kg", price: 640, purchasable: true },
+      { label: "Bulk (for temples/events)", price: 2800, purchasable: false },
+    ],
     keyword: "Peda Manufacturer Prayagraj",
     color: "#ffbf78",
     image: "/images/sweet-corner/peda.webp",
@@ -104,7 +139,11 @@ export const sweets: Sweet[] = [
       "It's a point of pride for us to manufacture authentic Kunda using the traditional recipe, and it's one of the most requested items by customers ordering from outside the region.",
     ],
     occasions: ["Regional specialty gifting", "Festive orders", "Wholesale"],
-    packSizes: ["250 g", "500 g", "1 kg tin"],
+    packSizes: [
+      { label: "250 g", price: 220, purchasable: true },
+      { label: "500 g", price: 420, purchasable: true },
+      { label: "1 kg tin", price: 800, purchasable: true },
+    ],
     keyword: "Kunda Sweet Prayagraj",
     color: "#e3a377",
     image: "/images/sweet-corner/kunda.webp",
@@ -117,7 +156,12 @@ export const sweets: Sweet[] = [
       "Bikaneri Cake is prepared using a slow reduction process that builds layered texture and a deep caramel note, offering a firmer alternative to milk cake that travels and stores exceptionally well — making it a favourite for bulk and wholesale orders.",
     ],
     occasions: ["Wholesale to sweet shops", "Corporate gifting", "Travel-friendly gifting"],
-    packSizes: ["250 g", "500 g", "1 kg", "Bulk trays"],
+    packSizes: [
+      { label: "250 g", price: 200, purchasable: true },
+      { label: "500 g", price: 380, purchasable: true },
+      { label: "1 kg", price: 720, purchasable: true },
+      { label: "Bulk trays", price: 3200, purchasable: false },
+    ],
     keyword: "Bikaneri Cake Wholesale Supplier",
     color: "#f2a6b0",
     image: "/images/sweet-corner/bikaneri-cake.webp",
@@ -131,7 +175,11 @@ export const sweets: Sweet[] = [
       "It's built for the same occasions our sweets are ordered for — corporate gifting and wedding hampers — for customers who want a mixed sweet-and-dry-fruit hamper or a standalone dry fruit gift box.",
     ],
     occasions: ["Corporate gifting", "Wedding hampers", "Festive gifting", "Bulk/MOQ orders"],
-    packSizes: ["500 g", "1 kg", "Bulk (MOQ 100 boxes)"],
+    packSizes: [
+      { label: "500 g", price: 900, purchasable: true },
+      { label: "1 kg", price: 1700, purchasable: true },
+      { label: "Bulk (MOQ 100 boxes)", price: 850, purchasable: false },
+    ],
     keyword: "Premium Dry Fruit Gift Box Prayagraj",
     color: "#d9b978",
     image: "/images/sweet-corner/premium-dry-fruit-box.webp",

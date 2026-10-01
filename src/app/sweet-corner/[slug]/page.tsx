@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCart } from "@/components/ui/add-to-cart";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
@@ -38,6 +39,8 @@ export default async function SweetDetailPage({
 
   const related = sweets.filter((s) => s.slug !== sweet.slug).slice(0, 3);
 
+  const purchasablePrices = sweet.packSizes.filter((size) => size.purchasable).map((size) => size.price);
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -49,6 +52,9 @@ export default async function SweetDetailPage({
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "INR",
+      ...(purchasablePrices.length > 0
+        ? { lowPrice: Math.min(...purchasablePrices), highPrice: Math.max(...purchasablePrices) }
+        : {}),
       availability: "https://schema.org/InStock",
       seller: { "@type": "Organization", name: siteConfig.name },
     },
@@ -105,16 +111,7 @@ export default async function SweetDetailPage({
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
-              <h2 className="font-heading text-lg font-bold text-ink">Available Pack Sizes</h2>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {sweet.packSizes.map((size) => (
-                  <li key={size} className="rounded-full border-2 border-ink/15 bg-blush px-3 py-1.5 text-sm font-medium text-ink">
-                    {size}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <AddToCart slug={sweet.slug} productName={sweet.name} packSizes={sweet.packSizes} />
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
               <h2 className="font-heading text-lg font-bold text-ink">Best For</h2>
               <ul className="mt-3 flex flex-col gap-2">
