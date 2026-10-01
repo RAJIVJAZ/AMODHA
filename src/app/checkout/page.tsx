@@ -58,7 +58,7 @@ export default function CheckoutPage() {
 
   function buildWhatsAppMessage(paymentNote: string) {
     const lines = [
-      "New Order from amodhadairy.com",
+      "New Order from mithaiwallah.shop",
       "",
       "Items:",
       ...items.map(

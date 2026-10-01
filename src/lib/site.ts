@@ -6,7 +6,7 @@ export const siteConfig = {
   description:
     "Handcrafted Mithaiwallah sweets manufactured in Prayagraj using traditional methods and modern hygiene standards — milk cake, kalakand, barfi, peda, kunda and more — for retail, wholesale, corporate and wedding gifting across India. Amodha's dairy range is coming soon.",
   comingSoonQuote: "The purity you want will be arriving soon.",
-  url: "https://www.amodhadairy.com",
+  url: "https://mithaiwallah.shop",
   locale: "en_IN",
   address: {
     office: {
@@ -32,7 +32,7 @@ export const siteConfig = {
     phone: "+91 70074 24542",
     phoneHref: "+917007424542",
     whatsapp: "917007424542",
-    email: "hello@amodhadairy.com",
+    email: "support@mithaiwallah.shop",
     dealerEmail: "dealers@amodhadairy.com",
     corporateEmail: "corporate@amodhadairy.com",
   },
