@@ -8,16 +8,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
   }
 
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    console.error("Razorpay create-order: RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET env vars are not set");
+    return NextResponse.json({ error: "Payment gateway is not configured" }, { status: 500 });
+  }
+
   const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID!,
-    key_secret: process.env.RAZORPAY_KEY_SECRET!,
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
   });
 
-  const order = await razorpay.orders.create({
-    amount: Math.round(amount * 100), // INR to paise
-    currency: "INR",
-    receipt: typeof receipt === "string" ? receipt : undefined,
-  });
-
-  return NextResponse.json(order);
+  try {
+    const order = await razorpay.orders.create({
+      amount: Math.round(amount * 100), // INR to paise
+      currency: "INR",
+      receipt: typeof receipt === "string" ? receipt : undefined,
+    });
+    return NextResponse.json(order);
+  } catch (err) {
+    console.error("Razorpay create-order failed:", err);
+    return NextResponse.json({ error: "Could not create Razorpay order" }, { status: 500 });
+  }
 }

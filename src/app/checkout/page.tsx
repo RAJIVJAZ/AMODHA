@@ -108,11 +108,15 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: subtotal, receipt: `amodha_${Date.now()}` }),
       });
-      if (!orderRes.ok) throw new Error("Could not start payment");
       const order = await orderRes.json();
+      if (!orderRes.ok) throw new Error(order?.error ?? "Could not start payment");
+
+      if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        throw new Error("Payment is not configured (missing NEXT_PUBLIC_RAZORPAY_KEY_ID)");
+      }
 
       const razorpay = new window.Razorpay({
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "",
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
         name: siteConfig.name,
@@ -153,8 +157,9 @@ export default function CheckoutPage() {
         },
       });
       razorpay.open();
-    } catch {
-      setPaymentError("Something went wrong starting the payment. Please try again.");
+    } catch (err) {
+      console.error("Payment start failed:", err);
+      setPaymentError(err instanceof Error ? err.message : "Something went wrong starting the payment.");
       setIsPaying(false);
     }
   }
