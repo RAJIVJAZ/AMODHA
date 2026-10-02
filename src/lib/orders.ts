@@ -146,6 +146,30 @@ export async function quoteOrder(admin: SupabaseClient | null, subtotal: number,
   return { customer, discount, discountReason: reason, deliveryFee, milkSubscriber, total: subtotal + deliveryFee - discount };
 }
 
+/** What the checkout shows on its confirmation screen. All amounts come from the server. */
+export function orderSummary(
+  orderNumber: number | null,
+  customer: CustomerDetails,
+  priced: { lines: PricedLine[]; subtotal: number },
+  quote: { deliveryFee: number; discount: number; discountReason: DiscountReason | null; total: number },
+  paymentMethod: "online" | "cod"
+) {
+  return {
+    orderNumber,
+    paymentMethod,
+    lines: priced.lines,
+    subtotal: priced.subtotal,
+    deliveryFee: quote.deliveryFee,
+    discount: quote.discount,
+    discountReason: quote.discountReason,
+    total: quote.total,
+    emailedTo: customer.email,
+    deliverTo: { name: customer.name, phone: customer.phone, address: customer.address, city: customer.city, pincode: customer.pincode },
+  };
+}
+
+export type OrderSummary = ReturnType<typeof orderSummary>;
+
 type SaveOrderInput = {
   customer: CustomerDetails;
   userId: string | null;
@@ -160,7 +184,7 @@ type SaveOrderInput = {
   razorpayOrderId?: string;
 };
 
-/** Saves an order and its items. Returns the order number, or null if saving failed. */
+/** Saves an order and its items. Returns its id and number, or null if saving failed. */
 export async function saveOrder(admin: SupabaseClient, input: SaveOrderInput) {
   const isCod = input.paymentMethod === "cod";
   const { data: order, error } = await admin
@@ -206,20 +230,23 @@ export async function saveOrder(admin: SupabaseClient, input: SaveOrderInput) {
   );
   if (itemsError) console.error("Saving order items failed:", itemsError);
 
-  return order.order_number as number;
+  return { id: order.id as string, orderNumber: order.order_number as number };
 }
 
 /** Marks an online order as paid. Only moves orders still awaiting payment, so it is safe to call twice. */
 export async function markOrderPaid(admin: SupabaseClient, razorpayOrderId: string, razorpayPaymentId: string) {
-  const { data, error } = await admin
+  const { error } = await admin
     .from("orders")
     .update({ payment_status: "paid", status: "received", razorpay_payment_id: razorpayPaymentId })
     .eq("razorpay_order_id", razorpayOrderId)
-    .eq("status", "pending_payment")
-    .select("order_number");
+    .eq("status", "pending_payment");
   if (error) console.error("Marking order paid failed:", error);
 
-  if (data?.[0]) return data[0].order_number as number;
-  const { data: existing } = await admin.from("orders").select("order_number").eq("razorpay_order_id", razorpayOrderId).maybeSingle();
-  return (existing?.order_number as number | undefined) ?? null;
+  const { data: order } = await admin
+    .from("orders")
+    .select("id, order_number, payment_status")
+    .eq("razorpay_order_id", razorpayOrderId)
+    .maybeSingle();
+  if (!order) return null;
+  return { id: order.id as string, orderNumber: order.order_number as number, paid: order.payment_status === "paid" };
 }

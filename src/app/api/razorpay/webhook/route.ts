@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
+import { sendOrderEmails } from "@/lib/order-emails";
 import { markOrderPaid } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -35,7 +36,9 @@ export async function POST(req: Request) {
     const payment = event.payload?.payment?.entity;
     const admin = createAdminClient();
     if (admin && payment?.order_id && payment?.id) {
-      await markOrderPaid(admin, payment.order_id, payment.id);
+      const order = await markOrderPaid(admin, payment.order_id, payment.id);
+      // Usually already sent by /verify; this covers customers who closed the tab before it ran.
+      if (order?.paid) await sendOrderEmails(admin, order.id);
     }
   }
 

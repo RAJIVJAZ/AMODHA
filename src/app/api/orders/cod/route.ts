@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
-import { parseCustomer, priceLines, quoteOrder, saveOrder } from "@/lib/orders";
+import { NextResponse, after } from "next/server";
+import { sendOrderEmails } from "@/lib/order-emails";
+import { orderSummary, parseCustomer, priceLines, quoteOrder, saveOrder } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-// Records a Cash on Delivery / UPI on delivery order. The customer still sends the
-// WhatsApp message afterwards; this just makes sure the order is never lost.
+// Places a Cash on Delivery / UPI on delivery order, then emails the invoice to the
+// customer and a new-order alert to the team.
 export async function POST(req: Request) {
   const { items, customer: customerInput } = await req.json();
 
@@ -14,22 +15,29 @@ export async function POST(req: Request) {
   if ("error" in customer) return NextResponse.json({ error: customer.error }, { status: 400 });
 
   const admin = createAdminClient();
+  if (!admin) {
+    console.error("COD order: SUPABASE_SECRET_KEY is not set, so the order can't be saved");
+    return NextResponse.json({ error: "We couldn't place your order right now. Please try again shortly." }, { status: 503 });
+  }
+
   const quote = await quoteOrder(admin, priced.subtotal, customer.phone);
+  const saved = await saveOrder(admin, {
+    customer,
+    userId: quote.customer?.id ?? null,
+    lines: priced.lines,
+    subtotal: priced.subtotal,
+    deliveryFee: quote.deliveryFee,
+    discount: quote.discount,
+    discountReason: quote.discountReason,
+    total: quote.total,
+    milkSubscriber: quote.milkSubscriber,
+    paymentMethod: "cod",
+  });
+  if (!saved) {
+    return NextResponse.json({ error: "We couldn't place your order right now. Please try again shortly." }, { status: 500 });
+  }
 
-  const orderNumber = admin
-    ? await saveOrder(admin, {
-        customer,
-        userId: quote.customer?.id ?? null,
-        lines: priced.lines,
-        subtotal: priced.subtotal,
-        deliveryFee: quote.deliveryFee,
-        discount: quote.discount,
-        discountReason: quote.discountReason,
-        total: quote.total,
-        milkSubscriber: quote.milkSubscriber,
-        paymentMethod: "cod",
-      })
-    : null;
+  after(() => sendOrderEmails(admin, saved.id));
 
-  return NextResponse.json({ orderNumber, discount: quote.discount, discountReason: quote.discountReason, total: quote.total });
+  return NextResponse.json(orderSummary(saved.orderNumber, customer, priced, quote, "cod"));
 }

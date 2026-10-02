@@ -1,5 +1,6 @@
 import crypto from "crypto";
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
+import { sendOrderEmails } from "@/lib/order-emails";
 import { markOrderPaid } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
   if (!verified) return NextResponse.json({ verified: false });
 
   const admin = createAdminClient();
-  const orderNumber = admin ? await markOrderPaid(admin, String(orderId), String(paymentId)) : null;
-  return NextResponse.json({ verified: true, orderNumber });
+  const order = admin ? await markOrderPaid(admin, String(orderId), String(paymentId)) : null;
+  if (admin && order?.paid) after(() => sendOrderEmails(admin, order.id));
+  return NextResponse.json({ verified: true, orderNumber: order?.orderNumber ?? null });
 }

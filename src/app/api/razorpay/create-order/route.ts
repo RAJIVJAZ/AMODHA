@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
-import { parseCustomer, priceLines, quoteOrder, saveOrder } from "@/lib/orders";
+import { orderSummary, parseCustomer, priceLines, quoteOrder, saveOrder } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       receipt: typeof receipt === "string" ? receipt.slice(0, 40) : undefined,
     });
 
-    const orderNumber = admin
+    const saved = admin
       ? await saveOrder(admin, {
           customer,
           userId: quote.customer?.id ?? null,
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
           discount: quote.discount,
           discountReason: quote.discountReason,
           total: quote.total,
-        milkSubscriber: quote.milkSubscriber,
+          milkSubscriber: quote.milkSubscriber,
           paymentMethod: "online",
           razorpayOrderId: order.id,
         })
@@ -54,10 +54,7 @@ export async function POST(req: Request) {
       amount: order.amount,
       currency: order.currency,
       keyId: process.env.RAZORPAY_KEY_ID,
-      discount: quote.discount,
-      discountReason: quote.discountReason,
-      total: quote.total,
-      orderNumber,
+      summary: orderSummary(saved?.orderNumber ?? null, customer, priced, quote, "online"),
     });
   } catch (err) {
     console.error("Razorpay create-order failed:", err);
