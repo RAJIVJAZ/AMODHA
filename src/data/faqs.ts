@@ -50,7 +50,7 @@ export const generalFaqs: FaqItem[] = [
   {
     question: "Is Mithai Wallah FSSAI certified?",
     answer:
-      "Yes, our manufacturing facility is FSSAI certified and follows documented hygiene and quality-control processes across milk collection, production and packaging.",
+      `Yes. Our manufacturing facility is FSSAI licensed (Lic. No. ${siteConfig.fssaiLicense}) and follows documented hygiene and quality-control processes across milk collection, production and packaging.`,
   },
   {
     question: "Do you supply wholesale to sweet shops, hotels and distributors?",

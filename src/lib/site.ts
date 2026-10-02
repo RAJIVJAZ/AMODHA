@@ -54,6 +54,7 @@ export const siteConfig = {
   officeMapsUrl:
     "https://www.google.com/maps/search/?api=1&query=594A%2F371A+Mutthiganj+Salikgram+Jaiswal+Nagar+Prayagraj+211003",
   founded: "2023",
+  fssaiLicense: "12725998000262",
   stats: {
     farmers: "100+",
     customers: "200+",

@@ -60,7 +60,7 @@ const hygienePoints = [
   "Gloved, masked team in production",
   "Clean steel kadhais and food-safe surfaces",
   "Sealed, food-safe packaging",
-  "FSSAI-registered manufacturing facility",
+  `FSSAI-licensed facility (Lic. No. ${siteConfig.fssaiLicense})`,
 ];
 
 export default function HomePage() {

@@ -87,6 +87,8 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {siteConfig.legalName}. {siteConfig.name} is a brand of{" "}
             {siteConfig.legalName}.
+            <br />
+            FSSAI Lic. No. {siteConfig.fssaiLicense}
           </p>
           <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1">
             {footerNav.legal.map((link) => (
