@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getPack, getSweet } from "@/data/sweets";
+import { productTax } from "@/data/tax";
 import { bestDiscountFor, deliveryFeeFor, type DiscountReason } from "@/lib/order-rules";
 import { normalizePhone } from "@/lib/phone";
 import { createClient } from "@/lib/supabase/server";
@@ -226,6 +227,8 @@ export async function saveOrder(admin: SupabaseClient, input: SaveOrderInput) {
       pack_label: line.packLabel,
       unit_price: line.unitPrice,
       quantity: line.quantity,
+      hsn: productTax(line.slug).hsn,
+      gst_rate: productTax(line.slug).gstRate,
     }))
   );
   if (itemsError) console.error("Saving order items failed:", itemsError);

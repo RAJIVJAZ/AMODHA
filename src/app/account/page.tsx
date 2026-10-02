@@ -30,6 +30,7 @@ export const metadata: Metadata = {
 type OrderRow = {
   id: string;
   order_number: number;
+  invoice_number: string | null;
   created_at: string;
   status: OrderStatus;
   payment_method: "online" | "cod";
@@ -88,7 +89,7 @@ export default async function AccountPage() {
     supabase.from("profiles").select("full_name, is_admin").eq("id", user.id).maybeSingle(),
     byContact
       .from("orders")
-      .select("id, order_number, created_at, status, payment_method, payment_status, total, discount, order_items(product_name, pack_label, quantity)")
+      .select("id, order_number, invoice_number, created_at, status, payment_method, payment_status, total, discount, order_items(product_name, pack_label, quantity)")
       .or(customerFilter(customer))
       .neq("status", "pending_payment")
       .order("created_at", { ascending: false })
@@ -215,6 +216,16 @@ export default async function AccountPage() {
                         <span className="text-xs font-semibold text-dark/60">
                           {orderStatusLabels[order.status]} · {order.payment_method === "online" ? "Paid online" : "Pay on delivery"}
                         </span>
+                        {order.status !== "cancelled" || order.invoice_number ? (
+                          <a
+                            href={`/invoice/${order.id}`}
+                            target="_blank"
+                            rel="noopener"
+                            className="text-xs font-semibold text-primary-dark hover:underline"
+                          >
+                            Tax invoice
+                          </a>
+                        ) : null}
                       </div>
                     </li>
                   ))}

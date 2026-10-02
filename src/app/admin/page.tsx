@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 type AdminOrder = {
   id: string;
   order_number: number;
+  invoice_number: string | null;
   created_at: string;
   customer_name: string;
   phone: string;
@@ -79,7 +80,7 @@ export default async function AdminPage() {
   const [ordersRes, supportRes, milkRes, staffRes, staffProfilesRes] = await Promise.all([
     staff
       .from("orders")
-      .select("id, order_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, discount_reason, order_items(product_name, pack_label, quantity)")
+      .select("id, order_number, invoice_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, discount_reason, order_items(product_name, pack_label, quantity)")
       .order("created_at", { ascending: false })
       .limit(50),
     staff.from("support_requests").select("id, user_id, subject, message, order_number, created_at").eq("status", "open").order("created_at"),
@@ -151,6 +152,11 @@ export default async function AdminPage() {
                       : ""} ·{" "}
                     {order.payment_method === "online" ? (order.payment_status === "paid" ? "Paid online" : "Online, not paid") : "Pay on delivery"}
                   </p>
+                  {order.status !== "pending_payment" && (order.status !== "cancelled" || order.invoice_number) ? (
+                    <a href={`/invoice/${order.id}`} target="_blank" rel="noopener" className="text-primary-dark hover:underline">
+                      {order.invoice_number ? `Tax invoice ${order.invoice_number}` : "Tax invoice"}
+                    </a>
+                  ) : null}
                 </div>
                 <OrderStatusSelect orderId={order.id} status={order.status} />
               </li>

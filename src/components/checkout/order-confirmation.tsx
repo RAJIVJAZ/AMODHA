@@ -31,7 +31,7 @@ export function OrderConfirmation({ placed, signedIn }: { placed: PlacedOrder; s
             {summary.emailedTo ? (
               <>
                 {" "}
-                Your invoice is on its way to <span className="font-semibold text-ink">{summary.emailedTo}</span>.
+                Your GST tax invoice is on its way to <span className="font-semibold text-ink">{summary.emailedTo}</span>.
               </>
             ) : null}
           </p>

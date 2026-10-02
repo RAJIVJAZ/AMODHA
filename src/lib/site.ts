@@ -55,6 +55,9 @@ export const siteConfig = {
     "https://www.google.com/maps/search/?api=1&query=594A%2F371A+Mutthiganj+Salikgram+Jaiswal+Nagar+Prayagraj+211003",
   founded: "2023",
   fssaiLicense: "12725998000262",
+  gstin: "09AGNPJ5616L1ZW",
+  /** GST state of the business (from the first two digits of the GSTIN). */
+  gstState: { name: "Uttar Pradesh", code: "09" },
   stats: {
     farmers: "100+",
     customers: "200+",
