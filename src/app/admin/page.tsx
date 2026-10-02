@@ -43,7 +43,25 @@ export default async function AdminPage() {
   if (!user) redirect("/login?next=/admin");
 
   const staff = await getStaffClient();
-  if (!staff) notFound();
+  if (!staff) {
+    // Customers can read their own profile, so this tells staff apart without the secret key.
+    const { data: profile } = await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
+    if (!profile?.is_admin) notFound();
+    return (
+      <section className="bg-blush py-16">
+        <div className="container-site">
+          <div className="sticker-shadow mx-auto max-w-xl rounded-2xl border-2 border-ink bg-white p-6">
+            <h1 className="text-2xl font-bold text-ink">Admin is not connected yet</h1>
+            <p className="mt-3 text-sm text-dark/75">
+              The live site can&rsquo;t find the <code>SUPABASE_SECRET_KEY</code> environment variable, so it can&rsquo;t
+              load orders. In Vercel → Project → Settings → Environment Variables, add it for the Production
+              environment, then redeploy.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const [ordersRes, supportRes, milkRes, milkCountRes] = await Promise.all([
     staff
