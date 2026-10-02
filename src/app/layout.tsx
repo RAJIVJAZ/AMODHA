@@ -62,9 +62,6 @@ export const metadata: Metadata = {
     title: "Pure Desi Ghee Sweets in Prayagraj | Mithai Wallah",
     description: siteConfig.description,
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
   alternates: {
     canonical: "/",
   },
