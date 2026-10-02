@@ -57,6 +57,14 @@ export default async function AdminPage() {
               load orders. In Vercel → Project → Settings → Environment Variables, add it for the Production
               environment, then redeploy.
             </p>
+            <p className="mt-4 text-sm font-semibold text-ink">Related settings this deployment can see (names only):</p>
+            <p className="mt-1 break-all font-mono text-xs text-dark/70">
+              {Object.keys(process.env)
+                .filter((name) => /SUPABASE|SECRET|SERVICE_ROLE/i.test(name))
+                .sort()
+                .join(", ") || "none"}
+            </p>
+            <p className="mt-2 text-xs text-dark/55">Deployment: {process.env.VERCEL_ENV ?? "unknown"} · {process.env.VERCEL_GIT_COMMIT_REF ?? "unknown branch"}</p>
           </div>
         </div>
       </section>
