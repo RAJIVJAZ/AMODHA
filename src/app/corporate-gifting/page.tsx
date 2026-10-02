@@ -10,7 +10,7 @@ import { getSweet } from "@/data/sweets";
 export const metadata: Metadata = {
   title: "Corporate Sweet Gift Boxes | Custom Branding & Bulk Orders",
   description:
-    "Custom-branded mithai boxes from Mithaiwallah, Prayagraj — made with 100% pure desi ghee and recorded live. Bulk orders for client gifting, employee rewards and festive gifting.",
+    "Custom-branded mithai boxes from Mithai Wallah, Prayagraj — made with 100% pure desi ghee in traceable batches. Bulk orders for client gifting, employee rewards and festive gifting.",
   alternates: { canonical: "/corporate-gifting" },
 };
 
@@ -69,7 +69,7 @@ export default function CorporateGiftingPage() {
           <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
             <Image
               src="/images/sweet-corner/corporate-gift-hamper.webp"
-              alt="Mithaiwallah premium corporate gift hamper with ribbon bow, gift tag and an assortment box of sweets"
+              alt="Mithai Wallah premium corporate gift hamper with ribbon bow, gift tag and an assortment box of sweets"
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -84,7 +84,7 @@ export default function CorporateGiftingPage() {
           <SectionHeading
             eyebrow="New for Corporate Gifting"
             title="Premium Dry Fruit Box"
-            description="Add a curated dry fruit box alongside your mithai hampers — a premium standalone gift or a mixed sweet-and-dry-fruit combo, available in bulk with MOQ 100 boxes."
+            description="Add a curated dry fruit box alongside your mithai hampers — a premium standalone gift or a mixed sweet-and-dry-fruit combo, in any quantity."
           />
           <div className="mt-8 max-w-sm">
             <ProductCard
@@ -94,7 +94,7 @@ export default function CorporateGiftingPage() {
               icon="🌰"
               color={dryFruitBox.color}
               image={dryFruitBox.image}
-              badge="MOQ 100 Boxes"
+              badge="New"
               cta="View Details"
             />
           </div>
@@ -122,7 +122,7 @@ export default function CorporateGiftingPage() {
             <div className="sticker-shadow-sm relative mt-6 aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-ink">
               <Image
                 src="/images/sweet-corner/packaging-ivory-gold.webp"
-                alt="Ivory Mithaiwallah gift box with gold foil branding and a champagne satin ribbon bow"
+                alt="Ivory Mithai Wallah gift box with gold foil branding and a champagne satin ribbon bow"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -182,7 +182,7 @@ export default function CorporateGiftingPage() {
               { name: "contactName", label: "Contact Person", required: true },
               { name: "phone", label: "Phone Number", type: "tel", required: true },
               { name: "email", label: "Email Address", type: "email" },
-              { name: "quantity", label: "Approximate Quantity", type: "select", options: ["50-100", "100-500", "500-1000", "1000-5000", "5000+"], required: true },
+              { name: "quantity", label: "Approximate Quantity", type: "select", options: ["Under 50", "50-100", "100-500", "500-1000", "1000+"], required: true },
               { name: "occasion", label: "Occasion", type: "select", options: ["Diwali", "New Year", "Client Gifting", "Employee Rewards", "Other Festive Gifting"] },
               { name: "requirements", label: "Tell us more about your requirement", type: "textarea" },
             ]}
@@ -194,7 +194,7 @@ export default function CorporateGiftingPage() {
         title="Let's Design a Gift Box Your Clients Will Remember"
         description="Talk to our corporate gifting team about branding, packaging and delivery timelines."
         primaryCta={{ label: "Get Custom Quote", href: "#quote" }}
-        secondaryCta={{ label: "Explore Sweet Corner", href: "/" }}
+        secondaryCta={{ label: "Browse Our Sweets", href: "/#catalog" }}
       />
     </>
   );

@@ -10,6 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/dairy-products",
     "/our-process",
+    "/milk-subscription",
+    "/membership",
     "/corporate-gifting",
     "/wedding-gifting",
     "/wholesale",

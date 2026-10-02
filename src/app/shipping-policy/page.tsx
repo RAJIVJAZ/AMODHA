@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/layout/legal-page";
 import { formatInr } from "@/lib/currency";
-import {
-  DELIVERY_AREA,
-  DELIVERY_FEE,
-  FREE_DELIVERY_THRESHOLD,
-  MAX_ONLINE_ORDER_GRAMS,
-  formatGrams,
-} from "@/lib/order-rules";
+import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Shipping Policy",
-  description: `Shipping and delivery policy for ${siteConfig.name} and Mithaiwallah Sweet Corner orders.`,
+  description: `Delivery areas, charges and timelines for ${siteConfig.name} orders in Prayagraj.`,
   alternates: { canonical: "/shipping-policy" },
 };
 
@@ -41,9 +35,9 @@ export default function ShippingPolicyPage() {
           ],
         },
         {
-          heading: "4. Order Limits",
+          heading: "4. Large Orders",
           body: [
-            `Online orders are limited to ${formatGrams(MAX_ONLINE_ORDER_GRAMS)} in total. For larger quantities, contact us on WhatsApp or through our contact page for bulk pricing and delivery.`,
+            "There is no minimum or maximum order size online. For very large orders, such as event or function orders, contact us in advance so we can plan the batch and delivery.",
           ],
         },
         {

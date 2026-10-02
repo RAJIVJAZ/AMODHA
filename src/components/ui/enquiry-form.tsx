@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/site";
 type Field = {
   name: string;
   label: string;
-  type?: "text" | "tel" | "email" | "textarea" | "select";
+  type?: "text" | "tel" | "email" | "number" | "textarea" | "select";
   required?: boolean;
   options?: string[];
 };
@@ -86,6 +86,8 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
                 id={field.name}
                 name={field.name}
                 type={field.type ?? "text"}
+                min={field.type === "number" ? 0 : undefined}
+                step={field.type === "number" ? "any" : undefined}
                 required={field.required}
                 onChange={(e) => handleChange(field.name, e.target.value)}
                 className="rounded-xl border-2 border-ink/30 px-3 py-2.5 text-sm text-dark focus:border-primary focus:outline-none"

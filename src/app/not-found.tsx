@@ -13,8 +13,8 @@ export default function NotFound() {
         <ButtonLink href="/" variant="primary">
           Back to Home
         </ButtonLink>
-        <ButtonLink href="/dairy-products" variant="ghost">
-          Amodha Dairy (Coming Soon)
+        <ButtonLink href="/#catalog" variant="ghost">
+          Browse Our Sweets
         </ButtonLink>
       </div>
     </section>

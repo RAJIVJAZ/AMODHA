@@ -10,7 +10,7 @@ import { getSweet } from "@/data/sweets";
 export const metadata: Metadata = {
   title: "Wedding Sweet Boxes | Premium Wedding Gifting & Return Gifts",
   description:
-    "Premium wedding hampers from Mithaiwallah Sweet Corner — bride & groom name customisation, theme-matched packaging and memorable wedding return gifts, made fresh in Prayagraj.",
+    "Premium wedding hampers from Mithai Wallah — bride & groom name customisation, theme-matched packaging and memorable wedding return gifts, made fresh in Prayagraj.",
   alternates: { canonical: "/wedding-gifting" },
 };
 
@@ -56,7 +56,7 @@ export default function WeddingGiftingPage() {
           <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
             <Image
               src="/images/sweet-corner/wedding-sweet-boxes.webp"
-              alt="Row of Mithaiwallah wedding sweet boxes with gold lattice lids, blush ribbon bows and fresh roses"
+              alt="Row of Mithai Wallah wedding sweet boxes with gold lattice lids, blush ribbon bows and fresh roses"
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -71,7 +71,7 @@ export default function WeddingGiftingPage() {
           <SectionHeading
             eyebrow="New for Weddings"
             title="Premium Dry Fruit Box"
-            description="Pair your mithai boxes with a curated dry fruit gift box for guests and family — a premium return gift or add-on, available in bulk with MOQ 100 boxes."
+            description="Pair your mithai boxes with a curated dry fruit gift box for guests and family — a premium return gift or add-on, in any quantity."
           />
           <div className="mt-8 max-w-sm">
             <ProductCard
@@ -81,7 +81,7 @@ export default function WeddingGiftingPage() {
               icon="🌰"
               color={dryFruitBox.color}
               image={dryFruitBox.image}
-              badge="MOQ 100 Boxes"
+              badge="New"
               cta="View Details"
             />
           </div>
@@ -94,7 +94,7 @@ export default function WeddingGiftingPage() {
           <div className="sticker-shadow relative aspect-[4/5] w-full overflow-hidden rounded-3xl border-2 border-ink">
             <Image
               src="/images/sweet-corner/packaging-blush-wedding.webp"
-              alt="Blush Mithaiwallah wedding gift box with gold lattice lid, rose and baby's breath, satin bow"
+              alt="Blush Mithai Wallah wedding gift box with gold lattice lid, rose and baby's breath, satin bow"
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover"
@@ -158,7 +158,7 @@ export default function WeddingGiftingPage() {
         title="Let's Make Your Wedding Gifting Unforgettable"
         description="From a small trial box to thousands of units — our wedding gifting team handles it all."
         primaryCta={{ label: "Design Your Wedding Box", href: "#design" }}
-        secondaryCta={{ label: "Browse Sweet Corner", href: "/" }}
+        secondaryCta={{ label: "Browse Our Sweets", href: "/#catalog" }}
       />
     </>
   );

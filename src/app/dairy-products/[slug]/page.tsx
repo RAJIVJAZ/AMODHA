@@ -44,12 +44,12 @@ export default async function DairyProductPage({
     name: product.name,
     description: product.shortDescription,
     brand: { "@type": "Brand", name: siteConfig.name },
-    manufacturer: { "@type": "Organization", name: siteConfig.name },
+    manufacturer: { "@type": "Organization", name: siteConfig.legalName },
     offers: {
       "@type": "Offer",
       priceCurrency: "INR",
       availability: "https://schema.org/PreOrder",
-      seller: { "@type": "Organization", name: siteConfig.name },
+      seller: { "@type": "Organization", name: siteConfig.legalName },
     },
   };
 
@@ -96,18 +96,18 @@ export default async function DairyProductPage({
           <div className="flex flex-col gap-6">
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6 text-center">
               <Image
-                src="/logos/amodha.png"
-                alt="Amodha"
+                src="/logos/mithaiwallah.png"
+                alt="Mithai Wallah"
                 width={900}
-                height={374}
-                className="mx-auto h-10 w-auto"
+                height={507}
+                className="mx-auto h-12 w-auto"
               />
               <h2 className="font-heading mt-4 text-lg font-bold text-ink">{product.name} Is On Its Way</h2>
               <p className="font-subheading mt-3 text-lg italic text-primary-dark">
                 &ldquo;{siteConfig.comingSoonQuote}&rdquo;
               </p>
-              <ButtonLink href="/contact" variant="primary" className="mt-5">
-                Get Notified at Launch
+              <ButtonLink href="/milk-subscription" variant="primary" className="mt-5">
+                Register Interest
               </ButtonLink>
             </div>
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">

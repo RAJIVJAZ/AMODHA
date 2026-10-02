@@ -7,7 +7,7 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
-import { DELIVERY_AREA, MAX_ONLINE_ORDER_GRAMS, deliveryFeeFor, formatGrams } from "@/lib/order-rules";
+import { DELIVERY_AREA, deliveryFeeFor } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 const inputClass =
@@ -44,10 +44,9 @@ declare global {
 }
 
 export default function CheckoutPage() {
-  const { items, subtotal, totalGrams, clearCart } = useCart();
+  const { items, subtotal, clearCart } = useCart();
   const deliveryFee = deliveryFeeFor(subtotal);
   const total = subtotal + deliveryFee;
-  const overLimit = totalGrams > MAX_ONLINE_ORDER_GRAMS;
   const [placedVia, setPlacedVia] = useState<"razorpay" | "whatsapp" | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -95,7 +94,7 @@ export default function CheckoutPage() {
   }
 
   function handleCodOrder(event: MouseEvent<HTMLButtonElement>) {
-    if (overLimit || !event.currentTarget.form?.reportValidity()) return;
+    if (!event.currentTarget.form?.reportValidity()) return;
     openWhatsAppWithOrder("Payment: To be confirmed with the team (COD / UPI on delivery).");
     setPlacedVia("whatsapp");
     clearCart();
@@ -110,7 +109,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (overLimit || !event.currentTarget.reportValidity()) return;
+    if (!event.currentTarget.reportValidity()) return;
 
     setIsPaying(true);
     try {
@@ -129,8 +128,8 @@ export default function CheckoutPage() {
         key: order.keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "Mithaiwallah",
-        description: "Fresh mithai from Mithaiwallah, Prayagraj",
+        name: "Mithai Wallah",
+        description: "Fresh mithai from Mithai Wallah, Prayagraj",
         order_id: order.id,
         prefill: {
           name: form.name,
@@ -333,24 +332,9 @@ export default function CheckoutPage() {
 
             {paymentError ? <p className="text-sm font-medium text-accent-dark">{paymentError}</p> : null}
 
-            {overLimit ? (
-              <p className="text-sm font-medium text-accent-dark">
-                Your cart has {formatGrams(totalGrams)}, but online orders are limited to{" "}
-                {formatGrams(MAX_ONLINE_ORDER_GRAMS)}.{" "}
-                <Link href="/cart" className="underline">
-                  Edit your cart
-                </Link>{" "}
-                or{" "}
-                <Link href="/contact" className="underline">
-                  contact us for bulk pricing
-                </Link>
-                .
-              </p>
-            ) : null}
-
             <button
               type="submit"
-              disabled={isPaying || overLimit}
+              disabled={isPaying}
               className="font-heading sticker-shadow mt-2 flex w-full items-center justify-center gap-2 rounded-full border-[2.5px] border-ink bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {isPaying ? "Processing…" : `Pay Now — ${formatInr(total)}`}
@@ -359,8 +343,7 @@ export default function CheckoutPage() {
             <button
               type="button"
               onClick={handleCodOrder}
-              disabled={overLimit}
-              className="font-heading flex w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+              className="font-heading flex w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-all hover:-translate-y-0.5 sm:w-auto"
             >
               Place Order for COD / UPI on Delivery
             </button>

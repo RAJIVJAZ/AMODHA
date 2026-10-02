@@ -12,37 +12,37 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Terms & Conditions"
-      updated="17 September 2026"
+      updated="2 October 2026"
       sections={[
         {
           heading: "1. Acceptance of Terms",
           body: [
-            `By accessing or using this website, you agree to be bound by these Terms & Conditions. ${siteConfig.name} operates the Mithaiwallah Sweet Corner sweets brand from the same manufacturing facility in Prayagraj, Uttar Pradesh.`,
+            `By accessing or using this website, you agree to be bound by these Terms & Conditions. This website and the ${siteConfig.name} brand are operated by ${siteConfig.legalName}, Prayagraj, Uttar Pradesh.`,
           ],
         },
         {
           heading: "2. Products & Availability",
           body: [
             "All products are subject to availability. Product images and descriptions are for illustrative purposes; actual packaging, weight and appearance may vary slightly due to the handmade nature of our sweets.",
-            "Prices for retail, wholesale and gifting orders are shared directly by our sales team and are subject to change without prior notice.",
+            "Prices shown on the website apply to online orders. Prices for wholesale and custom gifting orders are shared directly by our team and are subject to change without prior notice.",
           ],
         },
         {
           heading: "3. Orders & Enquiries",
           body: [
-            "Enquiry forms on this website (including wholesale, corporate and wedding gifting forms) are not binding orders. An order is confirmed only after our team has communicated final pricing, quantity and delivery details with you directly.",
+            "Online orders are confirmed once payment succeeds or, for Cash on Delivery, once our team confirms the order with you. Enquiry forms on this website (including wholesale, corporate and wedding gifting forms) are not binding orders.",
           ],
         },
         {
           heading: "4. Wholesale & Dealer Terms",
           body: [
-            "Wholesale pricing, minimum order quantities and payment terms are governed by a separate agreement communicated to dealers and distributors during onboarding.",
+            "Wholesale pricing and payment terms are governed by a separate agreement communicated to dealers and distributors during onboarding.",
           ],
         },
         {
           heading: "5. Intellectual Property",
           body: [
-            "All content on this website — including text, logos, images and the Amodha and Mithaiwallah Sweet Corner brand names — is the property of Amodha Dairy Products and may not be used without written permission.",
+            `All content on this website — including text, logos, images and the ${siteConfig.name} brand name — is the property of ${siteConfig.legalName} and may not be used without written permission.`,
           ],
         },
         {

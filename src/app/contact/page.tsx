@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with Amodha Dairy Products and Mithaiwallah Sweet Corner in Prayagraj, Uttar Pradesh — for retail, wholesale, corporate and wedding gifting enquiries.",
+    "Get in touch with Mithai Wallah in Prayagraj, Uttar Pradesh — for orders, bulk and event orders, wholesale, corporate and wedding gifting.",
   alternates: { canonical: "/contact" },
 };
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
             </div>
             <div className="sticker-shadow overflow-hidden rounded-2xl border-2 border-ink">
               <iframe
-                title="Amodha Dairy Products manufacturing plant on Google Maps"
+                title="Mithai Wallah kitchen on Google Maps"
                 src={siteConfig.mapsEmbedUrl}
                 width="100%"
                 height="320"

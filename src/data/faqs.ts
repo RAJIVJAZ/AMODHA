@@ -1,11 +1,5 @@
 import { formatInr } from "@/lib/currency";
-import {
-  DELIVERY_AREA,
-  DELIVERY_FEE,
-  FREE_DELIVERY_THRESHOLD,
-  MAX_ONLINE_ORDER_GRAMS,
-  formatGrams,
-} from "@/lib/order-rules";
+import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export type FaqItem = { question: string; answer: string };
@@ -25,8 +19,9 @@ export const generalFaqs: FaqItem[] = [
     answer: `Delivery is free on orders of ${formatInr(FREE_DELIVERY_THRESHOLD)} or more. Orders below ${formatInr(FREE_DELIVERY_THRESHOLD)} have a flat ${formatInr(DELIVERY_FEE)} delivery fee, shown in your cart before you pay.`,
   },
   {
-    question: "Is there a limit on how much I can order online?",
-    answer: `Online orders are limited to ${formatGrams(MAX_ONLINE_ORDER_GRAMS)} in total, so every order reaches you fresh. For anything above ${formatGrams(MAX_ONLINE_ORDER_GRAMS)}, message us on WhatsApp or use our contact page and we'll share bulk pricing.`,
+    question: "Is there a minimum or maximum order?",
+    answer:
+      "No. Order as little or as much as you like online. For large function or event orders, message us on WhatsApp a day or two ahead so we can plan the batch.",
   },
   {
     question: "How can I pay?",
@@ -34,23 +29,33 @@ export const generalFaqs: FaqItem[] = [
       "Pay online at checkout with UPI, debit/credit cards or netbanking — payments are processed securely by Razorpay. You can also choose Cash on Delivery or UPI on delivery.",
   },
   {
-    question: "What does \"every batch recorded live\" mean?",
+    question: "What does \"recorded and traceable batches\" mean?",
     answer:
-      "Each batch of sweets is cooked on camera in our hygienic kitchen, from fresh milk to finished mithai. It's our way of showing you exactly what goes into your sweets, with nothing hidden.",
+      "Every production batch is recorded — when it was made and what went into it — so any box of sweets can be traced back to its batch. Sweets are made and packed in a hygienic environment.",
+  },
+  {
+    question: "When will fresh milk delivery start?",
+    answer:
+      "Our farm-fresh milk subscription (₹100 per litre, in reusable glass bottles) launches once 50 households in Prayagraj sign up. Register your interest on the Fresh Milk page and we'll contact you before launch.",
+  },
+  {
+    question: "What is the Mithai Wallah Membership?",
+    answer:
+      "A ₹199-per-year membership with 20% off sweets and food products, free delivery on orders above ₹499, priority delivery and support, and early access to new products. Milk subscriptions are excluded from the discount. Membership is launching soon — join the waitlist on the Membership page.",
   },
   {
     question: "Where is your kitchen located?",
     answer: `Our kitchen is at ${siteConfig.address.plant.line1}, ${siteConfig.address.plant.line2}, ${siteConfig.address.plant.city}, ${siteConfig.address.plant.state} ${siteConfig.address.plant.postalCode}. We started here in ${siteConfig.founded}.`,
   },
   {
-    question: "Is Amodha FSSAI certified?",
+    question: "Is Mithai Wallah FSSAI certified?",
     answer:
       "Yes, our manufacturing facility is FSSAI certified and follows documented hygiene and quality-control processes across milk collection, production and packaging.",
   },
   {
     question: "Do you supply wholesale to sweet shops, hotels and distributors?",
     answer:
-      "Yes. Visit our Wholesale page to submit an enquiry, and our team will get in touch with pricing and minimum order quantities.",
+      "Yes. Visit our Wholesale page to submit an enquiry, and our team will get in touch with wholesale pricing.",
   },
   {
     question: "Can I get a custom-branded gift box for my company or wedding?",
@@ -62,17 +67,12 @@ export const generalFaqs: FaqItem[] = [
     answer:
       "Shelf life varies by product — fresh milk-based sweets like kalakand typically last 4-5 days refrigerated, while khoya-based sweets like milk cake and Bikaneri cake last longer. We share exact shelf-life details with every bulk order.",
   },
-  {
-    question: "What is the minimum order quantity for wholesale or corporate orders?",
-    answer:
-      "Minimum order quantities vary by product and customisation level. Standard wholesale orders typically start at a few kilograms, while custom-branded corporate boxes usually start around 50-100 units. Contact our team for exact figures.",
-  },
 ];
 
 export const dealerFaqs: FaqItem[] = [
   {
-    question: "How do I become a distributor or dealer for Amodha products?",
-    answer: `Submit your details through the Wholesale page or write to us at ${siteConfig.contact.dealerEmail} with your business location and current trade activity. Our team will reach out to discuss territory and terms.`,
+    question: "How do I become a distributor or dealer for Mithai Wallah?",
+    answer: `Submit your details through the Wholesale page or write to us at ${siteConfig.contact.email} with your business location and current trade activity. Our team will reach out to discuss territory and terms.`,
   },
   {
     question: "Do you offer exclusive territory rights to distributors?",

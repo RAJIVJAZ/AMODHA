@@ -24,7 +24,7 @@ export const blogPosts: BlogPost[] = [
       "Most commercial ghee is made by a shortcut process — cream is separated from milk and heated directly to produce ghee. It's fast and scalable, but it skips a crucial step: fermentation and hand-churning.",
       "The bilona method starts with curd, not cream. Fresh milk is set into curd, which is then hand-churned in a wooden bilona (churner) to separate white butter. That butter is then slow-cooked over a controlled flame until it transforms into ghee.",
       "This process takes longer and yields less ghee per litre of milk, which is why bilona ghee costs more — but it also produces a grainier texture, a deeper aroma, and a flavour that's noticeably richer than direct-cream ghee.",
-      "At Amodha, every batch of our Bilona Ghee starts with fresh curd from milk collected through our own farmer network near Prayagraj, hand-churned and slow-cooked exactly the way it has been done for generations.",
+      "At Mithai Wallah, we're preparing our own Bilona Ghee the same way: fresh curd from milk collected from local farmers near Prayagraj, hand-churned and slow-cooked exactly the way it has been done for generations.",
     ],
   },
   {
@@ -47,7 +47,7 @@ export const blogPosts: BlogPost[] = [
     slug: "corporate-gifting-mithai-guide",
     title: "A Buyer's Guide to Corporate Sweet Gift Boxes",
     excerpt:
-      "Ordering mithai for corporate gifting in bulk? Here's what to check before you commit — from shelf life to packaging to minimum order quantities.",
+      "Ordering mithai for corporate gifting in bulk? Here's what to check before you commit — from shelf life to packaging to lead times.",
     date: "2026-02-20",
     readingTime: "6 min read",
     category: "Corporate Gifting",
@@ -56,8 +56,8 @@ export const blogPosts: BlogPost[] = [
       "Corporate gifting season brings a wave of last-minute mithai orders, and getting it wrong — soggy packaging, inconsistent quality, missed delivery dates — reflects directly on your brand.",
       "Shelf life is the first thing to check. Milk-based sweets like kalakand and malai barfi have a shorter shelf life than khoya-based sweets like milk cake and Bikaneri cake, which travel and store better for gifting that needs to reach recipients across cities.",
       "Packaging matters as much as the sweet itself. A premium rigid box or magnetic box with your company's branding communicates far more than a plain mono carton, even if the product inside is identical.",
-      "Always confirm minimum order quantities and lead times well in advance — bulk custom-branded boxes typically need 7-15 days of lead time depending on the customisation involved (logo printing, gold foiling, or fully custom boxes).",
-      "At Mithaiwallah, our Corporate Gifting team works directly with procurement and admin teams to finalise box design, quantity and delivery timelines — and every batch is cooked in 100% pure desi ghee and recorded live, so you know exactly what your clients are receiving.",
+      "Always confirm lead times well in advance — custom-branded boxes typically need 7-15 days of lead time depending on the customisation involved (logo printing, gold foiling, or fully custom boxes).",
+      "At Mithai Wallah, our Corporate Gifting team works directly with procurement and admin teams to finalise box design, quantity and delivery timelines — and every batch is cooked in 100% pure desi ghee and recorded, so it can be traced — you know exactly what your clients are receiving.",
     ],
   },
   {

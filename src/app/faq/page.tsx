@@ -8,7 +8,7 @@ import { generalFaqs } from "@/data/faqs";
 export const metadata: Metadata = {
   title: "Frequently Asked Questions",
   description:
-    "Answers to common questions about Amodha Dairy Products and Mithaiwallah Sweet Corner — ordering, wholesale, gifting, delivery and quality.",
+    "Answers to common questions about Mithai Wallah — ingredients, delivery in Prayagraj, charges, payment, gifting and wholesale.",
   alternates: { canonical: "/faq" },
 };
 

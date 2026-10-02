@@ -12,12 +12,12 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="17 September 2026"
+      updated="2 October 2026"
       sections={[
         {
           heading: "1. Introduction",
           body: [
-            `This Privacy Policy explains how ${siteConfig.name} ("Amodha", "we", "us", "our") collects, uses and protects information you share with us through this website, WhatsApp, phone or email, whether you are a retail customer, wholesale partner, corporate client or job applicant.`,
+            `This Privacy Policy explains how ${siteConfig.legalName}, which runs the ${siteConfig.name} brand ("we", "us", "our"), collects, uses and protects information you share with us through this website, WhatsApp, phone or email, whether you are a retail customer, wholesale partner, corporate client or job applicant.`,
           ],
         },
         {

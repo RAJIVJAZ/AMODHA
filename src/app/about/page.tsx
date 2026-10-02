@@ -6,9 +6,9 @@ import { TrustBar } from "@/components/ui/trust-bar";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About Us — Fresh Mithai Since 2023",
+  title: "About Us — Pure Desi Ghee Sweets Since 2023",
   description:
-    "Mithaiwallah by Amodha started in Prayagraj in 2023. Milk from 100+ local farmers, 100% pure desi ghee, and every batch recorded live in our hygienic kitchen.",
+    "Mithai Wallah, a brand of Anuradha Enterprises, started in Prayagraj in 2023. Milk from 100+ local farmers, 100% pure desi ghee and traceable batches.",
   alternates: { canonical: "/about" },
 };
 
@@ -24,9 +24,9 @@ const values = [
       "Our sweets are made with 100% pure desi ghee. No vanaspati, no blended fats, no shortcuts that cheapen the taste.",
   },
   {
-    title: "Every Batch Recorded Live",
+    title: "Every Batch Recorded & Traceable",
     description:
-      "Each batch is cooked on camera, recorded live in our kitchen from start to finish. Nothing about how your mithai is made is hidden.",
+      "Every production batch is recorded, so each box can be traced back to the batch — and the milk — it came from. Nothing about how your mithai is made is hidden.",
   },
   {
     title: "Hygienic, Safe Packing",
@@ -45,7 +45,7 @@ export default function AboutPage() {
           align="left"
           eyebrow={`Our Story · Est. ${siteConfig.founded}`}
           title="Honest Mithai, Made Fresh in Prayagraj"
-          description={`Mithaiwallah by Amodha began in Prayagraj in ${siteConfig.founded} with one goal: traditional sweets made from milk and ghee you can actually trust.`}
+          description={`${siteConfig.name} — ${siteConfig.tagline} — began in Prayagraj in ${siteConfig.founded} with one goal: traditional sweets made from milk and ghee you can actually trust. ${siteConfig.name} is a brand of ${siteConfig.legalName}.`}
         />
         <div className="mt-10 grid grid-cols-1 gap-6 text-dark/75 lg:grid-cols-2 lg:gap-10">
           <p>
@@ -56,8 +56,8 @@ export default function AboutPage() {
           </p>
           <p>
             So we started in {siteConfig.founded} by doing it the honest way. We collect fresh milk from
-            around 100 local farmers near Prayagraj, cook every sweet in 100% pure desi ghee, and record
-            every batch live in our hygienic kitchen. Then we pack it safely and deliver it fresh across
+            around 100 local farmers near Prayagraj, cook every sweet in 100% pure desi ghee in our hygienic
+            kitchen, and record every batch so it can be traced. Then we pack it safely and deliver it fresh across
             Prayagraj. It takes more care — and that&rsquo;s the point.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function AboutPage() {
             <p>
               Ghee is the second. Plenty of sweets are cooked in vanaspati or blended fats because
               they&rsquo;re cheaper. We use only 100% pure desi ghee — and because every batch is
-              recorded live, you don&rsquo;t have to take our word for it.
+              recorded and traceable, you don&rsquo;t have to take our word for it.
             </p>
           </div>
         </div>

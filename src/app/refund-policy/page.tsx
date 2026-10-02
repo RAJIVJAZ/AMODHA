@@ -4,7 +4,7 @@ import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Refund Policy",
-  description: `Refund and cancellation policy for orders placed with ${siteConfig.name} and Mithaiwallah Sweet Corner.`,
+  description: `Refund and cancellation policy for ${siteConfig.name} orders, operated by ${siteConfig.legalName}.`,
   alternates: { canonical: "/refund-policy" },
 };
 
@@ -17,7 +17,7 @@ export default function RefundPolicyPage() {
         {
           heading: "1. Perishable Goods",
           body: [
-            "Our dairy products and sweets are fresh, perishable food items manufactured to order or in small daily batches. Because of this, we generally do not accept returns once a product has been delivered and accepted.",
+            "Our sweets are fresh, perishable food items made to order or in small daily batches. Because of this, we generally do not accept returns once a product has been delivered and accepted.",
           ],
         },
         {

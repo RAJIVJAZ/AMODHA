@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
-import { getPurchasablePack } from "@/data/sweets";
-import { MAX_ONLINE_ORDER_GRAMS, deliveryFeeFor, formatGrams } from "@/lib/order-rules";
+import { getPack } from "@/data/sweets";
+import { deliveryFeeFor } from "@/lib/order-rules";
 
 type OrderLine = { slug: string; packLabel: string; quantity: number };
 
@@ -23,21 +23,12 @@ export async function POST(req: Request) {
   }
 
   let subtotal = 0;
-  let totalGrams = 0;
   for (const line of items) {
-    const pack = getPurchasablePack(line.slug, line.packLabel);
+    const pack = getPack(line.slug, line.packLabel);
     if (!pack) {
       return NextResponse.json({ error: `${line.slug} (${line.packLabel}) is not available online` }, { status: 400 });
     }
     subtotal += pack.price * line.quantity;
-    totalGrams += pack.grams * line.quantity;
-  }
-
-  if (totalGrams > MAX_ONLINE_ORDER_GRAMS) {
-    return NextResponse.json(
-      { error: `Online orders are limited to ${formatGrams(MAX_ONLINE_ORDER_GRAMS)}. Please contact us for bulk orders.` },
-      { status: 400 }
-    );
   }
 
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {

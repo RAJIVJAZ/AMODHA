@@ -55,7 +55,7 @@ export const dairyProducts: DairyProduct[] = [
     shortDescription:
       "Soft, spongy, and cut fresh daily from whole milk — the way paneer should taste.",
     description: [
-      "Amodha Paneer is made fresh every day from full-cream cow and buffalo milk, curdled naturally and pressed to the perfect firmness — soft enough to melt in a curry, firm enough to hold its shape on skewers.",
+      "Our Paneer will be made fresh every day from full-cream cow and buffalo milk, curdled naturally and pressed to the perfect firmness — soft enough to melt in a curry, firm enough to hold its shape on skewers.",
       "We supply loose paneer to sweet shops and restaurants as well as vacuum-sealed retail blocks for households, maintaining an unbroken cold chain from our facility to your kitchen.",
       "Because we control the entire process from milk collection to cutting, we can guarantee consistency of fat content and texture — something restaurants and hotels depend on for repeat orders.",
     ],
@@ -107,7 +107,7 @@ export const dairyProducts: DairyProduct[] = [
     name: "Farm Fresh Milk",
     shortDescription: "Chilled, tested, and delivered from our own collection network within hours.",
     description: [
-      "Every drop of milk at Amodha is collected from our partner farmers, tested at the collection centre for fat, SNF and quality, and chilled immediately to preserve freshness before it reaches our processing unit.",
+      "Every drop of our milk is collected from our partner farmers, tested at the collection centre for fat, SNF and quality, and chilled immediately to preserve freshness before it reaches our processing unit.",
       "We offer full-cream, toned and double-toned milk options for households, and bulk chilled milk supply for hotels, sweet shops and institutional kitchens.",
     ],
     highlights: [
@@ -156,7 +156,7 @@ export const dairyProducts: DairyProduct[] = [
     name: "Curd (Dahi)",
     shortDescription: "Set curd with a smooth, creamy texture and a naturally tangy taste.",
     description: [
-      "Amodha Curd is set the traditional way from fresh, pasteurised milk, giving it a naturally thick, smooth texture and a mild tang that doesn't overpower a meal.",
+      "Our Curd will be set the traditional way from fresh, pasteurised milk, giving it a naturally thick, smooth texture and a mild tang that doesn't overpower a meal.",
       "We supply both retail cups and bulk curd for caterers, hotels and sweet shops that use curd as a base ingredient.",
     ],
     highlights: [
@@ -181,7 +181,7 @@ export const dairyProducts: DairyProduct[] = [
     shortDescription: "Slow-reduced whole milk solids — the backbone of every great mithai.",
     description: [
       "Khoya is the heart of Indian sweet-making, and ours is reduced slowly from fresh whole milk over direct heat until it reaches the right grain and moisture for milk cake, peda, gujiya and barfi.",
-      "As our own sweet-making unit consumes large quantities of khoya daily, we produce it at scale with consistent quality — and supply the surplus to other halwais and sweet shops who trust Amodha's khoya for their own mithai.",
+      "As our own sweet-making unit consumes large quantities of khoya daily, we produce it at scale with consistent quality — and supply the surplus to other halwais and sweet shops who want dependable khoya for their own mithai.",
     ],
     highlights: [
       "Reduced fresh daily from whole milk",

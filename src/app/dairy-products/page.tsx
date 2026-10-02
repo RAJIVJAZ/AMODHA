@@ -8,8 +8,8 @@ import { dairyProducts } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Amodha Dairy — Coming Soon",
-  description: `Amodha's farm-fresh dairy range is coming soon. ${siteConfig.comingSoonQuote}`,
+  title: "Mithai Wallah Dairy — Coming Soon",
+  description: `Mithai Wallah's farm-fresh dairy range is coming soon, starting with a pure milk subscription in Prayagraj. ${siteConfig.comingSoonQuote}`,
   alternates: { canonical: "/dairy-products" },
 };
 
@@ -25,17 +25,17 @@ export default function DairyProductsPage() {
           <div className="mb-8 flex justify-center">
             <div className="sticker-shadow rounded-2xl border-[2.5px] border-ink bg-white p-3">
               <Image
-                src="/logos/amodha.png"
-                alt="Amodha"
+                src="/logos/mithaiwallah.png"
+                alt="Mithai Wallah"
                 width={900}
-                height={374}
+                height={507}
                 priority
                 className="h-16 w-auto sm:h-20"
               />
             </div>
           </div>
           <SectionHeading
-            eyebrow="Amodha Dairy — Coming Soon"
+            eyebrow="Mithai Wallah Dairy — Coming Soon"
             title="Farm-Fresh Dairy, On Its Way to You"
             description="Every product below will start with milk collected fresh from around 100 local farmers near Prayagraj — the same milk behind our sweets. We're putting the finishing touches on bringing it to you directly."
           />
@@ -64,11 +64,11 @@ export default function DairyProductsPage() {
       </section>
 
       <CtaSection
-        eyebrow="Be the First to Know"
-        title="Want a Message When Amodha Dairy Launches?"
-        description="Meanwhile, explore Mithaiwallah Sweet Corner — or reach out to our team for bulk and institutional dairy supply enquiries."
-        primaryCta={{ label: "Get Notified", href: "/contact" }}
-        secondaryCta={{ label: "Explore Sweet Corner", href: "/" }}
+        eyebrow="Starting With Milk"
+        title="Want Pure Milk Delivered to Your Door?"
+        description="Our farm-fresh milk subscription launches once 50 households sign up. Register your interest — it takes a minute."
+        primaryCta={{ label: "Register Interest", href: "/milk-subscription" }}
+        secondaryCta={{ label: "Browse Our Sweets", href: "/#catalog" }}
       />
     </>
   );

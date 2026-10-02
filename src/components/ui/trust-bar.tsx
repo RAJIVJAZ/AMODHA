@@ -1,16 +1,16 @@
 import { siteConfig } from "@/lib/site";
 
 const trustItems = [
-  { value: siteConfig.stats.farmers, label: "Farmers Connected" },
+  { value: siteConfig.stats.farmers, label: "Local Farmers" },
   { value: siteConfig.stats.customers, label: "Happy Customers" },
-  { value: siteConfig.stats.retailPartners, label: "Retail Partners" },
+  { value: "100%", label: "Pure Desi Ghee" },
   { value: "FSSAI", label: "Certified Facility" },
   { value: "Est. " + siteConfig.founded, label: "In Prayagraj" },
 ];
 
 export function TrustBar() {
   return (
-    <section aria-label="Why customers trust Amodha" className="bg-primary-light/30 py-10">
+    <section aria-label={`Why customers trust ${siteConfig.name}`} className="bg-primary-light/30 py-10">
       <div className="container-site grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
         {trustItems.map((item) => (
           <div

@@ -8,7 +8,6 @@ export type CartItem = {
   productName: string;
   packLabel: string;
   price: number;
-  grams: number;
   quantity: number;
   icon: string;
 };
@@ -17,7 +16,6 @@ type CartContextValue = {
   items: CartItem[];
   itemCount: number;
   subtotal: number;
-  totalGrams: number;
   addItem: (item: Omit<CartItem, "key" | "quantity">, quantity: number) => void;
   updateQuantity: (key: string, quantity: number) => void;
   removeItem: (key: string) => void;
@@ -42,10 +40,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // be a lazy useState initializer.
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      // Carts saved before per-item weights existed can't be checked against the order cap.
-      const parsed: CartItem[] = stored ? JSON.parse(stored) : [];
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setItems(parsed.filter((item) => typeof item.grams === "number"));
+      if (stored) setItems(JSON.parse(stored));
     } catch {
       // ignore malformed/blocked storage
     }
@@ -87,11 +83,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const itemCount = useMemo(() => items.reduce((sum, i) => sum + i.quantity, 0), [items]);
   const subtotal = useMemo(() => items.reduce((sum, i) => sum + i.price * i.quantity, 0), [items]);
-  const totalGrams = useMemo(() => items.reduce((sum, i) => sum + i.grams * i.quantity, 0), [items]);
 
   const value = useMemo(
-    () => ({ items, itemCount, subtotal, totalGrams, addItem, updateQuantity, removeItem, clearCart }),
-    [items, itemCount, subtotal, totalGrams, addItem, updateQuantity, removeItem, clearCart]
+    () => ({ items, itemCount, subtotal, addItem, updateQuantity, removeItem, clearCart }),
+    [items, itemCount, subtotal, addItem, updateQuantity, removeItem, clearCart]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

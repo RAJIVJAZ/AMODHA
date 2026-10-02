@@ -13,7 +13,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b-[2.5px] border-ink bg-white">
       <div className="container-site flex items-center justify-between py-3">
-        <Link href="/" onClick={() => setIsOpen(false)} aria-label={`${siteConfig.sweetBrand} home`}>
+        <Link href="/" onClick={() => setIsOpen(false)} aria-label={`${siteConfig.name} home`}>
           <Image
             src="/logos/mithaiwallah.png"
             alt="Mithai Wallah"

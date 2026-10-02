@@ -106,10 +106,10 @@ export default async function BlogPostPage({
       ) : null}
 
       <CtaSection
-        title="Taste the Amodha Difference"
-        description="Explore our dairy range and Mithaiwallah Sweet Corner catalog."
-        primaryCta={{ label: "Dairy Products", href: "/dairy-products" }}
-        secondaryCta={{ label: "Sweet Corner", href: "/" }}
+        title="Taste the Mithai Wallah Difference"
+        description="Pure desi ghee sweets, made fresh in Prayagraj and delivered to your door."
+        primaryCta={{ label: "Browse Sweets", href: "/#catalog" }}
+        secondaryCta={{ label: "Fresh Milk Subscription", href: "/milk-subscription" }}
       />
     </>
   );

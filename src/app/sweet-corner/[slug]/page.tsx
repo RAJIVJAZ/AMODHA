@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/ui/add-to-cart";
+import { GheeSeal } from "@/components/ui/ghee-seal";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
@@ -40,7 +41,7 @@ export default async function SweetDetailPage({
 
   const related = sweets.filter((s) => s.slug !== sweet.slug).slice(0, 3);
 
-  const purchasablePrices = sweet.packSizes.filter((size) => size.purchasable).map((size) => size.price);
+  const purchasablePrices = sweet.packSizes.map((size) => size.price);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -48,8 +49,8 @@ export default async function SweetDetailPage({
     name: sweet.name,
     description: sweet.shortDescription,
     ...(sweet.image ? { image: `${siteConfig.url}${sweet.image}` } : {}),
-    brand: { "@type": "Brand", name: siteConfig.sweetBrand },
-    manufacturer: { "@type": "Organization", name: siteConfig.name },
+    brand: { "@type": "Brand", name: siteConfig.name },
+    manufacturer: { "@type": "Organization", name: siteConfig.legalName },
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "INR",
@@ -70,7 +71,7 @@ export default async function SweetDetailPage({
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Sweet Corner", href: "/" },
+          { label: "Sweets", href: "/#catalog" },
           { label: sweet.name },
         ]}
       />
@@ -79,15 +80,23 @@ export default async function SweetDetailPage({
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
           <div>
             {sweet.image ? (
-              <div className="sticker-shadow relative aspect-square w-full max-w-md overflow-hidden rounded-3xl border-2 border-ink">
-                <Image
-                  src={sweet.image}
-                  alt={sweet.imageAlt ?? sweet.name}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
+              <div className="relative w-full max-w-md">
+                <div className="sticker-shadow relative aspect-square w-full overflow-hidden rounded-3xl border-2 border-ink">
+                  <Image
+                    src={sweet.image}
+                    alt={sweet.imageAlt ?? sweet.name}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+                {sweet.pureDesiGhee ? (
+                  <GheeSeal
+                    idPrefix="product-seal"
+                    className="absolute -right-3 -top-6 h-24 w-24 rotate-[-10deg] drop-shadow-md sm:-right-8 sm:-top-8 sm:h-32 sm:w-32"
+                  />
+                ) : null}
               </div>
             ) : (
               <div
@@ -145,7 +154,7 @@ export default async function SweetDetailPage({
 
       <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
-          <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">More From Sweet Corner</h2>
+          <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">More Pure Desi Ghee Sweets</h2>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {related.map((item) => (
               <Link

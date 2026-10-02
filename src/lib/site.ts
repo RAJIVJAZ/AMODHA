@@ -1,10 +1,9 @@
 export const siteConfig = {
-  name: "Amodha Dairy Products",
-  shortName: "Amodha",
-  sweetBrand: "Mithaiwallah Sweet Corner",
-  tagline: "Pure Dairy. Traditional Sweets. Crafted with Trust.",
+  name: "Mithai Wallah",
+  legalName: "Anuradha Enterprises",
+  tagline: "A Taste of Prayagraj",
   description:
-    "Fresh mithai handmade in Prayagraj with 100% pure desi ghee and milk from 100+ local farmers — milk cake, kalakand, barfi, peda, kunda and more. Every batch recorded live. Delivered across Prayagraj, free on orders ₹999+.",
+    "Pure desi ghee sweets made fresh in Prayagraj with milk from 100+ local farmers — milk cake, kalakand, barfi, peda, kunda and more. Every batch recorded and traceable. Free delivery in Prayagraj on orders ₹999+.",
   comingSoonQuote: "The purity you want will be arriving soon.",
   url: "https://mithaiwallah.shop",
   locale: "en_IN",
@@ -33,15 +32,15 @@ export const siteConfig = {
     phoneHref: "+917007424542",
     whatsapp: "917007424542",
     email: "support@mithaiwallah.shop",
-    dealerEmail: "dealers@amodhadairy.com",
-    corporateEmail: "corporate@amodhadairy.com",
   },
+  /** Leave empty until the real profile URL is known; empty entries are hidden. */
   social: {
-    instagram: "https://www.instagram.com/amodhadairy",
-    facebook: "https://www.facebook.com/amodhadairy",
-    youtube: "https://www.youtube.com/@amodhadairy",
-    linkedin: "https://www.linkedin.com/company/amodhadairy",
+    instagram: "",
+    facebook: "",
+    youtube: "",
   },
+  /** Paste the Google Form "Send → link" URL here; until then the milk page collects interest via WhatsApp. */
+  dairyInterestFormUrl: "",
   mapsEmbedUrl:
     "https://www.google.com/maps?q=53/2+Surwal+Sahini+Naribari+Rewa+Road+Prayagraj+212106&output=embed",
   mapsUrl:
@@ -51,24 +50,24 @@ export const siteConfig = {
   founded: "2023",
   stats: {
     farmers: "100+",
-    customers: "5000+",
-    retailPartners: "100+",
+    customers: "200+",
   },
 };
 
 export const mainNav = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Dairy Products", href: "/dairy-products" },
   { label: "Our Process", href: "/our-process" },
+  { label: "Fresh Milk", href: "/milk-subscription" },
+  { label: "Membership", href: "/membership" },
   { label: "Corporate Gifting", href: "/corporate-gifting" },
   { label: "Wholesale", href: "/wholesale" },
-  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
 export const footerNav = {
   products: [
+    { label: "Fresh Milk Subscription", href: "/milk-subscription" },
     { label: "Bilona Ghee", href: "/dairy-products/ghee" },
     { label: "Paneer", href: "/dairy-products/paneer" },
     { label: "Butter", href: "/dairy-products/butter" },
@@ -86,9 +85,11 @@ export const footerNav = {
     { label: "Peda", href: "/sweet-corner/peda" },
     { label: "Kunda", href: "/sweet-corner/kunda" },
     { label: "Bikaneri Cake", href: "/sweet-corner/bikaneri-cake" },
+    { label: "Premium Dry Fruit Box", href: "/sweet-corner/premium-dry-fruit-box" },
   ],
   company: [
     { label: "About Us", href: "/about" },
+    { label: "Membership", href: "/membership" },
     { label: "Our Process", href: "/our-process" },
     { label: "Blog", href: "/blog" },
     { label: "FAQs", href: "/faq" },

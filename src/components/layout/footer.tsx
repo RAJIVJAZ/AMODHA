@@ -6,8 +6,7 @@ const socialLinks = [
   { label: "Instagram", href: siteConfig.social.instagram },
   { label: "Facebook", href: siteConfig.social.facebook },
   { label: "YouTube", href: siteConfig.social.youtube },
-  { label: "LinkedIn", href: siteConfig.social.linkedin },
-];
+].filter((social) => social.href);
 
 function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
@@ -31,28 +30,17 @@ export function Footer() {
     <footer className="bg-ink text-blush">
       <div className="container-site grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-6">
         <div className="sm:col-span-2 lg:col-span-2">
-          <div className="flex flex-wrap items-center gap-3">
-            <Image
-              src="/logos/mithaiwallah.png"
-              alt="Mithai Wallah"
-              width={900}
-              height={507}
-              className="h-14 w-auto"
-            />
-            <span className="text-blush/50" aria-hidden="true">
-              ×
-            </span>
-            <Image
-              src="/logos/amodha.png"
-              alt="Amodha"
-              width={900}
-              height={374}
-              className="h-9 w-auto"
-            />
-          </div>
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-blush/80">
-            Premium dairy products and handcrafted sweets, manufactured in Prayagraj using traditional
-            methods and modern hygiene standards.
+          <Image
+            src="/logos/mithaiwallah.png"
+            alt="Mithai Wallah"
+            width={900}
+            height={507}
+            className="h-14 w-auto"
+          />
+          <p className="font-subheading mt-3 text-lg italic text-primary-light">{siteConfig.tagline}</p>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-blush/80">
+            Pure desi ghee sweets made fresh in Prayagraj with milk from local farmers, in a hygienic
+            kitchen where every batch is recorded and traceable.
           </p>
           <address className="mt-5 not-italic text-sm leading-relaxed text-blush/80">
             {siteConfig.address.plant.line1}
@@ -68,24 +56,26 @@ export function Footer() {
           >
             View on Google Maps →
           </a>
-          <ul className="mt-6 flex gap-4">
-            {socialLinks.map((social) => (
-              <li key={social.label}>
-                <a
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blush/80 hover:text-white"
-                >
-                  {social.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {socialLinks.length > 0 ? (
+            <ul className="mt-6 flex gap-4">
+              {socialLinks.map((social) => (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blush/80 hover:text-white"
+                  >
+                    {social.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
 
         <FooterColumn title="Dairy (Coming Soon)" links={footerNav.products} />
-        <FooterColumn title="Sweet Corner" links={footerNav.sweets} />
+        <FooterColumn title="Our Sweets" links={footerNav.sweets} />
         <FooterColumn title="Business" links={footerNav.business} />
         <div>
           <FooterColumn title="Company" links={footerNav.company} />
@@ -95,7 +85,8 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-site flex flex-col items-center justify-between gap-3 py-6 text-xs text-blush/60 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            © {new Date().getFullYear()} {siteConfig.legalName}. {siteConfig.name} is a brand of{" "}
+            {siteConfig.legalName}.
           </p>
           <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1">
             {footerNav.legal.map((link) => (

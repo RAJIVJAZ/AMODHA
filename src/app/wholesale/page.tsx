@@ -10,7 +10,7 @@ import { dealerFaqs } from "@/data/faqs";
 export const metadata: Metadata = {
   title: "Wholesale & Distributor Program | Sweet Wholesale Supplier",
   description:
-    "Become an Amodha dealer or distributor. Wholesale dairy and mithai supply for sweet shops, hotels, restaurants and retail chains across Uttar Pradesh and beyond.",
+    "Become a Mithai Wallah dealer or distributor. Wholesale supply of pure desi ghee mithai for sweet shops, hotels, restaurants and retailers.",
   alternates: { canonical: "/wholesale" },
 };
 
@@ -44,7 +44,7 @@ export default function WholesalePage() {
               Wholesale & Distribution
             </span>
             <h1 className="text-balance max-w-3xl text-4xl font-bold text-ink sm:text-5xl">
-              Become an Amodha Wholesale Partner
+              Become a Mithai Wallah Wholesale Partner
             </h1>
             <p className="max-w-2xl text-balance text-lg text-ink/70">
               We supply consistent, high-quality dairy and mithai in bulk to sweet shop owners,
@@ -54,7 +54,7 @@ export default function WholesalePage() {
           <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
             <Image
               src="/images/sweet-corner/wholesale-partner-handshake.webp"
-              alt="A Mithaiwallah shop owner shaking hands with a delivery partner over stacked branded cartons at the sweet shop counter"
+              alt="A Mithai Wallah shop owner shaking hands with a delivery partner over stacked branded cartons at the sweet shop counter"
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -98,7 +98,7 @@ export default function WholesalePage() {
             <SectionHeading align="left" eyebrow="Get Started" title="Become a Distributor" />
             <p className="mt-4 text-dark/70">
               Tell us about your business and trade area. Our sales team will reach out with wholesale
-              pricing, minimum order quantities and onboarding details.
+              pricing and onboarding details.
             </p>
           </div>
           <EnquiryForm
@@ -129,7 +129,7 @@ export default function WholesalePage() {
 
       <CtaSection
         title="Let's Build a Reliable Supply Partnership"
-        description="Join 100+ retail and wholesale partners already trusting Amodha for consistent quality."
+        description="Stock pure desi ghee mithai made fresh in Prayagraj, with batches you can trace."
         primaryCta={{ label: "Become a Distributor", href: "#apply" }}
         secondaryCta={{ label: "Contact Sales", href: "/contact" }}
       />

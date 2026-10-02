@@ -4,18 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
-import {
-  DELIVERY_AREA,
-  DELIVERY_FEE,
-  FREE_DELIVERY_THRESHOLD,
-  MAX_ONLINE_ORDER_GRAMS,
-  formatGrams,
-} from "@/lib/order-rules";
+import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
-import type { PackSize, PurchasablePackSize } from "@/data/sweets";
+import type { PackSize } from "@/data/sweets";
 
 function bulkOrderHref(productName: string) {
-  const message = `Hi Mithaiwallah, I'd like to order more than ${formatGrams(MAX_ONLINE_ORDER_GRAMS)} of ${productName}. Please share bulk pricing.`;
+  const message = `Hi Mithai Wallah, I'd like to place a bulk order of ${productName} for an event. Please share pricing.`;
   return `https://wa.me/${siteConfig.contact.whatsapp}?text=${encodeURIComponent(message)}`;
 }
 
@@ -28,44 +22,18 @@ export function AddToCart({
   productName: string;
   packSizes: PackSize[];
 }) {
-  const { addItem, totalGrams } = useCart();
-  const purchasable = packSizes.filter((size): size is PurchasablePackSize => size.purchasable);
-  const [selectedLabel, setSelectedLabel] = useState(purchasable[0]?.label ?? "");
+  const { addItem } = useCart();
+  const [selectedLabel, setSelectedLabel] = useState(packSizes[0]?.label ?? "");
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
 
-  const selected = purchasable.find((size) => size.label === selectedLabel);
-  const remainingGrams = MAX_ONLINE_ORDER_GRAMS - totalGrams;
-  const maxQuantity = selected ? Math.floor(remainingGrams / selected.grams) : 0;
-  const canAdd = selected !== undefined && quantity <= maxQuantity;
+  const selected = packSizes.find((size) => size.label === selectedLabel);
 
   function handleAddToCart() {
-    if (!selected || !canAdd) return;
-    addItem(
-      { slug, productName, packLabel: selected.label, price: selected.price, grams: selected.grams, icon: "🍬" },
-      quantity
-    );
+    if (!selected) return;
+    addItem({ slug, productName, packLabel: selected.label, price: selected.price, icon: "🍬" }, quantity);
     setJustAdded(true);
     setQuantity(1);
-  }
-
-  const bulkLink = (
-    <a
-      href={bulkOrderHref(productName)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="font-semibold text-primary-dark underline"
-    >
-      contact us for bulk pricing
-    </a>
-  );
-
-  if (purchasable.length === 0) {
-    return (
-      <p className="text-sm text-dark/60">
-        This item is available in bulk only — {bulkLink}.
-      </p>
-    );
   }
 
   return (
@@ -73,13 +41,12 @@ export function AddToCart({
       <h2 className="font-heading text-lg font-bold text-ink">Add to Cart</h2>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {purchasable.map((size) => (
+        {packSizes.map((size) => (
           <button
             key={size.label}
             type="button"
             onClick={() => {
               setSelectedLabel(size.label);
-              setQuantity(1);
               setJustAdded(false);
             }}
             className={`rounded-full border-2 px-4 py-2 text-sm font-semibold transition-colors ${
@@ -108,8 +75,7 @@ export function AddToCart({
             type="button"
             aria-label="Increase quantity"
             onClick={() => setQuantity((q) => q + 1)}
-            disabled={quantity >= maxQuantity}
-            className="font-heading flex h-8 w-8 items-center justify-center rounded-full text-base font-bold text-ink hover:bg-blush disabled:cursor-not-allowed disabled:opacity-30"
+            className="font-heading flex h-8 w-8 items-center justify-center rounded-full text-base font-bold text-ink hover:bg-blush"
           >
             +
           </button>
@@ -118,19 +84,12 @@ export function AddToCart({
         <button
           type="button"
           onClick={handleAddToCart}
-          disabled={!canAdd}
+          disabled={!selected}
           className="font-heading sticker-shadow flex flex-1 items-center justify-center gap-2 rounded-full border-[2.5px] border-ink bg-accent px-6 py-2.5 text-sm font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
         >
           Add to Cart{selected ? ` — ${formatInr(selected.price * quantity)}` : ""}
         </button>
       </div>
-
-      {!canAdd ? (
-        <p className="mt-3 text-sm font-medium text-accent-dark">
-          Online orders are limited to {formatGrams(MAX_ONLINE_ORDER_GRAMS)}
-          {totalGrams > 0 ? ` and your cart already has ${formatGrams(totalGrams)}` : ""}. Need more? {bulkLink}.
-        </p>
-      ) : null}
 
       {justAdded ? (
         <p className="mt-3 text-sm font-semibold text-primary-dark">
@@ -142,12 +101,20 @@ export function AddToCart({
       ) : null}
 
       <ul className="mt-5 flex flex-col gap-1.5 border-t-2 border-dashed border-ink/15 pt-4 text-sm text-dark/70">
-        <li>📍 Delivery currently available in {DELIVERY_AREA} only</li>
+        <li>📍 Delivery currently available in {DELIVERY_AREA}</li>
         <li>
           🚚 Free delivery on orders {formatInr(FREE_DELIVERY_THRESHOLD)}+ ({formatInr(DELIVERY_FEE)} below that)
         </li>
         <li>
-          ⚖️ Online orders up to {formatGrams(MAX_ONLINE_ORDER_GRAMS)} — want more? {bulkLink}
+          🎉 Ordering for a function or event?{" "}
+          <a
+            href={bulkOrderHref(productName)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-primary-dark underline"
+          >
+            Ask about bulk pricing
+          </a>
         </li>
       </ul>
     </div>

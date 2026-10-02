@@ -2,7 +2,7 @@ import { siteConfig } from "@/lib/site";
 
 export function WhatsAppButton() {
   const message = encodeURIComponent(
-    "Hi Amodha, I'd like to know more about your dairy products and sweets."
+    "Hi Mithai Wallah, I'd like to know more about your sweets."
   );
 
   return (

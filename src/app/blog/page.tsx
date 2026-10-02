@@ -5,9 +5,9 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { blogPosts } from "@/data/blog";
 
 export const metadata: Metadata = {
-  title: "Blog | Dairy & Mithai Insights from Amodha",
+  title: "Blog | Mithai & Dairy Insights",
   description:
-    "Articles on traditional dairy-making, mithai craftsmanship, and gifting guides from Amodha Dairy Products and Mithaiwallah Sweet Corner.",
+    "Articles on traditional mithai-making, pure desi ghee, dairy and gifting guides from Mithai Wallah, Prayagraj.",
   alternates: { canonical: "/blog" },
 };
 
