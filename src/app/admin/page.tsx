@@ -96,7 +96,12 @@ export default async function AdminPage() {
   return (
     <section className="bg-blush py-10 sm:py-14">
       <div className="container-site flex flex-col gap-6">
-        <h1 className="text-3xl font-bold text-ink">Orders &amp; Requests</h1>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h1 className="text-3xl font-bold text-ink">Orders &amp; Requests</h1>
+          <a href="/account" className="text-sm font-semibold text-primary-dark hover:underline">
+            ← My account
+          </a>
+        </div>
 
         <div className="sticker-shadow overflow-hidden rounded-2xl border-2 border-ink bg-white">
           <h2 className="font-heading border-b-2 border-ink/10 px-5 py-4 text-lg font-bold text-ink">Latest orders</h2>

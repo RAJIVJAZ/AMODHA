@@ -74,7 +74,7 @@ export default async function AccountPage() {
   const byContact = admin ?? supabase;
 
   const [profileRes, ordersRes, addressesRes, wishlistRes, supportRes, membershipRes, pointsRes, milkRes] = await Promise.all([
-    supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("full_name, is_admin").eq("id", user.id).maybeSingle(),
     byContact
       .from("orders")
       .select("id, order_number, created_at, status, payment_method, payment_status, total, discount, order_items(product_name, pack_label, quantity)")
@@ -128,6 +128,14 @@ export default async function AccountPage() {
               {activeMembership ? `Member · renews ${formatDate(activeMembership.expires_at)}` : "Regular customer"}
             </span>
             <span className="rounded-full border-2 border-ink px-3 py-1 text-xs font-semibold text-ink">Points: {points}</span>
+            {profileRes.data?.is_admin ? (
+              <Link
+                href="/admin"
+                className="font-heading rounded-full border-2 border-ink bg-ink px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-ink-light"
+              >
+                Open Admin
+              </Link>
+            ) : null}
             <SignOutButton />
           </div>
         </div>
