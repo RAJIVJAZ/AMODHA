@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   if ("error" in customer) return NextResponse.json({ error: customer.error }, { status: 400 });
 
   const admin = createAdminClient();
-  const quote = await quoteOrder(admin, priced.subtotal);
+  const quote = await quoteOrder(admin, priced.subtotal, customer.phone);
 
   const orderNumber = admin
     ? await saveOrder(admin, {

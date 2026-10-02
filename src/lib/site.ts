@@ -40,10 +40,11 @@ export const siteConfig = {
     youtube: "",
   },
   /**
-   * Turn on once SMS is set up in Supabase (Authentication → Sign In / Providers → Phone).
-   * Shows the account link in the header and the first-order offer banner.
+   * Shows the account link in the header, the wishlist button and the first-order offer banner.
    */
-  accountsLive: false,
+  accountsLive: true,
+  /** How customers sign in: a one-time code by "email" now, by "phone" (SMS) once DLT is approved. */
+  loginMethod: "email" as "email" | "phone",
   /** Paste the Google Form "Send → link" URL here; until then the milk page collects interest via WhatsApp. */
   dairyInterestFormUrl: "",
   mapsEmbedUrl:

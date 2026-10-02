@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   }
 
   const admin = createAdminClient();
-  const quote = await quoteOrder(admin, priced.subtotal);
+  const quote = await quoteOrder(admin, priced.subtotal, customer.phone);
 
   const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,

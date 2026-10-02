@@ -85,7 +85,12 @@ export default function CheckoutPage() {
       ]);
       if (cancelled) return;
       const phone = userData.user?.phone?.replace(/\D/g, "").slice(-10);
-      if (phone) setForm((prev) => (prev.phone ? prev : { ...prev, phone }));
+      const email = userData.user?.email;
+      setForm((prev) => ({
+        ...prev,
+        phone: prev.phone || phone || "",
+        email: prev.email || email || "",
+      }));
       if (addresses) setSavedAddresses(addresses);
     }
     loadAccount();
@@ -326,7 +331,7 @@ export default function CheckoutPage() {
           <p className="mt-4 rounded-xl border-2 border-ink/15 bg-white px-4 py-3 text-sm text-dark/75">
             First order?{" "}
             <Link href="/login?next=/checkout" className="font-semibold text-primary-dark hover:underline">
-              Sign in with your mobile number
+              Sign in or sign up
             </Link>{" "}
             to get {formatInr(FIRST_ORDER_DISCOUNT)} off orders of {formatInr(FIRST_ORDER_MINIMUM)} or more, and to track your order.
           </p>

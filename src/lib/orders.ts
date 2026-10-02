@@ -65,22 +65,50 @@ export function parseCustomer(value: unknown): CustomerDetails | { error: string
   const pincode = text(input.pincode, 10);
   if (!name || !address || !city || !pincode) return { error: "Please fill in your name and full delivery address" };
   if (!phone) return { error: "Please enter a valid 10-digit mobile number" };
-  return { name, phone, email: text(input.email, 200), address, city, pincode, notes: text(input.notes, 500) };
+  const email = text(input.email, 200)?.toLowerCase() ?? null;
+  return { name, phone, email, address, city, pincode, notes: text(input.notes, 500) };
 }
 
-export type SignedInCustomer = { id: string; phone: string | null };
+/** A signed-in customer. Phone and email are set only when Supabase has verified them. */
+export type SignedInCustomer = { id: string; phone: string | null; email: string | null };
 
-/** The customer signed in with a verified mobile number, if any. */
+const SAFE_EMAIL = /^[^\s",()]+@[^\s",()]+$/;
+
+function verifiedEmail(email: string | undefined, confirmedAt: string | undefined) {
+  const lower = email?.toLowerCase();
+  return lower && confirmedAt && SAFE_EMAIL.test(lower) ? lower : null;
+}
+
 export async function getSignedInCustomer(): Promise<SignedInCustomer | null> {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
-  if (!data.user) return null;
-  return { id: data.user.id, phone: normalizePhone(data.user.phone ?? "") };
+  const user = data.user;
+  if (!user) return null;
+  return {
+    id: user.id,
+    phone: user.phone_confirmed_at ? normalizePhone(user.phone ?? "") : null,
+    email: verifiedEmail(user.email, user.email_confirmed_at),
+  };
 }
 
-/** True when this verified customer has no earlier confirmed order (online or COD). */
-export async function isFirstOrder(admin: SupabaseClient, customer: SignedInCustomer) {
-  const match = customer.phone ? `user_id.eq.${customer.id},phone.eq.${customer.phone}` : `user_id.eq.${customer.id}`;
+/**
+ * PostgREST filter matching rows that belong to this customer: their account, plus
+ * orders placed before signing in with the same verified phone or email.
+ */
+export function customerFilter(customer: SignedInCustomer, options: { email?: boolean; extraPhone?: string | null } = {}) {
+  const parts = [`user_id.eq.${customer.id}`];
+  if (customer.phone) parts.push(`phone.eq.${customer.phone}`);
+  if (options.extraPhone && options.extraPhone !== customer.phone) parts.push(`phone.eq.${options.extraPhone}`);
+  if (options.email !== false && customer.email) parts.push(`email.eq."${customer.email}"`);
+  return parts.join(",");
+}
+
+/**
+ * True when this customer has no earlier confirmed order (online or COD) on their account,
+ * verified phone or email — or on the phone number they are ordering for now.
+ */
+export async function isFirstOrder(admin: SupabaseClient, customer: SignedInCustomer, checkoutPhone?: string | null) {
+  const match = customerFilter(customer, { extraPhone: checkoutPhone });
   const { count, error } = await admin
     .from("orders")
     .select("id", { count: "exact", head: true })
@@ -93,9 +121,9 @@ export async function isFirstOrder(admin: SupabaseClient, customer: SignedInCust
   return count === 0;
 }
 
-export async function quoteOrder(admin: SupabaseClient | null, subtotal: number) {
+export async function quoteOrder(admin: SupabaseClient | null, subtotal: number, checkoutPhone: string) {
   const customer = await getSignedInCustomer();
-  const eligible = Boolean(admin && customer && (await isFirstOrder(admin, customer)));
+  const eligible = Boolean(admin && customer && (await isFirstOrder(admin, customer, checkoutPhone)));
   const discount = firstOrderDiscountFor(subtotal, eligible);
   const deliveryFee = deliveryFeeFor(subtotal);
   return { customer, discount, deliveryFee, total: subtotal + deliveryFee - discount };

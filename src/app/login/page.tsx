@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Sign In",
-  description: `Sign in to your ${siteConfig.name} account with your mobile number.`,
+  description: `Sign in to your ${siteConfig.name} account with a one-time code.`,
   robots: { index: false, follow: false },
 };
 
@@ -16,7 +16,10 @@ function safeNext(value: string | string[] | undefined) {
 }
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const next = safeNext((await searchParams).next);
+  const params = await searchParams;
+  const next = safeNext(params.next);
+  const linkExpired = params.link === "expired";
+  const isEmail = siteConfig.loginMethod === "email";
 
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
@@ -26,12 +29,18 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <section className="bg-blush py-16 sm:py-24">
       <div className="container-site flex justify-center">
         <div className="sticker-shadow w-full max-w-md rounded-3xl border-[2.5px] border-ink bg-white p-6 sm:p-8">
-          <h1 className="text-3xl font-bold text-ink">Sign in with OTP</h1>
+          <h1 className="text-3xl font-bold text-ink">Sign in or sign up</h1>
           <p className="mt-2 text-sm text-dark/70">
-            Track orders, save addresses and keep a wishlist. We&rsquo;ll text a one-time code to your mobile.
+            Track orders, save addresses and keep a wishlist. We&rsquo;ll {isEmail ? "email" : "text"} you a one-time
+            code{isEmail ? "" : " on your mobile"}.
           </p>
+          {linkExpired ? (
+            <p role="alert" className="mt-4 rounded-xl bg-blush px-3 py-2 text-sm text-accent-dark">
+              That sign-in link has expired or was already used. Request a new code below.
+            </p>
+          ) : null}
           <div className="mt-6">
-            <OtpLogin next={next} />
+            <OtpLogin next={next} method={siteConfig.loginMethod} />
           </div>
         </div>
       </div>

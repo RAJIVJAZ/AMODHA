@@ -12,7 +12,7 @@ import { membership as membershipOffer } from "@/data/membership";
 import { milkSubscription } from "@/data/milk-subscription";
 import { formatInr } from "@/lib/currency";
 import { orderStatusLabels, type OrderStatus } from "@/lib/order-status";
-import { normalizePhone } from "@/lib/phone";
+import { customerFilter, getSignedInCustomer } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -66,17 +66,17 @@ export default async function AccountPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/account");
 
-  // Orders and milk registrations placed before signing in are matched by the verified mobile number.
-  const phone = normalizePhone(user.phone ?? "");
-  const matchCustomer = phone ? `user_id.eq.${user.id},phone.eq.${phone}` : `user_id.eq.${user.id}`;
-  const byPhone = createAdminClient() ?? supabase;
+  // Orders and milk registrations placed before signing in are matched by verified phone or email.
+  const customer = await getSignedInCustomer();
+  if (!customer) redirect("/login?next=/account");
+  const byContact = createAdminClient() ?? supabase;
 
   const [profileRes, ordersRes, addressesRes, wishlistRes, supportRes, membershipRes, pointsRes, milkRes] = await Promise.all([
     supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle(),
-    byPhone
+    byContact
       .from("orders")
       .select("id, order_number, created_at, status, payment_method, payment_status, total, discount, order_items(product_name, pack_label, quantity)")
-      .or(matchCustomer)
+      .or(customerFilter(customer))
       .neq("status", "pending_payment")
       .order("created_at", { ascending: false })
       .limit(20),
@@ -95,10 +95,10 @@ export default async function AccountPage() {
       .limit(1)
       .maybeSingle(),
     supabase.from("reward_ledger").select("points"),
-    byPhone
+    byContact
       .from("milk_interest")
       .select("created_at, area, daily_litres, timing, wants_a2")
-      .or(matchCustomer)
+      .or(customerFilter(customer, { email: false }))
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
@@ -116,7 +116,9 @@ export default async function AccountPage() {
         <div className="sticker-shadow flex flex-col gap-4 rounded-2xl border-2 border-ink bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="flex flex-col gap-1">
             <ProfileName userId={user.id} initialName={profileRes.data?.full_name ?? null} />
-            <p className="text-sm text-dark/60">Signed in as +91 {phone ?? user.phone}</p>
+            <p className="text-sm text-dark/60">
+              Signed in as {customer.email ?? (customer.phone ? `+91 ${customer.phone}` : "your account")}
+            </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full border-2 border-ink px-3 py-1 text-xs font-semibold text-ink">

@@ -92,7 +92,7 @@ export default function HomePage() {
               className="font-heading sticker-shadow rounded-2xl border-[2.5px] border-ink bg-[#f3d27a] px-5 py-3 text-base font-bold text-ink transition-transform hover:-translate-y-0.5 sm:text-lg"
             >
               🎉 Get {formatInr(FIRST_ORDER_DISCOUNT)} OFF on Your First Order Above {formatInr(FIRST_ORDER_MINIMUM)}
-              <span className="block text-xs font-semibold text-ink/70 sm:text-sm">Sign in with your mobile number at checkout</span>
+              <span className="block text-xs font-semibold text-ink/70 sm:text-sm">Sign up with your email in a minute</span>
             </Link>
           ) : null}
           <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-5xl md:text-6xl">
