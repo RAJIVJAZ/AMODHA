@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { OrderStatusSelect } from "@/components/admin/order-status-select";
+import { StaffManager } from "@/components/admin/staff-manager";
 import { SupportReply } from "@/components/admin/support-reply";
 import { milkSubscription } from "@/data/milk-subscription";
 import { getStaffClient } from "@/lib/admin-auth";
@@ -71,7 +72,7 @@ export default async function AdminPage() {
     );
   }
 
-  const [ordersRes, supportRes, milkRes, milkCountRes] = await Promise.all([
+  const [ordersRes, supportRes, milkRes, milkCountRes, staffRes, staffProfilesRes] = await Promise.all([
     staff
       .from("orders")
       .select("id, order_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, order_items(product_name, pack_label, quantity)")
@@ -80,7 +81,14 @@ export default async function AdminPage() {
     staff.from("support_requests").select("id, subject, message, order_number, created_at").eq("status", "open").order("created_at"),
     staff.from("milk_interest").select("id, name, phone, area, daily_litres, timing, wants_a2, created_at").order("created_at", { ascending: false }).limit(50),
     staff.from("milk_interest").select("phone", { count: "exact", head: true }),
+    staff.from("staff_emails").select("email").order("created_at"),
+    staff.from("profiles").select("email").eq("is_admin", true),
   ]);
+  const signedUpStaff = new Set((staffProfilesRes.data ?? []).map((row) => row.email as string));
+  const staffMembers = (staffRes.data ?? []).map((row) => ({
+    email: row.email as string,
+    signedUp: signedUpStaff.has(row.email as string),
+  }));
 
   const orders = (ordersRes.data ?? []) as AdminOrder[];
   const milkCount = milkCountRes.count ?? 0;
@@ -155,6 +163,13 @@ export default async function AdminPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+
+        <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-5 lg:max-w-xl">
+          <h2 className="font-heading text-lg font-bold text-ink">Admins</h2>
+          <div className="mt-3">
+            <StaffManager staff={staffMembers} currentEmail={user.email?.toLowerCase() ?? null} />
           </div>
         </div>
       </div>
