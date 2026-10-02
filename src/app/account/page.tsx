@@ -12,7 +12,8 @@ import { membership as membershipOffer } from "@/data/membership";
 import { milkSubscription } from "@/data/milk-subscription";
 import { formatInr } from "@/lib/currency";
 import { orderStatusLabels, type OrderStatus } from "@/lib/order-status";
-import { customerFilter, getSignedInCustomer } from "@/lib/orders";
+import { FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM } from "@/lib/order-rules";
+import { customerFilter, getSignedInCustomer, isFirstOrder } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -69,7 +70,8 @@ export default async function AccountPage() {
   // Orders and milk registrations placed before signing in are matched by verified phone or email.
   const customer = await getSignedInCustomer();
   if (!customer) redirect("/login?next=/account");
-  const byContact = createAdminClient() ?? supabase;
+  const admin = createAdminClient();
+  const byContact = admin ?? supabase;
 
   const [profileRes, ordersRes, addressesRes, wishlistRes, supportRes, membershipRes, pointsRes, milkRes] = await Promise.all([
     supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle(),
@@ -109,6 +111,7 @@ export default async function AccountPage() {
   const points = (pointsRes.data ?? []).reduce((sum, row) => sum + (row.points as number), 0);
   const activeMembership = membershipRes.data;
   const milk = milkRes.data;
+  const welcomeOffer = admin ? await isFirstOrder(admin, customer) : false;
 
   return (
     <section className="bg-blush py-10 sm:py-14">
@@ -143,6 +146,25 @@ export default async function AccountPage() {
           </nav>
 
           <div className="flex flex-col gap-6">
+            {welcomeOffer ? (
+              <section className="sticker-shadow flex flex-col gap-3 rounded-2xl border-[2.5px] border-ink bg-[#fbeec4] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+                <div>
+                  <h2 className="font-heading text-lg font-bold text-ink">
+                    🎉 Your welcome gift: {formatInr(FIRST_ORDER_DISCOUNT)} off your first order
+                  </h2>
+                  <p className="mt-1 text-sm text-dark/70">
+                    Applied automatically at checkout on orders of {formatInr(FIRST_ORDER_MINIMUM)} or more. No code needed.
+                  </p>
+                </div>
+                <Link
+                  href="/#catalog"
+                  className="font-heading sticker-shadow shrink-0 self-start rounded-full border-[2.5px] border-ink bg-accent px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white sm:self-center"
+                >
+                  Shop Sweets
+                </Link>
+              </section>
+            ) : null}
+
             {activeOrder ? (
               <section className="sticker-shadow rounded-2xl border-[2.5px] border-accent bg-accent/10 p-5 sm:p-6">
                 <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">

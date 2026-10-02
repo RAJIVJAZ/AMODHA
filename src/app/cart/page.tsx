@@ -5,11 +5,15 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
-import { DELIVERY_AREA, FREE_DELIVERY_THRESHOLD, deliveryFeeFor } from "@/lib/order-rules";
+import { FirstOrderNote } from "@/components/ui/first-order-note";
+import { DELIVERY_AREA, FREE_DELIVERY_THRESHOLD, deliveryFeeFor, firstOrderDiscountFor } from "@/lib/order-rules";
+import { useFirstOrderOffer } from "@/lib/use-first-order-offer";
 
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeItem } = useCart();
   const deliveryFee = deliveryFeeFor(subtotal);
+  const offer = useFirstOrderOffer();
+  const discount = firstOrderDiscountFor(subtotal, Boolean(offer?.eligible));
 
   return (
     <>
@@ -97,10 +101,17 @@ export default function CartPage() {
                 <span>Delivery</span>
                 <span className="font-semibold text-ink">{deliveryFee === 0 ? "Free" : formatInr(deliveryFee)}</span>
               </div>
+              {discount > 0 ? (
+                <div className="mt-2 flex items-center justify-between text-sm text-dark/70">
+                  <span>First-order discount</span>
+                  <span className="font-semibold text-green-700">−{formatInr(discount)}</span>
+                </div>
+              ) : null}
               <div className="mt-3 flex items-center justify-between border-t-2 border-dashed border-ink/20 pt-3">
                 <span className="font-heading font-bold text-ink">Total</span>
-                <span className="font-heading font-bold text-ink">{formatInr(subtotal + deliveryFee)}</span>
+                <span className="font-heading font-bold text-ink">{formatInr(subtotal + deliveryFee - discount)}</span>
               </div>
+              <FirstOrderNote offer={offer} subtotal={subtotal} next="/cart" />
               {deliveryFee > 0 ? (
                 <p className="mt-2 text-xs font-medium text-primary-dark">
                   Add {formatInr(FREE_DELIVERY_THRESHOLD - subtotal)} more for free delivery.

@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent, type MouseEvent } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { FirstOrderNote } from "@/components/ui/first-order-note";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
@@ -518,15 +519,14 @@ export default function CheckoutPage() {
                 <span>First-order discount</span>
                 <span className="font-semibold text-green-700">−{formatInr(discount)}</span>
               </div>
-            ) : firstOrderEligible ? (
-              <p className="mt-2 text-xs text-dark/60">
-                Add {formatInr(FIRST_ORDER_MINIMUM - subtotal)} more to get {formatInr(FIRST_ORDER_DISCOUNT)} off your first order.
-              </p>
             ) : null}
             <div className="mt-3 flex items-center justify-between border-t-2 border-dashed border-ink/20 pt-3">
               <span className="font-heading font-bold text-ink">Total</span>
               <span className="font-heading font-bold text-ink">{formatInr(total)}</span>
             </div>
+            {signedIn ? (
+              <FirstOrderNote offer={{ signedIn, eligible: firstOrderEligible }} subtotal={subtotal} next="/checkout" />
+            ) : null}
             <Link href="/cart" className="mt-4 block text-center text-sm font-semibold text-primary-dark hover:underline">
               Edit Cart
             </Link>
