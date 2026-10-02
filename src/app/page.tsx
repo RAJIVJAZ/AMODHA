@@ -4,11 +4,9 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { TrustBar } from "@/components/ui/trust-bar";
-import { TestimonialCard } from "@/components/ui/testimonial-card";
 import { CtaSection } from "@/components/ui/cta-section";
 import { dairyProducts } from "@/data/dairy-products";
 import { sweets, hamperCategories } from "@/data/sweets";
-import { testimonials } from "@/data/testimonials";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -276,20 +274,6 @@ export default function HomePage() {
           <ButtonLink href="/wholesale" variant="primary">
             Become a Distributor
           </ButtonLink>
-        </div>
-      </section>
-
-      <section className="py-20 sm:py-28">
-        <div className="container-site flex flex-col gap-12">
-          <SectionHeading
-            eyebrow="Testimonials"
-            title="What Our Customers & Partners Say"
-          />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.name} {...testimonial} />
-            ))}
-          </div>
         </div>
       </section>
 
