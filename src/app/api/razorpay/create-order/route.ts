@@ -41,6 +41,7 @@ export async function POST(req: Request) {
           deliveryFee: quote.deliveryFee,
           discount: quote.discount,
           total: quote.total,
+        milkSubscriber: quote.milkSubscriber,
           paymentMethod: "online",
           razorpayOrderId: order.id,
         })

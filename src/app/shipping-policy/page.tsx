@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/layout/legal-page";
 import { formatInr } from "@/lib/currency";
-import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/order-rules";
+import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export default function ShippingPolicyPage() {
         {
           heading: "3. Delivery Charges",
           body: [
-            `Delivery is free on orders of ${formatInr(FREE_DELIVERY_THRESHOLD)} or more. Orders below ${formatInr(FREE_DELIVERY_THRESHOLD)} carry a flat ${formatInr(DELIVERY_FEE)} delivery fee. The fee is shown in your cart and at checkout before you pay.`,
+            `Delivery is free on orders of ${formatInr(FREE_DELIVERY_THRESHOLD)} or more. Orders below ${formatInr(FREE_DELIVERY_THRESHOLD)} carry a flat ${formatInr(DELIVERY_FEE)} delivery fee. The fee is shown in your cart and at checkout before you pay. Active Farm Fresh Milk subscribers get free delivery on orders of ${formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)} or more.`,
           ],
         },
         {

@@ -1,5 +1,5 @@
 import { formatInr } from "@/lib/currency";
-import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/order-rules";
+import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export type FaqItem = { question: string; answer: string };
@@ -16,7 +16,7 @@ export const generalFaqs: FaqItem[] = [
   },
   {
     question: "How much does delivery cost?",
-    answer: `Delivery is free on orders of ${formatInr(FREE_DELIVERY_THRESHOLD)} or more. Orders below ${formatInr(FREE_DELIVERY_THRESHOLD)} have a flat ${formatInr(DELIVERY_FEE)} delivery fee, shown in your cart before you pay.`,
+    answer: `Delivery is free on orders of ${formatInr(FREE_DELIVERY_THRESHOLD)} or more. Orders below ${formatInr(FREE_DELIVERY_THRESHOLD)} have a flat ${formatInr(DELIVERY_FEE)} delivery fee, shown in your cart before you pay. Active milk subscribers get free delivery from ${formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}.`,
   },
   {
     question: "Is there a minimum or maximum order?",
@@ -36,12 +36,12 @@ export const generalFaqs: FaqItem[] = [
   {
     question: "When will fresh milk delivery start?",
     answer:
-      "Our farm-fresh milk subscription (₹100 per litre, in reusable glass bottles) launches once 50 households in Prayagraj sign up. Register your interest on the Fresh Milk page and we'll contact you before launch.",
+      "Our Farm Fresh Milk Subscription (proposed at ₹100 per litre, in reusable glass bottles) is collecting interest now. We will launch it only after at least 50 regular subscription customers confirm their interest. Register on the Fresh Milk page and we'll contact you before launch.",
   },
   {
-    question: "What is the Mithai Wallah Membership?",
+    question: "What are Milk Subscriber Benefits?",
     answer:
-      "A ₹199-per-year membership with 20% off sweets and food products, free delivery on orders above ₹499, priority delivery and support, and early access to new products. Milk subscriptions are excluded from the discount. Membership is launching soon — join the waitlist on the Membership page.",
+      "Customers on our milk subscription automatically get priority delivery, free delivery on Mithai Wallah products above ₹499, early access to new products, subscriber-only and festive offers, priority support and access to limited-edition sweet collections. There is no extra fee.",
   },
   {
     question: "Where is your kitchen located?",

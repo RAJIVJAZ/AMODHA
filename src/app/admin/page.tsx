@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import { MilkStatusSelect } from "@/components/admin/milk-status-select";
 import { OrderStatusSelect } from "@/components/admin/order-status-select";
 import { StaffManager } from "@/components/admin/staff-manager";
 import { SupportReply } from "@/components/admin/support-reply";
@@ -29,6 +30,7 @@ type AdminOrder = {
   status: OrderStatus;
   total: number;
   discount: number;
+  milk_subscriber: boolean;
   order_items: { product_name: string; pack_label: string; quantity: number }[];
 };
 
@@ -72,15 +74,18 @@ export default async function AdminPage() {
     );
   }
 
-  const [ordersRes, supportRes, milkRes, milkCountRes, staffRes, staffProfilesRes] = await Promise.all([
+  const [ordersRes, supportRes, milkRes, staffRes, staffProfilesRes] = await Promise.all([
     staff
       .from("orders")
-      .select("id, order_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, order_items(product_name, pack_label, quantity)")
+      .select("id, order_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, order_items(product_name, pack_label, quantity)")
       .order("created_at", { ascending: false })
       .limit(50),
-    staff.from("support_requests").select("id, subject, message, order_number, created_at").eq("status", "open").order("created_at"),
-    staff.from("milk_interest").select("id, name, phone, area, daily_litres, timing, wants_a2, created_at").order("created_at", { ascending: false }).limit(50),
-    staff.from("milk_interest").select("phone", { count: "exact", head: true }),
+    staff.from("support_requests").select("id, user_id, subject, message, order_number, created_at").eq("status", "open").order("created_at"),
+    staff
+      .from("milk_interest")
+      .select("id, user_id, name, phone, area, daily_litres, monthly_litres, timing, preferred_time, wants_subscription, status, created_at")
+      .order("created_at", { ascending: false })
+      .limit(200),
     staff.from("staff_emails").select("email").order("created_at"),
     staff.from("profiles").select("email").eq("is_admin", true),
   ]);
@@ -91,7 +96,17 @@ export default async function AdminPage() {
   }));
 
   const orders = (ordersRes.data ?? []) as AdminOrder[];
-  const milkCount = milkCountRes.count ?? 0;
+  const milkEntries = milkRes.data ?? [];
+  // The launch target counts households (distinct phone numbers) that still want milk.
+  const interestedHouseholds = new Set(milkEntries.filter((entry) => entry.status !== "cancelled").map((entry) => entry.phone)).size;
+  const activeSubscribers = milkEntries.filter((entry) => entry.status === "active").length;
+  const subscriberUserIds = new Set(
+    milkEntries.filter((entry) => entry.status === "active" && entry.user_id).map((entry) => entry.user_id as string)
+  );
+  // Priority support: milk subscribers' requests first, then oldest first.
+  const supportRequests = [...(supportRes.data ?? [])].sort(
+    (a, b) => Number(subscriberUserIds.has(b.user_id)) - Number(subscriberUserIds.has(a.user_id))
+  );
 
   return (
     <section className="bg-blush py-10 sm:py-14">
@@ -111,6 +126,9 @@ export default async function AdminPage() {
               <li key={order.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:justify-between">
                 <div className="text-sm">
                   <p className="font-semibold text-ink">
+                    {order.milk_subscriber ? (
+                      <span className="mr-2 rounded-full bg-primary-light/50 px-2 py-0.5 text-xs font-bold text-ink">⭐ Milk subscriber · priority</span>
+                    ) : null}
                     #{order.order_number} · {order.customer_name} ·{" "}
                     <a href={`tel:+91${order.phone}`} className="text-primary-dark hover:underline">
                       {order.phone}
@@ -139,11 +157,14 @@ export default async function AdminPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-5">
             <h2 className="font-heading text-lg font-bold text-ink">Open support requests</h2>
-            {(supportRes.data ?? []).length === 0 ? <p className="mt-2 text-sm text-dark/60">None open.</p> : null}
+            {supportRequests.length === 0 ? <p className="mt-2 text-sm text-dark/60">None open.</p> : null}
             <ul className="mt-3 flex flex-col gap-4">
-              {(supportRes.data ?? []).map((request) => (
+              {supportRequests.map((request) => (
                 <li key={request.id} className="text-sm">
                   <p className="font-semibold text-ink">
+                    {subscriberUserIds.has(request.user_id) ? (
+                      <span className="mr-2 rounded-full bg-primary-light/50 px-2 py-0.5 text-xs font-bold text-ink">⭐ Priority</span>
+                    ) : null}
                     {request.subject}
                     {request.order_number ? ` · Order #${request.order_number}` : ""}
                   </p>
@@ -156,15 +177,25 @@ export default async function AdminPage() {
 
           <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-5">
             <h2 className="font-heading text-lg font-bold text-ink">
-              Milk registrations: {milkCount} (launch at {milkSubscription.launchThreshold} households)
+              Milk interest: {interestedHouseholds} of {milkSubscription.launchThreshold} households
             </h2>
-            <ul className="mt-3 flex flex-col gap-2 text-sm">
-              {(milkRes.data ?? []).map((entry) => (
-                <li key={entry.id} className="text-dark/75">
-                  <span className="font-semibold text-ink">{entry.name}</span> · {entry.phone} · {entry.area}
-                  {entry.daily_litres ? ` · ${entry.daily_litres} L` : ""}
-                  {entry.timing ? ` · ${entry.timing}` : ""}
-                  {entry.wants_a2 ? " · A2" : ""}
+            <p className="mt-1 text-xs text-dark/60">
+              {activeSubscribers} active subscriber{activeSubscribers === 1 ? "" : "s"}. Set a registration to &ldquo;Active subscriber&rdquo;
+              when their deliveries start: their Milk Subscriber Benefits switch on automatically.
+            </p>
+            <ul className="mt-3 flex flex-col divide-y divide-ink/10 text-sm">
+              {milkEntries.map((entry) => (
+                <li key={entry.id} className="flex flex-col gap-2 py-2 sm:flex-row sm:items-start sm:justify-between">
+                  <span className={entry.status === "cancelled" ? "text-dark/40 line-through" : "text-dark/75"}>
+                    <span className="font-semibold text-ink">{entry.name}</span> · {entry.phone} · {entry.area}
+                    {entry.daily_litres ? ` · ${entry.daily_litres} L/day` : ""}
+                    {entry.monthly_litres ? ` · ${entry.monthly_litres} L/month` : ""}
+                    {entry.timing ? ` · ${entry.timing}` : ""}
+                    {entry.preferred_time ? ` · ${entry.preferred_time}` : ""}
+                    {entry.wants_subscription === false ? " · not sure about subscribing" : ""}
+                    {entry.user_id ? "" : " · no account"}
+                  </span>
+                  <MilkStatusSelect id={entry.id} status={entry.status} />
                 </li>
               ))}
             </ul>

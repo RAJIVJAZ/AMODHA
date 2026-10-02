@@ -121,12 +121,29 @@ export async function isFirstOrder(admin: SupabaseClient, customer: SignedInCust
   return count === 0;
 }
 
+/** True when this customer has a milk subscription marked active by the team. */
+export async function isActiveMilkSubscriber(admin: SupabaseClient, customer: SignedInCustomer) {
+  const { count, error } = await admin
+    .from("milk_interest")
+    .select("id", { count: "exact", head: true })
+    .or(customerFilter(customer))
+    .eq("status", "active");
+  if (error) {
+    console.error("Milk subscriber check failed:", error);
+    return false;
+  }
+  return (count ?? 0) > 0;
+}
+
 export async function quoteOrder(admin: SupabaseClient | null, subtotal: number, checkoutPhone: string) {
   const customer = await getSignedInCustomer();
-  const eligible = Boolean(admin && customer && (await isFirstOrder(admin, customer, checkoutPhone)));
+  const [eligible, milkSubscriber] =
+    admin && customer
+      ? await Promise.all([isFirstOrder(admin, customer, checkoutPhone), isActiveMilkSubscriber(admin, customer)])
+      : [false, false];
   const discount = firstOrderDiscountFor(subtotal, eligible);
-  const deliveryFee = deliveryFeeFor(subtotal);
-  return { customer, discount, deliveryFee, total: subtotal + deliveryFee - discount };
+  const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
+  return { customer, discount, deliveryFee, milkSubscriber, total: subtotal + deliveryFee - discount };
 }
 
 type SaveOrderInput = {
@@ -138,6 +155,7 @@ type SaveOrderInput = {
   discount: number;
   total: number;
   paymentMethod: "online" | "cod";
+  milkSubscriber: boolean;
   razorpayOrderId?: string;
 };
 
@@ -163,6 +181,7 @@ export async function saveOrder(admin: SupabaseClient, input: SaveOrderInput) {
       discount: input.discount,
       total: input.total,
       first_order_offer: input.discount > 0,
+      milk_subscriber: input.milkSubscriber,
       razorpay_order_id: input.razorpayOrderId ?? null,
     })
     .select("id, order_number")

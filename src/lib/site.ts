@@ -66,7 +66,6 @@ export const mainNav = [
   { label: "About", href: "/about" },
   { label: "Our Process", href: "/our-process" },
   { label: "Fresh Milk", href: "/milk-subscription" },
-  { label: "Membership", href: "/membership" },
   { label: "Corporate Gifting", href: "/corporate-gifting" },
   { label: "Wholesale", href: "/wholesale" },
   { label: "Contact", href: "/contact" },
@@ -96,7 +95,6 @@ export const footerNav = {
   ],
   company: [
     { label: "About Us", href: "/about" },
-    { label: "Membership", href: "/membership" },
     { label: "Our Process", href: "/our-process" },
     { label: "Blog", href: "/blog" },
     { label: "FAQs", href: "/faq" },

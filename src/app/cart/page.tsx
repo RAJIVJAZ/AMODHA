@@ -6,13 +6,21 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
 import { FirstOrderNote } from "@/components/ui/first-order-note";
-import { DELIVERY_AREA, FREE_DELIVERY_THRESHOLD, deliveryFeeFor, firstOrderDiscountFor } from "@/lib/order-rules";
+import {
+  DELIVERY_AREA,
+  FREE_DELIVERY_THRESHOLD,
+  SUBSCRIBER_FREE_DELIVERY_MINIMUM,
+  deliveryFeeFor,
+  firstOrderDiscountFor,
+} from "@/lib/order-rules";
 import { useFirstOrderOffer } from "@/lib/use-first-order-offer";
 
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeItem } = useCart();
-  const deliveryFee = deliveryFeeFor(subtotal);
   const offer = useFirstOrderOffer();
+  const milkSubscriber = Boolean(offer?.milkSubscriber);
+  const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
+  const freeDeliveryFrom = milkSubscriber ? SUBSCRIBER_FREE_DELIVERY_MINIMUM : FREE_DELIVERY_THRESHOLD;
   const discount = firstOrderDiscountFor(subtotal, Boolean(offer?.eligible));
 
   return (
@@ -114,7 +122,8 @@ export default function CartPage() {
               <FirstOrderNote offer={offer} subtotal={subtotal} next="/cart" />
               {deliveryFee > 0 ? (
                 <p className="mt-2 text-xs font-medium text-primary-dark">
-                  Add {formatInr(FREE_DELIVERY_THRESHOLD - subtotal)} more for free delivery.
+                  Add {formatInr(freeDeliveryFrom - subtotal)} more for free delivery
+                  {milkSubscriber ? " (milk subscriber benefit)" : ""}.
                 </p>
               ) : null}
               <p className="mt-2 text-xs text-dark/50">Delivering in {DELIVERY_AREA}</p>

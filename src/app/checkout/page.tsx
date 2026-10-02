@@ -49,9 +49,10 @@ declare global {
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
-  const deliveryFee = deliveryFeeFor(subtotal);
   const [firstOrderEligible, setFirstOrderEligible] = useState(false);
+  const [milkSubscriber, setMilkSubscriber] = useState(false);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const discount = firstOrderDiscountFor(subtotal, firstOrderEligible);
   const total = subtotal + deliveryFee - discount;
@@ -78,6 +79,7 @@ export default function CheckoutPage() {
       setSignedIn(Boolean(offer?.signedIn));
       if (!offer?.signedIn) return;
       setFirstOrderEligible(Boolean(offer.eligible));
+      setMilkSubscriber(Boolean(offer.milkSubscriber));
 
       const supabase = createClient();
       const [{ data: userData }, { data: addresses }] = await Promise.all([
@@ -525,7 +527,7 @@ export default function CheckoutPage() {
               <span className="font-heading font-bold text-ink">{formatInr(total)}</span>
             </div>
             {signedIn ? (
-              <FirstOrderNote offer={{ signedIn, eligible: firstOrderEligible }} subtotal={subtotal} next="/checkout" />
+              <FirstOrderNote offer={{ signedIn, eligible: firstOrderEligible, milkSubscriber }} subtotal={subtotal} next="/checkout" />
             ) : null}
             <Link href="/cart" className="mt-4 block text-center text-sm font-semibold text-primary-dark hover:underline">
               Edit Cart

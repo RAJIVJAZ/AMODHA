@@ -8,12 +8,12 @@ import { CtaSection } from "@/components/ui/cta-section";
 import { FaqAccordion } from "@/components/ui/faq-accordion";
 import { GheeSeal } from "@/components/ui/ghee-seal";
 import { generalFaqs } from "@/data/faqs";
-import { membership } from "@/data/membership";
+import { milkSubscriberBenefits, milkSubscription } from "@/data/milk-subscription";
 import { processSteps } from "@/data/process";
 import { reviews } from "@/data/reviews";
 import { sweets, hamperCategories } from "@/data/sweets";
 import { formatInr } from "@/lib/currency";
-import { FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM } from "@/lib/order-rules";
+import { FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -419,40 +419,41 @@ export default function HomePage() {
       ) : null}
 
       <section className="py-20 sm:py-28">
-        <div className="container-site grid grid-cols-1 gap-8 lg:grid-cols-2">
-          <div className="sticker-shadow flex flex-col justify-between gap-6 rounded-3xl border-[2.5px] border-ink bg-primary-light/30 p-8">
-            <div>
-              <span className="font-heading sticker-shadow-sm inline-block rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-ink">
-                Coming soon · Register interest
+        <div className="container-site">
+          <div className="sticker-shadow grid grid-cols-1 gap-8 rounded-3xl border-[2.5px] border-ink bg-primary-light/25 p-6 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+            <div className="flex flex-col gap-4">
+              <span className="font-heading sticker-shadow-sm inline-block w-fit rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-ink">
+                {milkSubscription.name} · Coming soon
               </span>
-              <h2 className="mt-4 text-3xl font-bold text-ink">Farm Fresh Milk, Delivered</h2>
-              <p className="mt-3 text-dark/75">
-                Pure milk from local farmers in reusable glass bottles, delivered about 2 hours after
-                collection — ₹100 per litre. No preservatives, no milk powder, no adulteration.
+              <h2 className="text-3xl font-bold text-ink sm:text-4xl">Become a Milk Subscriber</h2>
+              <p className="text-dark/75">
+                Register your interest in our upcoming fresh milk delivery service and unlock exclusive customer
+                benefits including priority delivery, festive offers, and free delivery on Mithai Wallah products
+                above {formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}.
               </p>
-              <p className="mt-3 text-sm font-semibold text-ink">
-                Launching once 50 households in Prayagraj sign up.
+              <p className="font-subheading text-lg italic text-ink">{milkSubscription.community}</p>
+              <p className="text-sm font-semibold text-ink">
+                {formatInr(milkSubscription.pricePerLitre)} per litre (proposed) · Launching once{" "}
+                {milkSubscription.launchThreshold} regular subscribers confirm
               </p>
+              <ButtonLink href="/milk-subscription#register" variant="primary" className="self-start">
+                Register Your Interest
+              </ButtonLink>
             </div>
-            <ButtonLink href="/milk-subscription" variant="primary" className="self-start">
-              Register Your Interest
-            </ButtonLink>
-          </div>
-          <div className="sticker-shadow flex flex-col justify-between gap-6 rounded-3xl border-[2.5px] border-ink bg-[#fbeec4] p-8">
-            <div>
-              <span className="font-heading sticker-shadow-sm inline-block rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-ink">
-                Launching soon · Join the waitlist
-              </span>
-              <h2 className="mt-4 text-3xl font-bold text-ink">{membership.name}</h2>
-              <p className="mt-3 text-dark/75">
-                ₹{membership.fee} a year for {membership.discountPercent}% off sweets and food, free delivery
-                above ₹{membership.freeDeliveryThreshold}, priority support and early access to festive boxes.
-              </p>
-              <p className="mt-3 text-sm text-dark/60">{membership.exclusionNote}</p>
+            <div className="rounded-2xl border-2 border-ink bg-white p-6">
+              <p className="font-heading text-sm font-bold uppercase tracking-wide text-ink">Milk Subscriber Benefits</p>
+              <ul className="mt-4 flex flex-col gap-2.5">
+                {milkSubscriberBenefits.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-2.5 text-sm font-medium text-dark/80">
+                    <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] text-white">
+                      ✓
+                    </span>
+                    {benefit}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-xs text-dark/55">No extra fee. These benefits come with your milk subscription.</p>
             </div>
-            <ButtonLink href="/membership" variant="primary" className="self-start">
-              See Member Benefits
-            </ButtonLink>
           </div>
         </div>
       </section>

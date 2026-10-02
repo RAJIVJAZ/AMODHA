@@ -2,7 +2,11 @@ export const FREE_DELIVERY_THRESHOLD = 999;
 export const DELIVERY_FEE = 69;
 export const DELIVERY_AREA = "Prayagraj";
 
-export function deliveryFeeFor(subtotal: number) {
+/** Active milk subscribers get free delivery on Mithai Wallah orders from this amount. */
+export const SUBSCRIBER_FREE_DELIVERY_MINIMUM = 499;
+
+export function deliveryFeeFor(subtotal: number, milkSubscriber = false) {
+  if (milkSubscriber && subtotal >= SUBSCRIBER_FREE_DELIVERY_MINIMUM) return 0;
   return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
 }
 
