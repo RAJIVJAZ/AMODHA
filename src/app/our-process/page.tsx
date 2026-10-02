@@ -5,9 +5,9 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { CtaSection } from "@/components/ui/cta-section";
 
 export const metadata: Metadata = {
-  title: "Our Process | Farm to Factory Transparency",
+  title: "Our Process: Pure Desi Ghee, Recorded Live",
   description:
-    "See how Amodha collects milk, tests quality, processes dairy and hand-crafts sweets in our Prayagraj facility — from milk collection to dispatch.",
+    "See how Mithaiwallah makes mithai in Prayagraj: fresh milk from 100+ local farmers, 100% pure desi ghee, every batch recorded live and packed hygienically.",
   alternates: { canonical: "/our-process" },
 };
 
@@ -15,8 +15,8 @@ const stages = [
   {
     title: "1. Milk Collection",
     description:
-      "Every morning and evening, milk is collected from over 1,000 partner farmers across villages near Prayagraj at dedicated collection centres. Each farmer's milk is logged individually for traceability.",
-    points: ["Twice-daily collection", "Village-level collection centres", "Farmer ledger & fair payment"],
+      "Fresh milk is collected directly from around 100 local farmers in villages near Prayagraj. Buying straight from farmers means we know where every litre comes from.",
+    points: ["~100 local farmers", "Direct from the village", "Fair, reliable payment"],
   },
   {
     title: "2. Quality Testing",
@@ -33,20 +33,20 @@ const stages = [
   {
     title: "4. Khoya & Sweet Making",
     description:
-      "Fresh milk is slow-reduced into khoya, which becomes the base for our mithai range. Our halwais then hand-craft milk cake, kalakand, peda, kunda and more, fresh every day.",
-    points: ["Daily fresh khoya production", "Hand-crafted by experienced halwais", "No artificial preservatives"],
+      "Fresh milk is slow-reduced into khoya, the base for our mithai range. Our halwais then make milk cake, kalakand, peda, kunda and more by hand — cooked only in 100% pure desi ghee.",
+    points: ["Fresh khoya", "100% pure desi ghee", "No vanaspati or blended fats"],
   },
   {
-    title: "5. Quality Lab Checks",
+    title: "5. Recorded Live",
     description:
-      "Finished products pass through quality checks for taste, texture and hygiene before packaging — with random batch sampling to maintain consistency across every dispatch.",
-    points: ["Batch sampling", "Taste & texture consistency checks", "Hygiene compliance verification"],
+      "Every batch is cooked on camera and recorded live in our hygienic kitchen, from raw milk to finished sweet. If you want to know how your mithai was made, you can see it.",
+    points: ["Every batch on camera", "Hygienic kitchen", "Nothing hidden"],
   },
   {
-    title: "6. Packaging & Dispatch",
+    title: "6. Packing & Delivery",
     description:
-      "Products are packed in food-grade, tamper-evident packaging suited to their shelf life, then dispatched same-day to retail partners, wholesale customers and gifting orders across India.",
-    points: ["Food-grade tamper-evident packaging", "Cold-chain logistics where required", "Same-day dispatch"],
+      "Sweets are packed in sealed, food-safe boxes and delivered fresh to your door across Prayagraj.",
+    points: ["Sealed, food-safe packing", "Delivered across Prayagraj", "Free delivery on ₹999+"],
   },
 ];
 
@@ -58,8 +58,8 @@ export default function OurProcessPage() {
       <section className="container-site py-14 sm:py-20">
         <SectionHeading
           eyebrow="Transparency by Design"
-          title="From Farm to Factory to Your Table"
-          description="Every product we make passes through six stages of careful, documented process — combining traditional technique with modern food-safety standards."
+          title="From Farm to Kitchen to Your Table"
+          description="Six stages, all out in the open — from fresh farm milk to a sealed box at your door, with every batch recorded live."
         />
         <div className="sticker-shadow relative mt-10 aspect-[21/9] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
           <Image
@@ -126,8 +126,8 @@ export default function OurProcessPage() {
       </section>
 
       <CtaSection
-        eyebrow="Certified Quality"
-        title="FSSAI Certified. Farmer Sourced. Factory Fresh."
+        eyebrow="Made Honestly"
+        title="Farmer Sourced. Pure Desi Ghee. Recorded Live."
         description="Schedule a facility visit or start a wholesale conversation with our team."
         primaryCta={{ label: "Contact Us", href: "/contact" }}
         secondaryCta={{ label: "Wholesale Enquiry", href: "/wholesale" }}

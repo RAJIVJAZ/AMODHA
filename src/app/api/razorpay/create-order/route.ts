@@ -1,11 +1,43 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
+import { getPurchasablePack } from "@/data/sweets";
+import { MAX_ONLINE_ORDER_GRAMS, deliveryFeeFor, formatGrams } from "@/lib/order-rules";
+
+type OrderLine = { slug: string; packLabel: string; quantity: number };
+
+function isOrderLine(value: unknown): value is OrderLine {
+  const line = value as OrderLine;
+  return (
+    typeof line?.slug === "string" &&
+    typeof line?.packLabel === "string" &&
+    Number.isInteger(line?.quantity) &&
+    line.quantity > 0
+  );
+}
 
 export async function POST(req: Request) {
-  const { amount, receipt } = await req.json();
+  const { items, receipt } = await req.json();
 
-  if (typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0 || amount > 500000) {
-    return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+  if (!Array.isArray(items) || items.length === 0 || !items.every(isOrderLine)) {
+    return NextResponse.json({ error: "Your cart is empty or invalid" }, { status: 400 });
+  }
+
+  let subtotal = 0;
+  let totalGrams = 0;
+  for (const line of items) {
+    const pack = getPurchasablePack(line.slug, line.packLabel);
+    if (!pack) {
+      return NextResponse.json({ error: `${line.slug} (${line.packLabel}) is not available online` }, { status: 400 });
+    }
+    subtotal += pack.price * line.quantity;
+    totalGrams += pack.grams * line.quantity;
+  }
+
+  if (totalGrams > MAX_ONLINE_ORDER_GRAMS) {
+    return NextResponse.json(
+      { error: `Online orders are limited to ${formatGrams(MAX_ONLINE_ORDER_GRAMS)}. Please contact us for bulk orders.` },
+      { status: 400 }
+    );
   }
 
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
@@ -18,20 +50,23 @@ export async function POST(req: Request) {
     key_secret: process.env.RAZORPAY_KEY_SECRET,
   });
 
+  const total = subtotal + deliveryFeeFor(subtotal);
+
   try {
     const order = await razorpay.orders.create({
-      amount: Math.round(amount * 100), // INR to paise
+      amount: total * 100, // INR to paise
       currency: "INR",
-      receipt: typeof receipt === "string" ? receipt : undefined,
+      receipt: typeof receipt === "string" ? receipt.slice(0, 40) : undefined,
     });
-    return NextResponse.json(order);
+    // The Key ID is publishable; returning it at runtime avoids depending on a build-time NEXT_PUBLIC_ var.
+    return NextResponse.json({ id: order.id, amount: order.amount, currency: order.currency, keyId: process.env.RAZORPAY_KEY_ID });
   } catch (err) {
     console.error("Razorpay create-order failed:", err);
     const razorpayError = err as { statusCode?: number; error?: { description?: string } };
     const description = razorpayError.error?.description;
     return NextResponse.json(
       { error: description ? `Razorpay: ${description}` : "Could not create Razorpay order" },
-      { status: 500 }
+      { status: razorpayError.statusCode === 401 ? 401 : 500 }
     );
   }
 }

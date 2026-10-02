@@ -37,7 +37,7 @@ export default function DairyProductsPage() {
           <SectionHeading
             eyebrow="Amodha Dairy — Coming Soon"
             title="Farm-Fresh Dairy, On Its Way to You"
-            description="Every product below starts with milk collected fresh from our own network of 1,000+ partner farmers near Prayagraj, processed in our FSSAI-certified facility. We're putting the finishing touches on bringing it to you directly."
+            description="Every product below will start with milk collected fresh from around 100 local farmers near Prayagraj — the same milk behind our sweets. We're putting the finishing touches on bringing it to you directly."
           />
           <div className="sticker-shadow mx-auto mt-10 max-w-2xl rounded-2xl border-2 border-ink bg-white px-6 py-8 text-center sm:px-10">
             <p className="font-subheading text-xl italic text-primary-dark sm:text-2xl">

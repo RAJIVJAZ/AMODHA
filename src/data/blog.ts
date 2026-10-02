@@ -57,7 +57,7 @@ export const blogPosts: BlogPost[] = [
       "Shelf life is the first thing to check. Milk-based sweets like kalakand and malai barfi have a shorter shelf life than khoya-based sweets like milk cake and Bikaneri cake, which travel and store better for gifting that needs to reach recipients across cities.",
       "Packaging matters as much as the sweet itself. A premium rigid box or magnetic box with your company's branding communicates far more than a plain mono carton, even if the product inside is identical.",
       "Always confirm minimum order quantities and lead times well in advance — bulk custom-branded boxes typically need 7-15 days of lead time depending on the customisation involved (logo printing, gold foiling, or fully custom boxes).",
-      "At Amodha, our Corporate Gifting team works directly with procurement and admin teams to finalise box design, quantity and delivery timelines, with Pan-India dispatch for bulk corporate orders.",
+      "At Mithaiwallah, our Corporate Gifting team works directly with procurement and admin teams to finalise box design, quantity and delivery timelines — and every batch is cooked in 100% pure desi ghee and recorded live, so you know exactly what your clients are receiving.",
     ],
   },
   {

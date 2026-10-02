@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka, Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
@@ -32,21 +33,20 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | ${siteConfig.sweetBrand}`,
-    template: `%s | ${siteConfig.name}`,
+    default: "Mithaiwallah | Fresh Desi Ghee Mithai Delivered in Prayagraj",
+    template: "%s | Mithaiwallah",
   },
   description: siteConfig.description,
   keywords: [
-    "Bilona Ghee Manufacturer",
-    "Dairy Products Manufacturer Prayagraj",
-    "Milk Cake Manufacturer",
-    "Kalakand Manufacturer",
+    "Mithai Prayagraj",
+    "Desi Ghee Sweets Prayagraj",
+    "Sweet Shop Prayagraj",
+    "Milk Cake Prayagraj",
+    "Kalakand",
+    "Kunda Prayagraj",
+    "Peda",
     "Corporate Sweet Gift Boxes",
     "Wedding Sweet Boxes",
-    "Custom Mithai Packaging",
-    "Sweet Wholesale Supplier",
-    "Ghee Manufacturer Prayagraj",
-    "Paneer Supplier UP",
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: siteConfig.locale,
     url: siteConfig.url,
-    title: `${siteConfig.name} | ${siteConfig.sweetBrand}`,
+    title: "Mithaiwallah | Fresh Desi Ghee Mithai Delivered in Prayagraj",
     description: siteConfig.description,
-    siteName: siteConfig.name,
+    siteName: "Mithaiwallah",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | ${siteConfig.sweetBrand}`,
+    title: "Mithaiwallah | Fresh Desi Ghee Mithai Delivered in Prayagraj",
     description: siteConfig.description,
   },
   icons: {
@@ -78,8 +78,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     name: siteConfig.name,
     alternateName: siteConfig.sweetBrand,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/favicon.ico`,
+    logo: `${siteConfig.url}/logos/mithaiwallah.png`,
     description: siteConfig.description,
+    foundingDate: siteConfig.founded,
     address: {
       "@type": "PostalAddress",
       streetAddress: `${siteConfig.address.office.line1}, ${siteConfig.address.office.line2}`,
@@ -103,8 +104,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     "@type": "FoodEstablishment",
-    name: siteConfig.name,
-    image: `${siteConfig.url}/favicon.ico`,
+    name: siteConfig.sweetBrand,
+    image: `${siteConfig.url}/logos/mithaiwallah.png`,
+    url: siteConfig.url,
+    areaServed: { "@type": "City", name: "Prayagraj" },
     address: {
       "@type": "PostalAddress",
       streetAddress: `${siteConfig.address.plant.line1}, ${siteConfig.address.plant.line2}`,
@@ -139,6 +142,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to main content
         </a>
         <CartProvider>
+          <AnnouncementBar />
           <Header />
           <main id="main-content" className="flex-1">
             {children}

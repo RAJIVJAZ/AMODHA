@@ -10,7 +10,7 @@ import { getSweet } from "@/data/sweets";
 export const metadata: Metadata = {
   title: "Corporate Sweet Gift Boxes | Custom Branding & Bulk Orders",
   description:
-    "Luxury corporate gifting from Amodha's Mithaiwallah Sweet Corner — custom-branded mithai boxes, bulk orders and Pan-India delivery for client gifting, employee rewards and festive corporate gifting.",
+    "Custom-branded mithai boxes from Mithaiwallah, Prayagraj — made with 100% pure desi ghee and recorded live. Bulk orders for client gifting, employee rewards and festive gifting.",
   alternates: { canonical: "/corporate-gifting" },
 };
 
@@ -40,7 +40,7 @@ const processSteps = [
   { title: "Share Your Brief", description: "Tell us your quantity, budget range and occasion." },
   { title: "Sample & Box Design", description: "We share sweet combinations and packaging options with pricing." },
   { title: "Approve & Confirm", description: "Approve final design, branding and delivery timeline." },
-  { title: "Production & Dispatch", description: "We produce fresh, pack and dispatch Pan-India on schedule." },
+  { title: "Production & Delivery", description: "We make every box fresh, pack it safely and deliver on schedule." },
 ];
 
 export default function CorporateGiftingPage() {
@@ -62,8 +62,8 @@ export default function CorporateGiftingPage() {
               Corporate Gifting That Reflects Your Brand
             </h1>
             <p className="max-w-2xl text-balance text-lg text-ink/70">
-              Luxury gift boxes with custom branding, bulk order capacity and Pan-India delivery — for
-              client gifting, employee rewards, and festive corporate gifting programs.
+              Gift boxes with custom branding and bulk order capacity — for client gifting, employee
+              rewards and festive corporate gifting programs. Made with 100% pure desi ghee.
             </p>
           </div>
           <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">

@@ -4,7 +4,7 @@ export const siteConfig = {
   sweetBrand: "Mithaiwallah Sweet Corner",
   tagline: "Pure Dairy. Traditional Sweets. Crafted with Trust.",
   description:
-    "Handcrafted Mithaiwallah sweets manufactured in Prayagraj using traditional methods and modern hygiene standards — milk cake, kalakand, barfi, peda, kunda and more — for retail, wholesale, corporate and wedding gifting across India. Amodha's dairy range is coming soon.",
+    "Fresh mithai handmade in Prayagraj with 100% pure desi ghee and milk from 100+ local farmers — milk cake, kalakand, barfi, peda, kunda and more. Every batch recorded live. Delivered across Prayagraj, free on orders ₹999+.",
   comingSoonQuote: "The purity you want will be arriving soon.",
   url: "https://mithaiwallah.shop",
   locale: "en_IN",
@@ -48,9 +48,9 @@ export const siteConfig = {
     "https://www.google.com/maps/search/?api=1&query=53%2F2+Surwal+Sahini+Naribari+Rewa+Road+Prayagraj+212106",
   officeMapsUrl:
     "https://www.google.com/maps/search/?api=1&query=594A%2F371A+Mutthiganj+Salikgram+Jaiswal+Nagar+Prayagraj+211003",
-  founded: "1998",
+  founded: "2023",
   stats: {
-    farmers: "1000+",
+    farmers: "100+",
     customers: "5000+",
     retailPartners: "100+",
   },

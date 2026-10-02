@@ -5,9 +5,18 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
+import {
+  DELIVERY_AREA,
+  FREE_DELIVERY_THRESHOLD,
+  MAX_ONLINE_ORDER_GRAMS,
+  deliveryFeeFor,
+  formatGrams,
+} from "@/lib/order-rules";
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeItem } = useCart();
+  const { items, subtotal, totalGrams, updateQuantity, removeItem } = useCart();
+  const deliveryFee = deliveryFeeFor(subtotal);
+  const overLimit = totalGrams > MAX_ONLINE_ORDER_GRAMS;
 
   return (
     <>
@@ -23,11 +32,11 @@ export default function CartPage() {
             </span>
             <p className="font-heading text-xl font-bold text-ink">Your cart is empty</p>
             <p className="max-w-sm text-sm text-dark/70">
-              Amodha Dairy is coming soon — bilona ghee, fresh paneer, farm milk and more. Meanwhile,
-              explore Mithaiwallah Sweet Corner.
+              Fresh mithai made in 100% pure desi ghee, delivered across {DELIVERY_AREA} — free on orders{" "}
+              {formatInr(FREE_DELIVERY_THRESHOLD)}+.
             </p>
-            <ButtonLink href="/" variant="primary">
-              Explore Sweet Corner
+            <ButtonLink href="/#catalog" variant="primary">
+              Browse Sweets
             </ButtonLink>
           </div>
         ) : (
@@ -65,7 +74,8 @@ export default function CartPage() {
                       type="button"
                       aria-label={`Increase quantity of ${item.productName}`}
                       onClick={() => updateQuantity(item.key, item.quantity + 1)}
-                      className="font-heading flex h-7 w-7 items-center justify-center rounded-full text-base font-bold text-ink hover:bg-blush"
+                      disabled={totalGrams + item.grams > MAX_ONLINE_ORDER_GRAMS}
+                      className="font-heading flex h-7 w-7 items-center justify-center rounded-full text-base font-bold text-ink hover:bg-blush disabled:cursor-not-allowed disabled:opacity-30"
                     >
                       +
                     </button>
@@ -91,12 +101,36 @@ export default function CartPage() {
                 <span>Subtotal</span>
                 <span className="font-semibold text-ink">{formatInr(subtotal)}</span>
               </div>
-              <p className="mt-1 text-xs text-dark/50">
-                Delivery charges (if any) confirmed at checkout based on your location.
+              <div className="mt-2 flex items-center justify-between text-sm text-dark/70">
+                <span>Delivery</span>
+                <span className="font-semibold text-ink">{deliveryFee === 0 ? "Free" : formatInr(deliveryFee)}</span>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t-2 border-dashed border-ink/20 pt-3">
+                <span className="font-heading font-bold text-ink">Total</span>
+                <span className="font-heading font-bold text-ink">{formatInr(subtotal + deliveryFee)}</span>
+              </div>
+              {deliveryFee > 0 ? (
+                <p className="mt-2 text-xs font-medium text-primary-dark">
+                  Add {formatInr(FREE_DELIVERY_THRESHOLD - subtotal)} more for free delivery.
+                </p>
+              ) : null}
+              <p className="mt-2 text-xs text-dark/50">
+                Delivering in {DELIVERY_AREA} only · {formatGrams(totalGrams)} of {formatGrams(MAX_ONLINE_ORDER_GRAMS)} online
+                limit used
               </p>
-              <ButtonLink href="/checkout" variant="primary" className="mt-5 w-full">
-                Proceed to Checkout
-              </ButtonLink>
+              {overLimit ? (
+                <p className="mt-3 text-sm font-medium text-accent-dark">
+                  Online orders are limited to {formatGrams(MAX_ONLINE_ORDER_GRAMS)}. Please reduce your cart or{" "}
+                  <Link href="/contact" className="underline">
+                    contact us for bulk pricing
+                  </Link>
+                  .
+                </p>
+              ) : (
+                <ButtonLink href="/checkout" variant="primary" className="mt-5 w-full">
+                  Proceed to Checkout
+                </ButtonLink>
+              )}
               <Link
                 href="/"
                 className="mt-3 block text-center text-sm font-semibold text-primary-dark hover:underline"

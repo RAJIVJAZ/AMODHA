@@ -12,18 +12,18 @@ import { testimonials } from "@/data/testimonials";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: `${siteConfig.sweetBrand} | Premium Sweet Gifting Destination`,
+  title: { absolute: "Mithaiwallah | Fresh Desi Ghee Mithai Delivered in Prayagraj" },
   description:
-    "Mithaiwallah Sweet Corner by Amodha — India's premium sweet gifting destination for retail, wholesale, corporate and wedding gifting. Milk cake, kalakand, barfi, peda, kunda and custom hampers. Amodha's dairy range is coming soon.",
+    "Order fresh milk cake, kalakand, barfi and peda made with 100% pure desi ghee and milk from 100+ local farmers. Delivery in Prayagraj, free over ₹999.",
   alternates: { canonical: "/" },
 };
 
 const processSteps = [
-  { title: "Milk Collection", description: "Fresh milk collected daily from 1,000+ partner farmers near Prayagraj." },
-  { title: "Quality Testing", description: "Every batch tested for fat, SNF and purity before it enters our facility." },
-  { title: "Khoya Reduction", description: "Traditional slow-reduction methods, alongside modern hygienic processing." },
-  { title: "Sweet Making", description: "Our halwais craft milk cake, kalakand, peda and more fresh in-house daily." },
-  { title: "Packaging & Dispatch", description: "Hygienic packing and same-day dispatch to retail, wholesale and gifting orders." },
+  { title: "Fresh Milk", description: "Collected fresh from around 100 local farmers in villages near Prayagraj." },
+  { title: "Slow-Cooked Khoya", description: "Milk is reduced slowly into khoya — the base of every sweet we make." },
+  { title: "Pure Desi Ghee", description: "Every sweet is cooked in 100% pure desi ghee. No vanaspati, no blends." },
+  { title: "Recorded Live", description: "Each batch is cooked on camera in our hygienic kitchen, start to finish." },
+  { title: "Packed & Delivered", description: "Sealed in food-safe boxes and delivered fresh across Prayagraj." },
 ];
 
 export default function HomePage() {
@@ -47,11 +47,11 @@ export default function HomePage() {
             By Amodha — Made fresh in Prayagraj, Uttar Pradesh
           </span>
           <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-5xl md:text-6xl">
-            India&rsquo;s Premium Sweet Gifting Destination
+            Fresh Desi Ghee Mithai, Made in Prayagraj
           </h1>
           <p className="text-balance max-w-2xl text-lg text-ink/70 sm:text-xl">
-            Wholesale, retail, corporate and wedding gifting solutions — handcrafted sweets made fresh in
-            Prayagraj.
+            Milk from 100+ local farmers, 100% pure desi ghee, and every batch recorded live. Delivered
+            fresh across Prayagraj — free on orders ₹999+.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
             <ButtonLink href="#catalog" variant="primary">
@@ -84,19 +84,19 @@ export default function HomePage() {
           <div className="order-2 flex flex-col gap-5 lg:order-1">
             <SectionHeading
               align="left"
-              eyebrow="Our Story"
-              title="A Legacy Built on Milk, Trust and Tradition"
+              eyebrow={`Our Story · Est. ${siteConfig.founded}`}
+              title="Fresh Milk. Pure Ghee. Nothing Hidden."
             />
             <p className="text-dark/75">
-              Amodha began with a simple belief: that mithai tastes best when made the way it always has
-              been — patiently, honestly, and from milk you can trust. Since {siteConfig.founded}, we&rsquo;ve
-              built a network of over 1,000 partner farmers around Prayagraj, collecting fresh milk daily
-              and processing it in our own facility rather than buying from anonymous suppliers.
+              We started Mithaiwallah in {siteConfig.founded} with a simple belief: mithai tastes best when
+              it&rsquo;s made honestly. So we buy fresh milk directly from around 100 local farmers near
+              Prayagraj, cook every sweet in 100% pure desi ghee, and record every batch live in our
+              hygienic kitchen.
             </p>
             <p className="text-dark/75">
-              That same milk is the heart of Mithaiwallah Sweet Corner, where our halwais turn fresh khoya
-              into milk cake, kalakand, peda and the Prayagraj specialty, Kunda, every single day. Amodha&rsquo;s
-              own dairy range — bilona ghee, paneer, butter and more — is coming soon.
+              That fresh milk becomes the khoya behind our milk cake, kalakand, peda and the Prayagraj
+              specialty, Kunda — packed safely and delivered fresh across Prayagraj. Amodha&rsquo;s own
+              dairy range — bilona ghee, paneer, butter and more — is coming soon.
             </p>
             <div>
               <ButtonLink href="/about" variant="ghost">
@@ -119,7 +119,7 @@ export default function HomePage() {
               </div>
               <div className="sticker-shadow-sm absolute bottom-5 left-5 right-5 rounded-2xl border-2 border-ink bg-white p-4">
                 <p className="font-subheading text-lg italic text-ink">
-                  &ldquo;Same milk. Same family. Since {siteConfig.founded}.&rdquo;
+                  &ldquo;Fresh milk, pure desi ghee — and every batch recorded live.&rdquo;
                 </p>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function HomePage() {
                   <div className="relative aspect-[4/3] w-full border-b-2 border-ink">
                     <Image
                       src={sweet.image}
-                      alt={sweet.name}
+                      alt={sweet.imageAlt ?? sweet.name}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover"
@@ -211,8 +211,8 @@ export default function HomePage() {
               <span className="font-subheading text-lg italic text-primary-light">For Businesses</span>
               <h3 className="mt-2 text-3xl font-bold">Corporate Gifting</h3>
               <p className="mt-3 text-blush/85">
-                Luxury gift boxes with custom branding, bulk order capacity and Pan-India delivery — for
-                client gifting, employee rewards and festive corporate hampers.
+                Gift boxes with custom branding and bulk order capacity — for client gifting, employee
+                rewards and festive corporate hampers.
               </p>
             </div>
             <ButtonLink href="/corporate-gifting" variant="secondary" className="self-start">
@@ -239,8 +239,8 @@ export default function HomePage() {
         <div className="container-site flex flex-col gap-12">
           <SectionHeading
             eyebrow="Our Process"
-            title="From Farm to Factory to Your Table"
-            description="Complete transparency across every stage of production — the way it should be."
+            title="From Farm to Kitchen to Your Table"
+            description="Every step out in the open — down to every batch being recorded live."
           />
           <ol className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {processSteps.map((step, index) => (

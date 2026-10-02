@@ -28,8 +28,8 @@ export const dairyProducts: DairyProduct[] = [
       "Hand-churned using the traditional bilona method — slow, patient, and true to the way our grandmothers made it.",
     description: [
       "Our Bilona Ghee is made the way ghee was always meant to be made — from curd that is hand-churned into butter and then slow-cooked over a controlled flame until it turns into deep golden, grainy ghee with a rich aroma.",
-      "We source milk directly from our network of over 1,000 partner farmers across villages near Prayagraj, ensuring every batch starts with fresh, wholesome milk rather than industrial cream.",
-      "No shortcuts, no direct cream separation, no additives — just the same process that has been trusted in Indian households for generations, now produced under strict food-safety standards.",
+      "We source milk directly from around 100 local farmers in villages near Prayagraj, ensuring every batch starts with fresh, wholesome milk rather than industrial cream.",
+      "No shortcuts, no direct cream separation, no additives — just the traditional process trusted in Indian households for generations, made in a hygienic kitchen.",
     ],
     highlights: [
       "Traditional bilona (hand-churned) method",

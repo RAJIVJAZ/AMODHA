@@ -6,41 +6,33 @@ import { TrustBar } from "@/components/ui/trust-bar";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Us — Fresh Mithai Since 2023",
   description:
-    "Learn the story of Amodha Dairy Products and Mithaiwallah Sweet Corner — a family dairy and sweets manufacturer in Prayagraj built on farmer partnerships, bilona heritage and quality.",
+    "Mithaiwallah by Amodha started in Prayagraj in 2023. Milk from 100+ local farmers, 100% pure desi ghee, and every batch recorded live in our hygienic kitchen.",
   alternates: { canonical: "/about" },
 };
 
 const values = [
   {
-    title: "Traditional Methods",
+    title: "Milk From 100+ Local Farmers",
     description:
-      "From hand-churned bilona ghee to hand-shaped peda, we still use the slow, traditional techniques that shortcuts skip — because they produce better taste and texture.",
+      "We collect fresh milk directly from around 100 farmers in villages near Prayagraj — not anonymous bulk milk — so we know exactly where every batch begins.",
   },
   {
-    title: "Farmer Partnerships",
+    title: "100% Pure Desi Ghee",
     description:
-      "Over 1,000 farmers across villages near Prayagraj supply our fresh milk daily, giving us traceability from source to shelf and giving them a fair, reliable buyer.",
+      "Our sweets are made with 100% pure desi ghee. No vanaspati, no blended fats, no shortcuts that cheapen the taste.",
   },
   {
-    title: "Uncompromising Quality",
+    title: "Every Batch Recorded Live",
     description:
-      "Every batch of milk is tested for fat, SNF and purity before it enters production. Our facility follows FSSAI-certified hygiene and quality-control standards.",
+      "Each batch is cooked on camera, recorded live in our kitchen from start to finish. Nothing about how your mithai is made is hidden.",
   },
   {
-    title: "Two Crafts, One Roof",
+    title: "Hygienic, Safe Packing",
     description:
-      "Our dairy division and Mithaiwallah Sweet Corner share the same milk, the same khoya kitchen, and the same standards — so every product carries the same trust.",
+      "Sweets are made in a clean, hygienic kitchen and packed in food-safe, sealed boxes so they reach you fresh and untouched.",
   },
-];
-
-const milestones = [
-  { year: siteConfig.founded, event: "Amodha begins milk collection and dairy processing in Prayagraj." },
-  { year: "2006", event: "Launch of Mithaiwallah Sweet Corner, bringing traditional mithai-making in-house." },
-  { year: "2014", event: "Farmer network crosses 500 partners; facility upgraded for higher daily capacity." },
-  { year: "2020", event: "FSSAI-certified modern facility expansion, adding cold-chain retail distribution." },
-  { year: "Today", event: "1,000+ farmer partners, 100+ retail partners, and Pan-India gifting & wholesale dispatch." },
 ];
 
 export default function AboutPage() {
@@ -51,23 +43,22 @@ export default function AboutPage() {
       <section className="container-site py-14 sm:py-20">
         <SectionHeading
           align="left"
-          eyebrow="Our Story"
-          title="Built on Milk, Trust and Tradition"
-          description={`Amodha Dairy Products and Mithaiwallah Sweet Corner operate from a single facility in Prayagraj, Uttar Pradesh, manufacturing dairy products and traditional sweets using methods that have barely changed in generations.`}
+          eyebrow={`Our Story · Est. ${siteConfig.founded}`}
+          title="Honest Mithai, Made Fresh in Prayagraj"
+          description={`Mithaiwallah by Amodha began in Prayagraj in ${siteConfig.founded} with one goal: traditional sweets made from milk and ghee you can actually trust.`}
         />
         <div className="mt-10 grid grid-cols-1 gap-6 text-dark/75 lg:grid-cols-2 lg:gap-10">
           <p>
-            It started with a simple frustration: dairy sold in most shops had stopped tasting like the
-            milk, ghee and paneer our founders grew up with. Mass processing had made products cheaper
-            and more available, but something had been lost along the way — the depth of flavour that
-            comes from patient, traditional methods and honestly sourced milk.
+            It started with a simple frustration: mithai from most shops had stopped tasting like the
+            sweets we grew up with. Cheaper fats, bulk milk of unknown origin and rushed batches had
+            made sweets more available — but the flavour that comes from fresh milk and real ghee had
+            been lost along the way.
           </p>
           <p>
-            Since {siteConfig.founded}, we&rsquo;ve built our business the slower way. We work directly
-            with farmers in villages around Prayagraj rather than buying anonymous bulk milk, we
-            hand-churn our ghee using the bilona method instead of separating cream directly, and our
-            halwais still shape peda and knead khoya by hand. It takes longer and costs more — but
-            it&rsquo;s why customers who&rsquo;ve tried both keep coming back to Amodha.
+            So we started in {siteConfig.founded} by doing it the honest way. We collect fresh milk from
+            around 100 local farmers near Prayagraj, cook every sweet in 100% pure desi ghee, and record
+            every batch live in our hygienic kitchen. Then we pack it safely and deliver it fresh across
+            Prayagraj. It takes more care — and that&rsquo;s the point.
           </p>
         </div>
       </section>
@@ -88,34 +79,19 @@ export default function AboutPage() {
 
       <section className="bg-blush py-14 sm:py-20">
         <div className="container-site">
-          <SectionHeading eyebrow="Our Journey" title="Milestones" align="center" />
-          <ol className="mx-auto mt-10 flex max-w-3xl flex-col gap-6 border-l-[3px] border-ink pl-6">
-            {milestones.map((milestone) => (
-              <li key={milestone.year} className="relative">
-                <span className="absolute -left-[1.95rem] top-1 h-3 w-3 rounded-full bg-primary" aria-hidden="true" />
-                <span className="font-heading text-lg font-bold text-primary-dark">{milestone.year}</span>
-                <p className="mt-1 text-dark/75">{milestone.event}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="container-site py-14 sm:py-20">
-        <SectionHeading eyebrow="Bilona Heritage" title="Why We Still Do It the Slow Way" align="left" />
-        <div className="mt-8 grid grid-cols-1 gap-6 text-dark/75 lg:grid-cols-2">
-          <p>
-            The bilona method — culturing milk into curd, hand-churning it into butter, then slow-cooking
-            that butter into ghee — takes far longer than modern cream-separation methods, and yields
-            less ghee per litre of milk. Most manufacturers moved away from it decades ago for exactly
-            those reasons.
-          </p>
-          <p>
-            We kept it because the results are worth it: a grainier texture, a deeper aroma, and a
-            flavour that store-bought ghee simply doesn&rsquo;t have. It&rsquo;s the same philosophy behind everything
-            we make, from our khoya-based sweets to our fresh paneer — modern hygiene and food safety
-            standards, applied to genuinely traditional recipes and processes.
-          </p>
+          <SectionHeading eyebrow="Why It Matters" title="What You Get in Every Box" align="center" />
+          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-6 text-dark/75 lg:grid-cols-2">
+            <p>
+              Milk is the single biggest factor in how mithai tastes. Buying directly from local farmers
+              means our milk reaches the kitchen fresh, the same day, and we know who produced it. That
+              freshness carries straight through into the khoya, and from the khoya into every sweet.
+            </p>
+            <p>
+              Ghee is the second. Plenty of sweets are cooked in vanaspati or blended fats because
+              they&rsquo;re cheaper. We use only 100% pure desi ghee — and because every batch is
+              recorded live, you don&rsquo;t have to take our word for it.
+            </p>
+          </div>
         </div>
       </section>
 

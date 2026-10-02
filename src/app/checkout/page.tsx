@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
+import { DELIVERY_AREA, MAX_ONLINE_ORDER_GRAMS, deliveryFeeFor, formatGrams } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 const inputClass =
@@ -31,14 +32,22 @@ type RazorpayOptions = {
   modal?: { ondismiss?: () => void };
 };
 
+type RazorpayInstance = {
+  open: () => void;
+  on: (event: "payment.failed", callback: (response: { error: { description: string } }) => void) => void;
+};
+
 declare global {
   interface Window {
-    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+    Razorpay?: new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
 export default function CheckoutPage() {
-  const { items, subtotal, clearCart } = useCart();
+  const { items, subtotal, totalGrams, clearCart } = useCart();
+  const deliveryFee = deliveryFeeFor(subtotal);
+  const total = subtotal + deliveryFee;
+  const overLimit = totalGrams > MAX_ONLINE_ORDER_GRAMS;
   const [placedVia, setPlacedVia] = useState<"razorpay" | "whatsapp" | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -47,7 +56,7 @@ export default function CheckoutPage() {
     phone: "",
     email: "",
     address: "",
-    city: "",
+    city: DELIVERY_AREA,
     pincode: "",
     notes: "",
   });
@@ -66,6 +75,8 @@ export default function CheckoutPage() {
       ),
       "",
       `Subtotal: ${formatInr(subtotal)}`,
+      `Delivery: ${deliveryFee === 0 ? "Free" : formatInr(deliveryFee)}`,
+      `Total: ${formatInr(total)}`,
       "",
       `Name: ${form.name}`,
       `Phone: ${form.phone}`,
@@ -84,7 +95,7 @@ export default function CheckoutPage() {
   }
 
   function handleCodOrder(event: MouseEvent<HTMLButtonElement>) {
-    if (!event.currentTarget.form?.reportValidity()) return;
+    if (overLimit || !event.currentTarget.form?.reportValidity()) return;
     openWhatsAppWithOrder("Payment: To be confirmed with the team (COD / UPI on delivery).");
     setPlacedVia("whatsapp");
     clearCart();
@@ -99,28 +110,27 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!event.currentTarget.reportValidity()) return;
+    if (overLimit || !event.currentTarget.reportValidity()) return;
 
     setIsPaying(true);
     try {
       const orderRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: subtotal, receipt: `amodha_${Date.now()}` }),
+        body: JSON.stringify({
+          items: items.map(({ slug, packLabel, quantity }) => ({ slug, packLabel, quantity })),
+          receipt: `mw_${Date.now()}`,
+        }),
       });
       const order = await orderRes.json();
       if (!orderRes.ok) throw new Error(order?.error ?? "Could not start payment");
 
-      if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
-        throw new Error("Payment is not configured (missing NEXT_PUBLIC_RAZORPAY_KEY_ID)");
-      }
-
       const razorpay = new window.Razorpay({
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: order.keyId,
         amount: order.amount,
         currency: order.currency,
-        name: siteConfig.name,
-        description: "Order from Mithaiwallah Sweet Corner / Amodha Dairy",
+        name: "Mithaiwallah",
+        description: "Fresh mithai from Mithaiwallah, Prayagraj",
         order_id: order.id,
         prefill: {
           name: form.name,
@@ -156,6 +166,10 @@ export default function CheckoutPage() {
           ondismiss: () => setIsPaying(false),
         },
       });
+      razorpay.on("payment.failed", (response) => {
+        setPaymentError(`Payment failed: ${response.error.description}. You can try again.`);
+        setIsPaying(false);
+      });
       razorpay.open();
     } catch (err) {
       console.error("Payment start failed:", err);
@@ -178,7 +192,7 @@ export default function CheckoutPage() {
             ? "Your payment went through and we've opened WhatsApp with your order details pre-filled — please send that message so our team can confirm delivery timing."
             : "We've opened WhatsApp with your order details pre-filled — please send that message so our team can confirm availability, delivery timing and payment (COD or UPI on delivery)."}
         </p>
-        <ButtonLink href="/dairy-products" variant="primary">
+        <ButtonLink href="/#catalog" variant="primary">
           Continue Shopping
         </ButtonLink>
       </section>
@@ -193,10 +207,10 @@ export default function CheckoutPage() {
         </span>
         <h1 className="text-3xl font-bold text-ink sm:text-4xl">Your Cart Is Empty</h1>
         <p className="max-w-md text-dark/70">
-          Amodha Dairy is coming soon. Meanwhile, explore Mithaiwallah Sweet Corner.
+          Pick your sweets first — fresh mithai made in 100% pure desi ghee, delivered across {DELIVERY_AREA}.
         </p>
-        <ButtonLink href="/" variant="primary">
-          Explore Sweet Corner
+        <ButtonLink href="/#catalog" variant="primary">
+          Browse Sweets
         </ButtonLink>
       </section>
     );
@@ -212,6 +226,9 @@ export default function CheckoutPage() {
         <p className="mt-2 max-w-xl text-dark/70">
           Fill in your delivery details below, then pay securely online or place your order for Cash on
           Delivery / UPI on delivery.
+        </p>
+        <p className="font-heading sticker-shadow-sm mt-4 inline-block rounded-full border-2 border-ink bg-blush px-4 py-1.5 text-sm font-semibold text-ink">
+          📍 We currently deliver within {DELIVERY_AREA} only
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-start">
@@ -316,25 +333,50 @@ export default function CheckoutPage() {
 
             {paymentError ? <p className="text-sm font-medium text-accent-dark">{paymentError}</p> : null}
 
+            {overLimit ? (
+              <p className="text-sm font-medium text-accent-dark">
+                Your cart has {formatGrams(totalGrams)}, but online orders are limited to{" "}
+                {formatGrams(MAX_ONLINE_ORDER_GRAMS)}.{" "}
+                <Link href="/cart" className="underline">
+                  Edit your cart
+                </Link>{" "}
+                or{" "}
+                <Link href="/contact" className="underline">
+                  contact us for bulk pricing
+                </Link>
+                .
+              </p>
+            ) : null}
+
             <button
               type="submit"
-              disabled={isPaying}
+              disabled={isPaying || overLimit}
               className="font-heading sticker-shadow mt-2 flex w-full items-center justify-center gap-2 rounded-full border-[2.5px] border-ink bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all hover:-translate-y-0.5 hover:bg-accent-dark hover:shadow-[4px_4px_0_0_var(--color-ink)] active:translate-y-0 active:shadow-[1px_1px_0_0_var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
-              {isPaying ? "Processing…" : `Pay Now — ${formatInr(subtotal)}`}
+              {isPaying ? "Processing…" : `Pay Now — ${formatInr(total)}`}
             </button>
 
             <button
               type="button"
               onClick={handleCodOrder}
-              className="font-heading flex w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-all hover:-translate-y-0.5 sm:w-auto"
+              disabled={overLimit}
+              className="font-heading flex w-full items-center justify-center gap-2 rounded-full border-2 border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               Place Order for COD / UPI on Delivery
             </button>
-            <p className="text-xs text-dark/50">
-              Pay Now accepts cards, UPI and netbanking via Razorpay. Prefer to pay on delivery? Use the
-              second button — your order is confirmed directly with our team over WhatsApp.
-            </p>
+
+            <div className="flex items-start gap-3 rounded-xl border-2 border-ink/15 bg-blush px-4 py-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="mt-0.5 shrink-0 text-primary-dark">
+                <rect x="4" y="10" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <p className="text-xs text-dark/70">
+                <span className="font-semibold text-ink">Secure checkout.</span> Online payments are processed
+                by Razorpay over an encrypted connection — UPI, cards and netbanking accepted. We never see or
+                store your card details. Prefer to pay on delivery? Use the second button and our team will
+                confirm your order on WhatsApp.
+              </p>
+            </div>
           </form>
 
           <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6">
@@ -349,9 +391,17 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-ink/20 pt-4">
-              <span className="font-heading font-bold text-ink">Subtotal</span>
-              <span className="font-heading font-bold text-ink">{formatInr(subtotal)}</span>
+            <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-ink/20 pt-4 text-sm text-dark/70">
+              <span>Subtotal</span>
+              <span className="font-semibold text-ink">{formatInr(subtotal)}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-sm text-dark/70">
+              <span>Delivery</span>
+              <span className="font-semibold text-ink">{deliveryFee === 0 ? "Free" : formatInr(deliveryFee)}</span>
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t-2 border-dashed border-ink/20 pt-3">
+              <span className="font-heading font-bold text-ink">Total</span>
+              <span className="font-heading font-bold text-ink">{formatInr(total)}</span>
             </div>
             <Link href="/cart" className="mt-4 block text-center text-sm font-semibold text-primary-dark hover:underline">
               Edit Cart

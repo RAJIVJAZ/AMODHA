@@ -22,9 +22,10 @@ export async function generateMetadata({
   const sweet = getSweet(slug);
   if (!sweet) return {};
   return {
-    title: `${sweet.name} | ${sweet.keyword}`,
-    description: sweet.shortDescription,
+    title: { absolute: sweet.metaTitle },
+    description: sweet.metaDescription,
     alternates: { canonical: `/sweet-corner/${sweet.slug}` },
+    openGraph: sweet.image ? { images: [{ url: sweet.image, alt: sweet.imageAlt ?? sweet.name }] } : undefined,
   };
 }
 
@@ -79,7 +80,14 @@ export default async function SweetDetailPage({
           <div>
             {sweet.image ? (
               <div className="sticker-shadow relative aspect-square w-full max-w-md overflow-hidden rounded-3xl border-2 border-ink">
-                <Image src={sweet.image} alt={sweet.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+                <Image
+                  src={sweet.image}
+                  alt={sweet.imageAlt ?? sweet.name}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
               </div>
             ) : (
               <div
@@ -91,9 +99,9 @@ export default async function SweetDetailPage({
             )}
             {sweet.gallery && sweet.gallery.length > 0 ? (
               <div className="mt-4 grid max-w-md grid-cols-2 gap-4">
-                {sweet.gallery.map((src) => (
-                  <div key={src} className="sticker-shadow-sm relative aspect-square overflow-hidden rounded-2xl border-2 border-ink">
-                    <Image src={src} alt={`${sweet.name} packaging`} fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" />
+                {sweet.gallery.map((photo) => (
+                  <div key={photo.src} className="sticker-shadow-sm relative aspect-square overflow-hidden rounded-2xl border-2 border-ink">
+                    <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" />
                   </div>
                 ))}
               </div>

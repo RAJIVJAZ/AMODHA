@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/layout/legal-page";
+import { formatInr } from "@/lib/currency";
+import {
+  DELIVERY_AREA,
+  DELIVERY_FEE,
+  FREE_DELIVERY_THRESHOLD,
+  MAX_ONLINE_ORDER_GRAMS,
+  formatGrams,
+} from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -12,42 +20,42 @@ export default function ShippingPolicyPage() {
   return (
     <LegalPage
       title="Shipping Policy"
-      updated="17 September 2026"
+      updated="2 October 2026"
       sections={[
         {
-          heading: "1. Dispatch Locations",
+          heading: "1. Dispatch Location",
           body: [
-            `All orders are dispatched from our manufacturing facility in ${siteConfig.address.plant.line2}, ${siteConfig.address.plant.city}, ${siteConfig.address.plant.state}.`,
+            `All orders are prepared and dispatched from our kitchen at ${siteConfig.address.plant.line2}, ${siteConfig.address.plant.city}, ${siteConfig.address.plant.state}.`,
           ],
         },
         {
-          heading: "2. Delivery Areas",
+          heading: "2. Delivery Area",
           body: [
-            "Retail and wholesale delivery is available within Prayagraj and select nearby cities in Uttar Pradesh, subject to route availability. Corporate and wedding gifting orders are dispatched Pan-India, with delivery timelines shared at the time of order confirmation.",
+            `Online orders are currently delivered within ${DELIVERY_AREA} only. Bulk corporate or wedding orders outside ${DELIVERY_AREA} are considered case by case — please contact us before ordering.`,
           ],
         },
         {
-          heading: "3. Delivery Timelines",
+          heading: "3. Delivery Charges",
           body: [
-            "Local retail orders are typically delivered same-day or next-day. Wholesale orders follow scheduled dispatch based on your agreed order cycle. Corporate and wedding gifting orders require 7-15 days of lead time depending on quantity and customisation involved.",
+            `Delivery is free on orders of ${formatInr(FREE_DELIVERY_THRESHOLD)} or more. Orders below ${formatInr(FREE_DELIVERY_THRESHOLD)} carry a flat ${formatInr(DELIVERY_FEE)} delivery fee. The fee is shown in your cart and at checkout before you pay.`,
           ],
         },
         {
-          heading: "4. Packaging for Transit",
+          heading: "4. Order Limits",
           body: [
-            "Perishable dairy items are packed with appropriate cold-chain measures for local delivery. Sweets intended for gifting or long-distance dispatch are packed in travel-friendly formats (such as Bikaneri Cake and Milk Cake, which store well) with tamper-evident sealing.",
+            `Online orders are limited to ${formatGrams(MAX_ONLINE_ORDER_GRAMS)} in total. For larger quantities, contact us on WhatsApp or through our contact page for bulk pricing and delivery.`,
           ],
         },
         {
-          heading: "5. Delivery Partners",
+          heading: "5. Delivery Timelines",
           body: [
-            "We use a combination of our own delivery fleet for local orders and trusted third-party logistics partners for Pan-India gifting dispatch. Delivery timelines for third-party logistics are estimates and may occasionally vary due to factors outside our control.",
+            `Online orders within ${DELIVERY_AREA} are typically delivered same-day or next-day. Corporate and wedding gifting orders require 7-15 days of lead time depending on quantity and customisation.`,
           ],
         },
         {
-          heading: "6. Shipping Charges",
+          heading: "6. Packaging",
           body: [
-            "Shipping charges, where applicable, are communicated at the time of order confirmation based on delivery location, order weight and urgency.",
+            "Sweets are packed in sealed, food-safe boxes in our hygienic kitchen so they reach you fresh and untouched.",
           ],
         },
         {
