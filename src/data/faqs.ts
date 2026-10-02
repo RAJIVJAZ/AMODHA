@@ -1,5 +1,11 @@
 import { formatInr } from "@/lib/currency";
-import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
+import {
+  DELIVERY_AREA,
+  DELIVERY_FEE,
+  FREE_DELIVERY_THRESHOLD,
+  SUBSCRIBER_DISCOUNT_PERCENT,
+  SUBSCRIBER_FREE_DELIVERY_MINIMUM,
+} from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export type FaqItem = { question: string; answer: string };
@@ -41,7 +47,7 @@ export const generalFaqs: FaqItem[] = [
   {
     question: "What are Milk Subscriber Benefits?",
     answer:
-      "Customers on our milk subscription automatically get priority delivery, free delivery on Mithai Wallah products above ₹499, early access to new products, subscriber-only and festive offers, priority support and access to limited-edition sweet collections. There is no extra fee.",
+      `Customers on our milk subscription automatically get ${SUBSCRIBER_DISCOUNT_PERCENT}% off our range of Mithai Wallah products, priority delivery, free delivery on orders above ${formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}, early access to new products, subscriber-only and festive offers, priority support and access to limited-edition sweet collections. There is no extra fee. The discount applies to our sweets and products, not to the milk itself, and doesn't combine with the first-order offer.`,
   },
   {
     question: "Where is your kitchen located?",

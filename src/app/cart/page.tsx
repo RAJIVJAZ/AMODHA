@@ -11,7 +11,8 @@ import {
   FREE_DELIVERY_THRESHOLD,
   SUBSCRIBER_FREE_DELIVERY_MINIMUM,
   deliveryFeeFor,
-  firstOrderDiscountFor,
+  bestDiscountFor,
+  discountLabels,
 } from "@/lib/order-rules";
 import { useFirstOrderOffer } from "@/lib/use-first-order-offer";
 
@@ -21,7 +22,10 @@ export default function CartPage() {
   const milkSubscriber = Boolean(offer?.milkSubscriber);
   const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
   const freeDeliveryFrom = milkSubscriber ? SUBSCRIBER_FREE_DELIVERY_MINIMUM : FREE_DELIVERY_THRESHOLD;
-  const discount = firstOrderDiscountFor(subtotal, Boolean(offer?.eligible));
+  const { discount, reason: discountReason } = bestDiscountFor(subtotal, {
+    firstOrderEligible: Boolean(offer?.eligible),
+    milkSubscriber,
+  });
 
   return (
     <>
@@ -111,7 +115,7 @@ export default function CartPage() {
               </div>
               {discount > 0 ? (
                 <div className="mt-2 flex items-center justify-between text-sm text-dark/70">
-                  <span>First-order discount</span>
+                  <span>{discountReason ? discountLabels[discountReason] : "Discount"}</span>
                   <span className="font-semibold text-green-700">−{formatInr(discount)}</span>
                 </div>
               ) : null}

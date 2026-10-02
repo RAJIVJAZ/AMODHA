@@ -13,7 +13,12 @@ import { processSteps } from "@/data/process";
 import { reviews } from "@/data/reviews";
 import { sweets, hamperCategories } from "@/data/sweets";
 import { formatInr } from "@/lib/currency";
-import { FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
+import {
+  FIRST_ORDER_DISCOUNT,
+  FIRST_ORDER_MINIMUM,
+  SUBSCRIBER_DISCOUNT_PERCENT,
+  SUBSCRIBER_FREE_DELIVERY_MINIMUM,
+} from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -428,8 +433,8 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold text-ink sm:text-4xl">Become a Milk Subscriber</h2>
               <p className="text-dark/75">
                 Register your interest in our upcoming fresh milk delivery service and unlock exclusive customer
-                benefits including priority delivery, festive offers, and free delivery on Mithai Wallah products
-                above {formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}.
+                benefits including {SUBSCRIBER_DISCOUNT_PERCENT}% off our range of products, priority delivery, festive
+                offers, and free delivery on Mithai Wallah products above {formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}.
               </p>
               <p className="font-subheading text-lg italic text-ink">{milkSubscription.community}</p>
               <p className="text-sm font-semibold text-ink">

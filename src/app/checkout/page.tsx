@@ -8,7 +8,15 @@ import { FirstOrderNote } from "@/components/ui/first-order-note";
 import { ButtonLink } from "@/components/ui/button-link";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
-import { DELIVERY_AREA, FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM, deliveryFeeFor, firstOrderDiscountFor } from "@/lib/order-rules";
+import {
+  DELIVERY_AREA,
+  FIRST_ORDER_DISCOUNT,
+  FIRST_ORDER_MINIMUM,
+  bestDiscountFor,
+  deliveryFeeFor,
+  discountLabels,
+  type DiscountReason,
+} from "@/lib/order-rules";
 import { createClient } from "@/lib/supabase/client";
 import { siteConfig } from "@/lib/site";
 
@@ -54,7 +62,7 @@ export default function CheckoutPage() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
-  const discount = firstOrderDiscountFor(subtotal, firstOrderEligible);
+  const { discount, reason: discountReason } = bestDiscountFor(subtotal, { firstOrderEligible, milkSubscriber });
   const total = subtotal + deliveryFee - discount;
   const [placedVia, setPlacedVia] = useState<"razorpay" | "whatsapp" | null>(null);
   const [placedOrderNumber, setPlacedOrderNumber] = useState<number | null>(null);
@@ -118,7 +126,13 @@ export default function CheckoutPage() {
     };
   }
 
-  function buildWhatsAppMessage(paymentNote: string, orderNumber: number | null, orderDiscount: number, orderTotal: number) {
+  function buildWhatsAppMessage(
+    paymentNote: string,
+    orderNumber: number | null,
+    orderDiscount: number,
+    orderTotal: number,
+    orderDiscountReason: DiscountReason | null
+  ) {
     const lines = [
       orderNumber ? `New Order #${orderNumber} from mithaiwallah.shop` : "New Order from mithaiwallah.shop",
       "",
@@ -129,7 +143,7 @@ export default function CheckoutPage() {
       "",
       `Subtotal: ${formatInr(subtotal)}`,
       `Delivery: ${deliveryFee === 0 ? "Free" : formatInr(deliveryFee)}`,
-      orderDiscount > 0 ? `First-order discount: -${formatInr(orderDiscount)}` : "",
+      orderDiscount > 0 ? `${orderDiscountReason ? discountLabels[orderDiscountReason] : "Discount"}: -${formatInr(orderDiscount)}` : "",
       `Total: ${formatInr(orderTotal)}`,
       "",
       `Name: ${form.name}`,
@@ -143,8 +157,14 @@ export default function CheckoutPage() {
     return encodeURIComponent(lines.join("\n"));
   }
 
-  function openWhatsAppWithOrder(paymentNote: string, orderNumber: number | null, orderDiscount: number, orderTotal: number) {
-    const message = buildWhatsAppMessage(paymentNote, orderNumber, orderDiscount, orderTotal);
+  function openWhatsAppWithOrder(
+    paymentNote: string,
+    orderNumber: number | null,
+    orderDiscount: number,
+    orderTotal: number,
+    orderDiscountReason: DiscountReason | null
+  ) {
+    const message = buildWhatsAppMessage(paymentNote, orderNumber, orderDiscount, orderTotal, orderDiscountReason);
     const url = `https://wa.me/${siteConfig.contact.whatsapp}?text=${message}`;
     setWhatsAppUrl(url);
     setPlacedOrderNumber(orderNumber);
@@ -157,6 +177,7 @@ export default function CheckoutPage() {
     setIsPaying(true);
     let orderNumber: number | null = null;
     let orderDiscount = discount;
+    let orderDiscountReason = discountReason;
     let orderTotal = total;
     try {
       const res = await fetch("/api/orders/cod", {
@@ -171,6 +192,7 @@ export default function CheckoutPage() {
       }
       orderNumber = data.orderNumber ?? null;
       orderDiscount = data.discount ?? 0;
+      orderDiscountReason = data.discountReason ?? null;
       orderTotal = data.total ?? total;
     } catch (err) {
       // Saving failed (e.g. offline); the WhatsApp message still reaches the team.
@@ -178,7 +200,13 @@ export default function CheckoutPage() {
     } finally {
       setIsPaying(false);
     }
-    openWhatsAppWithOrder("Payment: To be confirmed with the team (COD / UPI on delivery).", orderNumber, orderDiscount, orderTotal);
+    openWhatsAppWithOrder(
+      "Payment: To be confirmed with the team (COD / UPI on delivery).",
+      orderNumber,
+      orderDiscount,
+      orderTotal,
+      orderDiscountReason
+    );
     setPlacedVia("whatsapp");
     clearCart();
   }
@@ -238,7 +266,8 @@ export default function CheckoutPage() {
               `Payment: Paid online via Razorpay (Payment ID: ${response.razorpay_payment_id}).`,
               verifyData.orderNumber ?? order.orderNumber ?? null,
               order.discount ?? 0,
-              order.total ?? total
+              order.total ?? total,
+              order.discountReason ?? null
             );
             setPlacedVia("razorpay");
             clearCart();
@@ -518,7 +547,7 @@ export default function CheckoutPage() {
             </div>
             {discount > 0 ? (
               <div className="mt-2 flex items-center justify-between text-sm text-dark/70">
-                <span>First-order discount</span>
+                <span>{discountReason ? discountLabels[discountReason] : "Discount"}</span>
                 <span className="font-semibold text-green-700">−{formatInr(discount)}</span>
               </div>
             ) : null}

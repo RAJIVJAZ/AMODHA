@@ -24,11 +24,12 @@ export async function POST(req: Request) {
         subtotal: priced.subtotal,
         deliveryFee: quote.deliveryFee,
         discount: quote.discount,
+        discountReason: quote.discountReason,
         total: quote.total,
         milkSubscriber: quote.milkSubscriber,
         paymentMethod: "cod",
       })
     : null;
 
-  return NextResponse.json({ orderNumber, discount: quote.discount, total: quote.total });
+  return NextResponse.json({ orderNumber, discount: quote.discount, discountReason: quote.discountReason, total: quote.total });
 }

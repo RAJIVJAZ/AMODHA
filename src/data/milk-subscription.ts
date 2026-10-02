@@ -1,5 +1,5 @@
 import type { FaqItem } from "@/data/faqs";
-import { SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
+import { SUBSCRIBER_DISCOUNT_PERCENT, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
 
 export const milkSubscription = {
   name: "Farm Fresh Milk Subscription",
@@ -25,6 +25,7 @@ export const milkProductPoints = [
 
 /** What an active milk subscriber gets automatically. There is no separate fee. */
 export const milkSubscriberBenefits = [
+  `${SUBSCRIBER_DISCOUNT_PERCENT}% off our range of Mithai Wallah products`,
   "Priority delivery",
   `Free delivery on Mithai Wallah products above ₹${SUBSCRIBER_FREE_DELIVERY_MINIMUM}`,
   "Early access to new products",

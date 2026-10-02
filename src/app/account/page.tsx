@@ -12,7 +12,12 @@ import { WithdrawMilkInterest } from "@/components/account/withdraw-milk-interes
 import { milkSubscriberBenefits, milkSubscription } from "@/data/milk-subscription";
 import { formatInr } from "@/lib/currency";
 import { orderStatusLabels, type OrderStatus } from "@/lib/order-status";
-import { FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM, SUBSCRIBER_FREE_DELIVERY_MINIMUM } from "@/lib/order-rules";
+import {
+  FIRST_ORDER_DISCOUNT,
+  FIRST_ORDER_MINIMUM,
+  SUBSCRIBER_DISCOUNT_PERCENT,
+  SUBSCRIBER_FREE_DELIVERY_MINIMUM,
+} from "@/lib/order-rules";
 import { customerFilter, getSignedInCustomer, isFirstOrder } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -155,7 +160,7 @@ export default async function AccountPage() {
           </nav>
 
           <div className="flex flex-col gap-6">
-            {welcomeOffer ? (
+            {welcomeOffer && !milkSubscriber ? (
               <section className="sticker-shadow flex flex-col gap-3 rounded-2xl border-[2.5px] border-ink bg-[#fbeec4] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
                 <div>
                   <h2 className="font-heading text-lg font-bold text-ink">
@@ -313,14 +318,15 @@ export default async function AccountPage() {
 
             <Card id="rewards" title="Rewards & offers">
               <ul className="flex flex-col gap-3 text-sm">
-                {welcomeOffer ? (
+                {welcomeOffer && !milkSubscriber ? (
                   <li className="rounded-xl bg-[#fbeec4] px-4 py-3 font-semibold text-ink">
                     🎉 {formatInr(FIRST_ORDER_DISCOUNT)} off your first order of {formatInr(FIRST_ORDER_MINIMUM)}+ (applied at checkout)
                   </li>
                 ) : null}
                 {milkSubscriber ? (
                   <li className="rounded-xl bg-primary-light/25 px-4 py-3 font-semibold text-ink">
-                    🥛 Free delivery on orders of {formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}+ (milk subscriber)
+                    🥛 {SUBSCRIBER_DISCOUNT_PERCENT}% off all Mithai Wallah products and free delivery on orders of{" "}
+                    {formatInr(SUBSCRIBER_FREE_DELIVERY_MINIMUM)}+ (applied at checkout)
                   </li>
                 ) : null}
                 <li className="flex items-baseline justify-between gap-3 rounded-xl border-2 border-ink/10 px-4 py-3">

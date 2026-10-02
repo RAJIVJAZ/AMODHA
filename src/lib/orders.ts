@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getPack, getSweet } from "@/data/sweets";
-import { deliveryFeeFor, firstOrderDiscountFor } from "@/lib/order-rules";
+import { bestDiscountFor, deliveryFeeFor, type DiscountReason } from "@/lib/order-rules";
 import { normalizePhone } from "@/lib/phone";
 import { createClient } from "@/lib/supabase/server";
 
@@ -141,9 +141,9 @@ export async function quoteOrder(admin: SupabaseClient | null, subtotal: number,
     admin && customer
       ? await Promise.all([isFirstOrder(admin, customer, checkoutPhone), isActiveMilkSubscriber(admin, customer)])
       : [false, false];
-  const discount = firstOrderDiscountFor(subtotal, eligible);
+  const { discount, reason } = bestDiscountFor(subtotal, { firstOrderEligible: eligible, milkSubscriber });
   const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
-  return { customer, discount, deliveryFee, milkSubscriber, total: subtotal + deliveryFee - discount };
+  return { customer, discount, discountReason: reason, deliveryFee, milkSubscriber, total: subtotal + deliveryFee - discount };
 }
 
 type SaveOrderInput = {
@@ -153,6 +153,7 @@ type SaveOrderInput = {
   subtotal: number;
   deliveryFee: number;
   discount: number;
+  discountReason: DiscountReason | null;
   total: number;
   paymentMethod: "online" | "cod";
   milkSubscriber: boolean;
@@ -180,7 +181,8 @@ export async function saveOrder(admin: SupabaseClient, input: SaveOrderInput) {
       delivery_fee: input.deliveryFee,
       discount: input.discount,
       total: input.total,
-      first_order_offer: input.discount > 0,
+      first_order_offer: input.discountReason === "first_order",
+      discount_reason: input.discountReason,
       milk_subscriber: input.milkSubscriber,
       razorpay_order_id: input.razorpayOrderId ?? null,
     })

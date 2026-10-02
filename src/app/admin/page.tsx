@@ -7,6 +7,7 @@ import { SupportReply } from "@/components/admin/support-reply";
 import { milkSubscription } from "@/data/milk-subscription";
 import { getStaffClient } from "@/lib/admin-auth";
 import { formatInr } from "@/lib/currency";
+import { discountLabels, type DiscountReason } from "@/lib/order-rules";
 import type { OrderStatus } from "@/lib/order-status";
 import { createClient } from "@/lib/supabase/server";
 
@@ -31,6 +32,7 @@ type AdminOrder = {
   total: number;
   discount: number;
   milk_subscriber: boolean;
+  discount_reason: DiscountReason | null;
   order_items: { product_name: string; pack_label: string; quantity: number }[];
 };
 
@@ -77,7 +79,7 @@ export default async function AdminPage() {
   const [ordersRes, supportRes, milkRes, staffRes, staffProfilesRes] = await Promise.all([
     staff
       .from("orders")
-      .select("id, order_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, order_items(product_name, pack_label, quantity)")
+      .select("id, order_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, discount_reason, order_items(product_name, pack_label, quantity)")
       .order("created_at", { ascending: false })
       .limit(50),
     staff.from("support_requests").select("id, user_id, subject, message, order_number, created_at").eq("status", "open").order("created_at"),
@@ -144,7 +146,9 @@ export default async function AdminPage() {
                   </p>
                   <p className="font-semibold text-ink">
                     {formatInr(order.total)}
-                    {order.discount > 0 ? ` (incl. ${formatInr(order.discount)} first-order discount)` : ""} ·{" "}
+                    {order.discount > 0
+                      ? ` (after ${formatInr(order.discount)} ${(order.discount_reason ? discountLabels[order.discount_reason] : "discount").toLowerCase()})`
+                      : ""} ·{" "}
                     {order.payment_method === "online" ? (order.payment_status === "paid" ? "Paid online" : "Online, not paid") : "Pay on delivery"}
                   </p>
                 </div>

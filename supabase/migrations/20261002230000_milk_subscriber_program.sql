@@ -18,3 +18,6 @@ create trigger milk_interest_touch_updated_at
 
 -- Orders placed by an active milk subscriber get priority handling.
 alter table public.orders add column milk_subscriber boolean not null default false;
+
+-- Which discount an order received: the first-order offer or the 20% milk subscriber discount.
+alter table public.orders add column if not exists discount_reason text check (discount_reason in ('first_order', 'milk_subscriber'));

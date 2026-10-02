@@ -40,6 +40,7 @@ export async function POST(req: Request) {
           subtotal: priced.subtotal,
           deliveryFee: quote.deliveryFee,
           discount: quote.discount,
+          discountReason: quote.discountReason,
           total: quote.total,
         milkSubscriber: quote.milkSubscriber,
           paymentMethod: "online",
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
       currency: order.currency,
       keyId: process.env.RAZORPAY_KEY_ID,
       discount: quote.discount,
+      discountReason: quote.discountReason,
       total: quote.total,
       orderNumber,
     });
