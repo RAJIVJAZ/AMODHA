@@ -36,7 +36,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           </p>
           {linkExpired ? (
             <p role="alert" className="mt-4 rounded-xl bg-blush px-3 py-2 text-sm text-accent-dark">
-              That sign-in link has expired or was already used. Request a new code below.
+              That sign-in link didn&rsquo;t work here. Links only open in the same browser you requested them
+              from, and only once. Enter the 6-digit code from the email instead, or request a new one below.
             </p>
           ) : null}
           <div className="mt-6">
