@@ -134,6 +134,7 @@ export default function MilkSubscriptionPage() {
               description="Fill this in and send it to us on WhatsApp."
               fields={milkInterestFields}
               whatsappIntro="Hi Mithai Wallah, I'm interested in the Farm Fresh Dairy Subscription."
+              saveEndpoint="/api/milk-interest"
             />
           )}
         </div>

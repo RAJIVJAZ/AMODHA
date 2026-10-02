@@ -12,6 +12,8 @@ import { membership } from "@/data/membership";
 import { processSteps } from "@/data/process";
 import { reviews } from "@/data/reviews";
 import { sweets, hamperCategories } from "@/data/sweets";
+import { formatInr } from "@/lib/currency";
+import { FIRST_ORDER_DISCOUNT, FIRST_ORDER_MINIMUM } from "@/lib/order-rules";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -84,6 +86,15 @@ export default function HomePage() {
           <span className="font-heading sticker-shadow-sm inline-block rounded-full border-2 border-ink bg-white px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
             Made fresh in Prayagraj since {siteConfig.founded}
           </span>
+          {siteConfig.accountsLive ? (
+            <Link
+              href="/login?next=/checkout"
+              className="font-heading sticker-shadow rounded-2xl border-[2.5px] border-ink bg-[#f3d27a] px-5 py-3 text-base font-bold text-ink transition-transform hover:-translate-y-0.5 sm:text-lg"
+            >
+              🎉 Get {formatInr(FIRST_ORDER_DISCOUNT)} OFF on Your First Order Above {formatInr(FIRST_ORDER_MINIMUM)}
+              <span className="block text-xs font-semibold text-ink/70 sm:text-sm">Sign in with your mobile number at checkout</span>
+            </Link>
+          ) : null}
           <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-5xl md:text-6xl">
             Pure Desi Ghee Sweets, Made Fresh in Prayagraj
           </h1>

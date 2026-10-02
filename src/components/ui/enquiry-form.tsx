@@ -16,9 +16,11 @@ type EnquiryFormProps = {
   description?: string;
   fields: Field[];
   whatsappIntro: string;
+  /** Optional API route that also stores the submission (e.g. milk interest). */
+  saveEndpoint?: string;
 };
 
-export function EnquiryForm({ title, description, fields, whatsappIntro }: EnquiryFormProps) {
+export function EnquiryForm({ title, description, fields, whatsappIntro, saveEndpoint }: EnquiryFormProps) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -36,6 +38,14 @@ export function EnquiryForm({ title, description, fields, whatsappIntro }: Enqui
     }
     const message = encodeURIComponent(lines.join("\n"));
     window.open(`https://wa.me/${siteConfig.contact.whatsapp}?text=${message}`, "_blank", "noopener,noreferrer");
+    if (saveEndpoint) {
+      fetch(saveEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+        keepalive: true,
+      }).catch((err) => console.error("Saving the form failed:", err));
+    }
     setSubmitted(true);
   }
 

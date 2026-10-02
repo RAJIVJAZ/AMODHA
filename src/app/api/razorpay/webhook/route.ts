@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
+import { markOrderPaid } from "@/lib/orders";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // Razorpay Dashboard -> Settings -> Webhooks: point this route's URL here and
 // set the same secret as RAZORPAY_WEBHOOK_SECRET. This is a separate secret
@@ -28,10 +30,13 @@ export async function POST(req: Request) {
 
   const event = JSON.parse(rawBody);
 
-  if (event.event === "payment.captured") {
-    // This is the source of truth that a payment succeeded. There's no
-    // order database in this project yet — once one exists, mark the
-    // matching order as paid here using event.payload.payment.entity.order_id.
+  // The source of truth that a payment succeeded, even if the customer closed the tab before /verify ran.
+  if (event.event === "payment.captured" || event.event === "order.paid") {
+    const payment = event.payload?.payment?.entity;
+    const admin = createAdminClient();
+    if (admin && payment?.order_id && payment?.id) {
+      await markOrderPaid(admin, payment.order_id, payment.id);
+    }
   }
 
   return NextResponse.json({ received: true });

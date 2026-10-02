@@ -37,6 +37,18 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          {siteConfig.accountsLive ? (
+            <Link
+              href="/account"
+              aria-label="My account"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-blush"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
+                <path d="M4 21a8 8 0 0 1 16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </Link>
+          ) : null}
           <Link
             href="/cart"
             aria-label={`Cart, ${itemCount} item${itemCount === 1 ? "" : "s"}`}

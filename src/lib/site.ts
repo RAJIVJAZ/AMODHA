@@ -39,6 +39,11 @@ export const siteConfig = {
     facebook: "",
     youtube: "",
   },
+  /**
+   * Turn on once SMS is set up in Supabase (Authentication → Sign In / Providers → Phone).
+   * Shows the account link in the header and the first-order offer banner.
+   */
+  accountsLive: false,
   /** Paste the Google Form "Send → link" URL here; until then the milk page collects interest via WhatsApp. */
   dairyInterestFormUrl: "",
   mapsEmbedUrl:

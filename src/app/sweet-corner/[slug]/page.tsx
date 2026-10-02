@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCart } from "@/components/ui/add-to-cart";
 import { GheeSeal } from "@/components/ui/ghee-seal";
+import { WishlistButton } from "@/components/account/wishlist-button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
@@ -129,6 +130,7 @@ export default async function SweetDetailPage({
 
           <div className="flex flex-col gap-6">
             <AddToCart slug={sweet.slug} productName={sweet.name} packSizes={sweet.packSizes} />
+            {siteConfig.accountsLive ? <WishlistButton slug={sweet.slug} /> : null}
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
               <h2 className="font-heading text-lg font-bold text-ink">Best For</h2>
               <ul className="mt-3 flex flex-col gap-2">
