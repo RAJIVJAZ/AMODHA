@@ -17,7 +17,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "Pure Desi Ghee Sweets in Prayagraj | Mithai Wallah" },
   description:
-    "Pure desi ghee sweets made fresh in Prayagraj — milk cake, kalakand, barfi, peda and kunda from 100+ local farmers' milk. Traceable batches. Free delivery ₹999+.",
+    "Pure desi ghee sweets made fresh in Prayagraj: milk cake, kalakand, barfi, peda and kunda from local farmers' milk. Traceable batches. Free delivery ₹999+.",
   alternates: { canonical: "/" },
 };
 
