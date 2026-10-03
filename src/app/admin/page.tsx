@@ -6,6 +6,7 @@ import { StaffManager } from "@/components/admin/staff-manager";
 import { SupportReply } from "@/components/admin/support-reply";
 import { milkSubscription } from "@/data/milk-subscription";
 import { getStaffClient } from "@/lib/admin-auth";
+import { ResendInvoiceButton } from "@/components/admin/resend-invoice-button";
 import { formatInr } from "@/lib/currency";
 import { discountLabels, type DiscountReason } from "@/lib/order-rules";
 import type { OrderStatus } from "@/lib/order-status";
@@ -20,6 +21,9 @@ type AdminOrder = {
   id: string;
   order_number: number;
   invoice_number: string | null;
+  invoice_emailed_at: string | null;
+  email_error: string | null;
+  email: string | null;
   created_at: string;
   customer_name: string;
   phone: string;
@@ -80,7 +84,7 @@ export default async function AdminPage() {
   const [ordersRes, supportRes, milkRes, staffRes, staffProfilesRes] = await Promise.all([
     staff
       .from("orders")
-      .select("id, order_number, invoice_number, created_at, customer_name, phone, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, discount_reason, order_items(product_name, pack_label, quantity)")
+      .select("id, order_number, invoice_number, invoice_emailed_at, email_error, created_at, customer_name, phone, email, address, city, pincode, notes, payment_method, payment_status, status, total, discount, milk_subscriber, discount_reason, order_items(product_name, pack_label, quantity)")
       .order("created_at", { ascending: false })
       .limit(50),
     staff.from("support_requests").select("id, user_id, subject, message, order_number, created_at").eq("status", "open").order("created_at"),
@@ -156,6 +160,10 @@ export default async function AdminPage() {
                     <a href={`/invoice/${order.id}`} target="_blank" rel="noopener" className="text-primary-dark hover:underline">
                       {order.invoice_number ? `Tax invoice ${order.invoice_number}` : "Tax invoice"}
                     </a>
+                  ) : null}
+                  {order.email_error ? <p className="text-xs font-semibold text-accent-dark">⚠ Email not sent: {order.email_error}</p> : null}
+                  {order.status !== "pending_payment" && order.email && !order.invoice_emailed_at ? (
+                    <ResendInvoiceButton orderId={order.id} />
                   ) : null}
                 </div>
                 <OrderStatusSelect orderId={order.id} status={order.status} />

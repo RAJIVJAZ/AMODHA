@@ -97,16 +97,22 @@ export async function sendOrderEmails(admin: SupabaseClient, orderId: string) {
     .is("invoice_emailed_at", null)
     .select(invoiceOrderColumns)
     .maybeSingle();
-  if (!claimed) return;
+  if (!claimed) return null;
   const order = claimed as OrderForEmail;
 
-  const [invoiceSent] = await Promise.all([
-    order.email ? sendEmail({ to: order.email, ...invoiceEmail(order) }) : Promise.resolve(false),
+  const [invoice, alert] = await Promise.all([
+    order.email ? sendEmail({ to: order.email, ...invoiceEmail(order) }) : Promise.resolve(null),
     sendEmail({ to: orderAlertRecipients, replyTo: order.email ?? undefined, ...orderAlertEmail(order) }),
   ]);
 
-  // Let a later call retry if the customer's invoice didn't go out.
-  if (order.email && !invoiceSent) {
-    await admin.from("orders").update({ invoice_emailed_at: null }).eq("id", order.id);
-  }
+  // Keep the reason on the order (shown in /admin), and let a later call retry if the
+  // customer's invoice didn't go out.
+  const problems = [
+    invoice && !invoice.sent ? `Customer invoice: ${invoice.error}` : null,
+    !alert.sent ? `Order alert: ${alert.error}` : null,
+  ].filter(Boolean);
+  const update: { email_error: string | null; invoice_emailed_at?: null } = { email_error: problems.join(" · ") || null };
+  if (invoice && !invoice.sent) update.invoice_emailed_at = null;
+  await admin.from("orders").update(update).eq("id", order.id);
+  return update.email_error;
 }

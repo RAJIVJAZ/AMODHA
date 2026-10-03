@@ -22,17 +22,21 @@ export const orderAlertRecipients = process.env.ORDER_NOTIFY_EMAIL ?? siteConfig
 
 export type Email = { to: string; subject: string; html: string; text: string; replyTo?: string };
 
-export async function sendEmail(email: Email) {
+export type SendResult = { sent: true } | { sent: false; error: string };
+
+export async function sendEmail(email: Email): Promise<SendResult> {
   const smtp = transport();
   if (!smtp) {
+    const missing = ["SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD"].filter((name) => !process.env[name]);
     console.warn(`Email not sent (SMTP is not configured): ${email.subject}`);
-    return false;
+    return { sent: false, error: `SMTP is not configured on the server (missing ${missing.join(", ")})` };
   }
   try {
     await smtp.sendMail({ from: mailFrom, ...email });
-    return true;
+    return { sent: true };
   } catch (err) {
     console.error(`Sending email failed: ${email.subject}`, err);
-    return false;
+    const message = err instanceof Error ? err.message : String(err);
+    return { sent: false, error: message.slice(0, 300) };
   }
 }
