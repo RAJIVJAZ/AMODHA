@@ -162,7 +162,7 @@ export default async function AdminPage() {
                     </a>
                   ) : null}
                   {order.email_error ? <p className="text-xs font-semibold text-accent-dark">⚠ Email not sent: {order.email_error}</p> : null}
-                  {order.status !== "pending_payment" && order.email && !order.invoice_emailed_at ? (
+                  {order.status !== "pending_payment" && order.status !== "cancelled" && order.email && !order.invoice_emailed_at ? (
                     <ResendInvoiceButton orderId={order.id} />
                   ) : null}
                 </div>
