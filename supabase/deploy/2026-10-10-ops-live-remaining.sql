@@ -1,4 +1,20 @@
 -- ONE-TIME LIVE DEPLOYMENT: completes the business-app database on the live Supabase project.
+-- Run once in the Supabase dashboard: SQL Editor -> New query -> paste this whole file -> Run.
+--
+-- Already on live (10 Oct 2026): the permission tables and settings from 20261010100000_ops_foundation.sql,
+-- their access rules, the settings/numbering helpers, and a temporary switch that stops new tables and
+-- functions from being opened to the public API while this update runs. This file is everything else:
+-- the rest of the six 20261010* migrations in order, then the final API permissions (exactly as the
+-- migrations leave them) and Supabase's normal defaults switched back on.
+--
+-- It runs as one transaction: if any statement fails, nothing is changed.
+-- Backup of all existing data: schema backup_20261010 (taken before any change).
+-- Fresh environments use supabase/migrations/ instead; do not run this file anywhere else.
+
+begin;
+set local lock_timeout = '15s';
+
+-- ONE-TIME LIVE DEPLOYMENT: completes the business-app database on the live Supabase project.
 --
 -- The live project already has the first part of 20261010100000_ops_foundation.sql (permission tables,
 -- settings) plus its access rules, applied on 10 Oct 2026. This file is everything after that point:
@@ -8,103 +24,8 @@
 -- It runs as a single transaction: if any statement fails, nothing is changed.
 -- Backup of all existing data: schema backup_20261010 (taken before any change).
 
-begin;
-set local lock_timeout = '15s';
 
 -- ===== ops_foundation_part2of3 =====
-create function public.setting(p_key text)
-returns jsonb
-language sql
-stable
-security definer
-set search_path = ''
-as $$
-  select value from public.business_settings where key = p_key
-$$;
-
-create function public.setting_num(p_key text, p_default numeric default 0)
-returns numeric
-language sql
-stable
-security definer
-set search_path = ''
-as $$
-  select coalesce((select (value #>> '{}')::numeric from public.business_settings where key = p_key), p_default)
-$$;
-
-create function public.ops_update_setting(p_key text, p_value jsonb)
-returns void
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  old_value jsonb;
-  kind text;
-begin
-  perform public.require_permission('settings', 'edit');
-  select value, value_type into old_value, kind from public.business_settings where key = p_key for update;
-  if not found then
-    raise exception 'Unknown setting %', p_key;
-  end if;
-  if kind = 'number' and jsonb_typeof(p_value) <> 'number' then
-    raise exception 'Setting % must be a number', p_key;
-  elsif kind = 'boolean' and jsonb_typeof(p_value) <> 'boolean' then
-    raise exception 'Setting % must be on or off', p_key;
-  elsif kind = 'time' and (jsonb_typeof(p_value) <> 'string' or (p_value #>> '{}') !~ '^([01][0-9]|2[0-3]):[0-5][0-9]$') then
-    raise exception 'Setting % must be a time like 20:00', p_key;
-  end if;
-  update public.business_settings set value = p_value, updated_at = now(), updated_by = auth.uid() where key = p_key;
-  perform public.write_audit('setting.update', 'business_settings', p_key, jsonb_build_object('from', old_value, 'to', p_value));
-end;
-$$;
-
--- Document numbers: permanent, gap-free per type and period (e.g. MW-MFG-2026-0001).
-create table public.doc_counters (
-  doc_type text not null,
-  period text not null,
-  last_number integer not null default 0,
-  primary key (doc_type, period)
-);
-
-create function public.next_doc_number(p_doc_type text, p_prefix text, p_period text, p_width integer default 4)
-returns text
-language plpgsql
-security definer
-set search_path = ''
-as $$
-declare
-  n integer;
-begin
-  insert into public.doc_counters (doc_type, period, last_number) values (p_doc_type, p_period, 1)
-  on conflict (doc_type, period) do update set last_number = public.doc_counters.last_number + 1
-  returning last_number into n;
-  return p_prefix || '-' || p_period || '-' || lpad(n::text, p_width, '0');
-end;
-$$;
-
--- India time helpers.
-create function public.ist_today()
-returns date
-language sql
-stable
-set search_path = ''
-as $$
-  select (now() at time zone 'Asia/Kolkata')::date
-$$;
-
-create function public.financial_year(p_date date)
-returns text
-language sql
-immutable
-set search_path = ''
-as $$
-  select case when extract(month from p_date) >= 4
-    then extract(year from p_date)::int::text || '-' || lpad(((extract(year from p_date)::int + 1) % 100)::text, 2, '0')
-    else (extract(year from p_date)::int - 1)::text || '-' || lpad((extract(year from p_date)::int % 100)::text, 2, '0')
-  end
-$$;
-
 -- Staff management -----------------------------------------------------------
 create function public.ops_set_user_roles(p_user_id uuid, p_role_keys text[], p_reason text default null)
 returns void
@@ -6113,5 +6034,23 @@ grant execute on function public.is_active_milk_subscriber(uuid) to service_role
 -- Staff working on subscriptions can read the interest list collected on the website.
 create policy "Subscription staff read milk interest" on public.milk_interest for select to authenticated
   using ((select public.has_permission('subscriptions', 'view')));
+
+-- Final rights for the public API roles, exactly as the tested migrations leave them.
+grant select, update, usage on sequence public.audit_log_id_seq, public.batch_corrections_id_seq, public.batch_events_id_seq, public.journal_lines_id_seq, public.order_events_id_seq, public.orders_order_number_seq, public.posting_errors_id_seq, public.stock_movements_id_seq, public.subscription_events_id_seq to anon;
+grant delete, insert, references, select, trigger, truncate, update on table public.addresses, public.invoice_counters, public.memberships, public.milk_interest, public.reward_ledger, public.staff_emails, public.support_requests, public.wishlist to anon;
+grant delete, references, select, trigger, truncate on table public.profiles to anon;
+grant references, select, trigger on table public.order_items, public.orders to anon;
+grant select, update, usage on sequence public.audit_log_id_seq, public.batch_corrections_id_seq, public.batch_events_id_seq, public.journal_lines_id_seq, public.order_events_id_seq, public.orders_order_number_seq, public.posting_errors_id_seq, public.stock_movements_id_seq, public.subscription_events_id_seq to authenticated;
+grant delete, insert, references, select, trigger, truncate, update on table public.addresses, public.invoice_counters, public.memberships, public.milk_interest, public.reward_ledger, public.staff_emails, public.support_requests, public.v_batch_materials, public.v_dispatch_queue, public.v_order_line_fulfilment, public.v_stock_summary, public.wishlist to authenticated;
+grant delete, references, select, trigger, truncate on table public.profiles to authenticated;
+grant references, select, trigger on table public.audit_log, public.bank_accounts, public.bank_reconciliations, public.batch_corrections, public.batch_events, public.batch_materials, public.batch_packaging, public.batch_qc_results, public.bottle_ledger, public.business_settings, public.cash_counts, public.categories, public.dispatch_lines, public.dispatches, public.doc_counters, public.employee_advances, public.employees, public.expense_categories, public.expenses, public.item_prices, public.items, public.journal_entries, public.journal_lines, public.ledger_accounts, public.milk_collections, public.ops_actions, public.ops_modules, public.ops_request_keys, public.ops_role_permissions, public.ops_roles, public.ops_staff_invites, public.ops_user_roles, public.order_allocations, public.order_events, public.order_items, public.orders, public.packaging_bom, public.packaging_configs, public.payment_allocations, public.payments, public.payroll_lines, public.payroll_runs, public.posting_errors, public.production_batches, public.products, public.purchase_invoice_lines, public.purchase_invoices, public.quality_parameters, public.recipe_lines, public.recipes, public.stock_lots, public.stock_movements, public.subscription_deliveries, public.subscription_delivery_lines, public.subscription_events, public.subscription_notices, public.subscriptions, public.suppliers, public.units to authenticated;
+grant execute on function financial_year(date), ist_today(), touch_updated_at() to anon;
+grant execute on function _ist_date(timestamp with time zone), _text(jsonb,text), cat_activate_recipe(uuid), cat_save_item(jsonb), cat_save_packaging_config(jsonb,jsonb), cat_save_product(jsonb), cat_save_quality_parameter(jsonb), cat_save_recipe_draft(uuid,numeric,jsonb,integer,text,uuid), cat_save_supplier(jsonb), cat_set_item_price(uuid,numeric,date,text), disp_allocate_order(uuid), disp_create_staff_order(jsonb,jsonb,text,integer,text,date,text), disp_dispatch_order(uuid,jsonb,text,timestamp with time zone,text,text), disp_hold_order(uuid,boolean,text), disp_release_allocation(uuid,text), disp_set_stage(uuid,text,text), disp_update_delivery(uuid,text,text,numeric,text,jsonb,boolean), fin_account_ledger(text,date,date), fin_cancel_purchase_invoice(uuid,text), fin_cash_count(text,numeric,date,text,boolean), fin_cash_flow(date,date), fin_credit_note(uuid,numeric,text,text,text), fin_decide_expense(uuid,boolean,text), fin_gst_summary(date,date), fin_manual_journal(date,text,jsonb,text), fin_money_balances(date), fin_pay_supplier(uuid,numeric,date,text,text,text,jsonb,text), fin_payables(), fin_post_purchase_invoice(jsonb,jsonb,text), fin_product_margins(date,date), fin_profit_and_loss(date,date), fin_receivables(), fin_receive_customer_payment(uuid,numeric,date,text,text,text,text), fin_reconcile(bigint[],date,text), fin_record_expense(date,text,numeric,text,text,text,text,numeric,text,text,text), fin_retry_postings(), fin_reverse_entry(uuid,text), fin_supplier_return(uuid,jsonb,text,text), fin_transfer(text,text,numeric,date,text,text), fin_trial_balance(date), financial_year(date), has_permission(text,text), inv_adjust_stock(uuid,numeric,text,text,text), inv_receive_opening_stock(uuid,numeric,numeric,date,text,text,text), inv_reverse_movement(bigint,text), inv_set_lot_status(uuid,text,text), inv_valuation(), ist_today(), item_price_on(uuid,date), my_permissions(), ops_audit_log(date,date,text,text,integer), ops_create_role(text,text,text), ops_dashboard(date,date), ops_invite_staff(text,text[],text), ops_log_export(text,integer,jsonb), ops_login_history(uuid,integer), ops_reset_user_sessions(uuid,text), ops_set_role_permissions(text,jsonb,text), ops_set_user_active(uuid,boolean,text), ops_set_user_roles(uuid,text[],text), ops_staff_directory(), ops_update_setting(text,jsonb), pay_approve_run(uuid), pay_create_run(date), pay_mark_paid(uuid,date,text,text), pay_record_advance(uuid,numeric,date,text,text), pay_save_employee(jsonb), pay_update_line(uuid,numeric,numeric,numeric,numeric,numeric,text), proc_cancel_collection(uuid,text), proc_record_collection(uuid,date,text,numeric,numeric,numeric,numeric,numeric,numeric,jsonb,text,text,text), prod_batch_trace(uuid), prod_cancel_batch(uuid,text,text), prod_close_batch(uuid,text), prod_complete_batch(uuid,numeric,numeric,numeric,numeric,numeric,text,jsonb), prod_complete_packaging(uuid,numeric,text,text), prod_correct_output(uuid,text,numeric,text), prod_create_batch(uuid,date,numeric,text,uuid,text,text,text,text,text), prod_issue_material(uuid,uuid,numeric,uuid,text,text), prod_record_packaging(uuid,uuid,integer,integer,integer,text,date,text,text), prod_record_qc(uuid,jsonb,text,text), prod_release_batch(uuid), prod_return_material(uuid,uuid,numeric,text,text), prod_reverse_packaging(uuid,text), prod_start_batch(uuid), require_permission(text,text), setting(text), setting_num(text,numeric), sub_cancel(uuid,text), sub_catalogue(), sub_change_address(uuid,jsonb), sub_change_quantity(uuid,integer), sub_create(jsonb), sub_daily_demand(date), sub_first_open_date(), sub_lock_day(date), sub_my_overview(), sub_pause(uuid,date,date), sub_record_bottles(uuid,integer,integer,integer,uuid,text), sub_resume(uuid), sub_set_addons(uuid,date,jsonb), sub_set_extra(uuid,date,integer), sub_skip(uuid,date,text), sub_unskip(uuid,date), touch_updated_at() to authenticated;
+grant execute on function armor(bytea), armor(bytea,text[],text[]), crypt(text,text), dearmor(text), decrypt(bytea,bytea,text), decrypt_iv(bytea,bytea,bytea,text), digest(bytea,text), digest(text,text), encrypt(bytea,bytea,text), encrypt_iv(bytea,bytea,bytea,text), financial_year(date), gen_random_bytes(integer), gen_salt(text), gen_salt(text,integer), hmac(bytea,bytea,text), hmac(text,text,text), ist_today(), pgp_armor_headers(text), pgp_key_id(bytea), pgp_pub_decrypt(bytea,bytea), pgp_pub_decrypt(bytea,bytea,text), pgp_pub_decrypt(bytea,bytea,text,text), pgp_pub_decrypt_bytea(bytea,bytea), pgp_pub_decrypt_bytea(bytea,bytea,text), pgp_pub_decrypt_bytea(bytea,bytea,text,text), pgp_pub_encrypt(text,bytea), pgp_pub_encrypt(text,bytea,text), pgp_pub_encrypt_bytea(bytea,bytea), pgp_pub_encrypt_bytea(bytea,bytea,text), pgp_sym_decrypt(bytea,text), pgp_sym_decrypt(bytea,text,text), pgp_sym_decrypt_bytea(bytea,text), pgp_sym_decrypt_bytea(bytea,text,text), pgp_sym_encrypt(text,text), pgp_sym_encrypt(text,text,text), pgp_sym_encrypt_bytea(bytea,text), pgp_sym_encrypt_bytea(bytea,text,text), public.gen_random_uuid(), touch_updated_at() to public;
+-- Back to Supabase's normal defaults for new objects.
+alter default privileges for role postgres in schema public grant all on tables to anon, authenticated;
+alter default privileges for role postgres in schema public grant all on functions to anon, authenticated;
+alter default privileges for role postgres in schema public grant all on sequences to anon, authenticated;
+alter default privileges for role postgres grant execute on functions to public;
 
 commit;
