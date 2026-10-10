@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import { mainNav, siteConfig } from "@/lib/site";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { itemCount } = useCart();
+  const isMilkSubscriber = useMilkSubscriber();
 
   return (
     <header className="sticky top-0 z-50 border-b-[2.5px] border-ink bg-white">
@@ -37,6 +38,19 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          {isMilkSubscriber ? (
+            <Link
+              href="/account/milk"
+              aria-label="My milk deliveries"
+              title="My milk"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-blush"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 2h6M9.5 2v3.2L7.4 8.6A2.6 2.6 0 0 0 7 10v9.5A2.5 2.5 0 0 0 9.5 22h5a2.5 2.5 0 0 0 2.5-2.5V10a2.6 2.6 0 0 0-.4-1.4L14.5 5.2V2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M7 13h10" stroke="currentColor" strokeWidth="2" />
+              </svg>
+            </Link>
+          ) : null}
           {siteConfig.accountsLive ? (
             <Link
               href="/account"
@@ -118,6 +132,13 @@ export function Header() {
                 </Link>
               </li>
             ))}
+            {isMilkSubscriber ? (
+              <li>
+                <Link href="/account/milk" className="block rounded-md px-2 py-2.5 hover:bg-white" onClick={() => setIsOpen(false)}>
+                  🥛 My milk
+                </Link>
+              </li>
+            ) : null}
             <li>
               <Link
                 href="/contact"
@@ -140,4 +161,23 @@ export function Header() {
       ) : null}
     </header>
   );
+}
+
+/** True when the signed-in customer has a milk subscription (checked once per page load, only when signed in). */
+function useMilkSubscriber() {
+  const [subscriber, setSubscriber] = useState(false);
+  useEffect(() => {
+    if (!siteConfig.accountsLive || !/(^|; )sb-[^=]+-auth-token/.test(document.cookie)) return;
+    let cancelled = false;
+    fetch("/api/account/milk-status", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : { subscriber: false }))
+      .then((d: { subscriber?: boolean }) => {
+        if (!cancelled) setSubscriber(Boolean(d.subscriber));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return subscriber;
 }

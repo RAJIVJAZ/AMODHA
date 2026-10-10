@@ -33,7 +33,7 @@ const ALLOWED = new Set([
   "fin_reverse_entry", "fin_retry_postings",
   // customer subscription actions
   "sub_create", "sub_skip", "sub_unskip", "sub_set_extra", "sub_set_addons", "sub_pause", "sub_resume", "sub_cancel",
-  "sub_change_quantity", "sub_change_address",
+  "sub_change_quantity", "sub_change_address", "sub_change_schedule",
 ]);
 
 class InputError extends Error {}

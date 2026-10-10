@@ -8,3 +8,8 @@ After it ran, the live database was checked against a clean build of `supabase/m
 columns, functions, permissions, access policies, row-level security and triggers are identical.
 
 New environments: apply `supabase/migrations/` in order. Local tests: `supabase/tests/run-tests.sh`.
+
+## Later migrations
+
+- `20261011100000_subscriber_app.sql` (customer schedule change and monthly milk statement) — applied
+  to live on 10 October 2026; function bodies and permissions checked identical to the tested build.

@@ -154,6 +154,13 @@ export default async function AccountPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[200px_1fr] lg:items-start">
           <nav aria-label="Account sections" className="sticker-shadow hidden rounded-2xl border-2 border-ink bg-white p-3 lg:sticky lg:top-28 lg:block">
             <ul className="flex flex-col gap-1">
+              {appSubscriptions.length || subscriptionsAreOpen ? (
+                <li>
+                  <Link href="/account/milk" className="block rounded-lg bg-primary-light/40 px-3 py-2 text-sm font-semibold text-ink hover:bg-primary-light/60">
+                    🥛 My milk
+                  </Link>
+                </li>
+              ) : null}
               {sections.map((section) => (
                 <li key={section.id}>
                   <a href={`#${section.id}`} className="block rounded-lg px-3 py-2 text-sm font-semibold text-ink hover:bg-blush">

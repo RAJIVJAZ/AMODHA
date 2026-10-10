@@ -12,6 +12,10 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#fff0f0",
     theme_color: "#16323f",
+    shortcuts: [
+      { name: "My milk", short_name: "My milk", description: "Skip a day, add extra milk or products, see your bill", url: "/account/milk" },
+      { name: "Shop sweets", short_name: "Sweets", url: "/sweet-corner" },
+    ],
     icons: [
       { src: "/icons/app-192-any.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icons/app-512-any.png", sizes: "512x512", type: "image/png", purpose: "any" },
