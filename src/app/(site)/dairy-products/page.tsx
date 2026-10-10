@@ -8,8 +8,8 @@ import { dairyProducts } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Mithai Wallah Dairy — Coming Soon",
-  description: `Mithai Wallah's farm-fresh dairy range is coming soon, starting with a pure milk subscription in Prayagraj. ${siteConfig.comingSoonQuote}`,
+  title: "Mithai Wallah Dairy — Farm Fresh Milk in Prayagraj",
+  description: `Order farm-fresh milk in 1 L glass bottles or subscribe for daily delivery in Prayagraj. The rest of Mithai Wallah's dairy range is coming soon. ${siteConfig.comingSoonQuote}`,
   alternates: { canonical: "/dairy-products" },
 };
 
@@ -35,9 +35,9 @@ export default function DairyProductsPage() {
             </div>
           </div>
           <SectionHeading
-            eyebrow="Mithai Wallah Dairy — Coming Soon"
-            title="Farm-Fresh Dairy, On Its Way to You"
-            description="Every product below will start with milk collected fresh from around 100 local farmers near Prayagraj — the same milk behind our sweets. We're putting the finishing touches on bringing it to you directly."
+            eyebrow="Mithai Wallah Dairy"
+            title="Farm-Fresh Dairy, Starting With Milk"
+            description="Farm-fresh milk is here: order a bottle or subscribe for daily delivery. Everything else below will follow, made from the same milk collected fresh from around 100 local farmers near Prayagraj — the milk behind our sweets."
           />
           <div className="sticker-shadow mx-auto mt-10 max-w-2xl rounded-2xl border-2 border-ink bg-white px-6 py-8 text-center sm:px-10">
             <p className="font-subheading text-xl italic text-primary-dark sm:text-2xl">
@@ -57,7 +57,7 @@ export default function DairyProductsPage() {
               description={product.shortDescription}
               icon={product.motif}
               color={product.color}
-              badge="Coming Soon"
+              badge={product.inShop ? "Order now" : "Coming Soon"}
             />
           ))}
         </div>
@@ -66,9 +66,9 @@ export default function DairyProductsPage() {
       <CtaSection
         eyebrow="Starting With Milk"
         title="Want Pure Milk Delivered to Your Door?"
-        description="Our farm-fresh milk subscription launches once 50 households sign up. Register your interest — it takes a minute."
-        primaryCta={{ label: "Register Interest", href: "/milk-subscription" }}
-        secondaryCta={{ label: "Browse Our Sweets", href: "/#catalog" }}
+        description="Order a 1 L glass bottle whenever you need one, or subscribe for daily delivery you can skip, top up or pause."
+        primaryCta={{ label: "Milk Subscription", href: "/milk-subscription" }}
+        secondaryCta={{ label: "Order Milk", href: "/dairy-products/milk" }}
       />
     </>
   );

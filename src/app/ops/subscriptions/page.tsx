@@ -20,7 +20,7 @@ export default async function SubscriptionsAdminPage({ searchParams }: { searchP
   const tab = param(sp.tab) ?? "demand";
   const day = param(sp.date) ?? todayIST(1);
 
-  const [{ data: demandData }, { data: subs }, { data: interest }, { data: bottles }, { data: enabledSetting }, { count: milkProducts }] = await Promise.all([
+  const [{ data: demandData }, { data: subs }, { data: interest }, { data: bottles }, { data: enabledSetting }, { data: milkProducts }, { data: catalogue }] = await Promise.all([
     tab === "demand" ? ops.supabase.rpc("sub_daily_demand", { p_date: day }) : Promise.resolve({ data: null }),
     ops.supabase
       .from("subscriptions")
@@ -31,10 +31,11 @@ export default async function SubscriptionsAdminPage({ searchParams }: { searchP
     ops.supabase.from("milk_interest").select("id, name, phone, area, daily_litres, timing, status, created_at").neq("status", "cancelled").order("created_at", { ascending: false }).limit(500),
     tab === "bottles" ? ops.supabase.from("bottle_ledger").select("user_id, issued, returned, damaged") : Promise.resolve({ data: [] }),
     ops.supabase.rpc("setting", { p_key: "subscriptions.enabled" }),
-    ops.can("catalog")
-      ? ops.supabase.from("products").select("id", { count: "exact", head: true }).eq("is_subscribable", true).eq("is_active", true)
-      : Promise.resolve({ count: null }),
+    ops.supabase.from("products").select("id, name").eq("is_subscribable", true).eq("is_active", true).order("sort_order"),
+    ops.supabase.rpc("sub_catalogue"),
   ]);
+  const milkPacks = ((catalogue as { milk?: unknown[] } | null)?.milk ?? []).length;
+  const milkProductList = (milkProducts ?? []) as { id: string; name: string }[];
   const demand = demandData as Demand | null;
   const subscriptions = (subs ?? []) as unknown as Sub[];
   const activeCount = subscriptions.filter((s) => s.status === "active").length;
@@ -51,10 +52,26 @@ export default async function SubscriptionsAdminPage({ searchParams }: { searchP
           <Notice tone="warn">Subscriptions are not open to customers yet (Settings → &ldquo;Milk subscriptions open to customers&rdquo;). Staff can still test them.</Notice>
         </div>
       ) : null}
-      {milkProducts === 0 ? (
+      {catalogue && milkPacks === 0 ? (
         <div className="mb-4">
           <Notice tone="warn">
-            No milk product is set up for subscriptions yet. Add it under Products &amp; recipes (tick &ldquo;Available as milk subscription&rdquo;) with a 1 L SKU priced at ₹100.
+            Customers can&apos;t subscribe or see a milk price yet: there is no active milk pack size with a price.{" "}
+            {milkProductList.length ? (
+              <>
+                Open{" "}
+                {milkProductList.map((p, i) => (
+                  <span key={p.id}>
+                    {i ? ", " : ""}
+                    <a href={`/ops/catalog/products/${p.id}`} className="font-semibold underline">
+                      {p.name}
+                    </a>
+                  </span>
+                ))}{" "}
+                and add a pack size (e.g. 1 L glass bottle) with its selling price. Made-by-us products need a packaging configuration for the pack first.
+              </>
+            ) : (
+              <>Add the milk product under Products &amp; recipes, tick &ldquo;Milk subscription product&rdquo;, then add a 1 L pack size with its price.</>
+            )}
           </Notice>
         </div>
       ) : null}

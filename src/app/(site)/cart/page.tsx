@@ -13,6 +13,7 @@ import {
   deliveryFeeFor,
   bestDiscountFor,
   discountLabels,
+  subscriberDiscountBase,
 } from "@/lib/order-rules";
 import { useFirstOrderOffer } from "@/lib/use-first-order-offer";
 
@@ -25,6 +26,7 @@ export default function CartPage() {
   const { discount, reason: discountReason } = bestDiscountFor(subtotal, {
     firstOrderEligible: Boolean(offer?.eligible),
     milkSubscriber,
+    subscriberDiscountBase: subscriberDiscountBase(items),
   });
 
   return (

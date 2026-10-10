@@ -211,13 +211,32 @@ export function MilkApp({ overview, catalogue, statement, statementFailed, profi
             </Panel>
           ) : (
             <Panel title="Milk subscription">
-              <p className="text-sm text-dark/70">
-                Subscriptions have not opened yet.{" "}
-                <Link href="/milk-subscription#register" className="font-semibold text-primary-dark hover:underline">
-                  Register your interest
-                </Link>{" "}
-                and we&apos;ll let you know as soon as deliveries start in your area.
-              </p>
+              {staffPreview && !catalogue?.milk.length ? (
+                <p className="mb-3 rounded-xl border-2 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                  Staff: customers can&apos;t subscribe because no milk pack size has a price. In{" "}
+                  <Link href="/ops/subscriptions" className="font-semibold underline">
+                    Ops → Milk subscriptions
+                  </Link>{" "}
+                  follow the setup note.
+                </p>
+              ) : null}
+              {overview.enabled ? (
+                <p className="text-sm text-dark/70">
+                  Milk subscriptions are opening very soon. Meanwhile you can{" "}
+                  <Link href="/dairy-products/milk" className="font-semibold text-primary-dark hover:underline">
+                    order single bottles in our shop
+                  </Link>
+                  .
+                </p>
+              ) : (
+                <p className="text-sm text-dark/70">
+                  Subscriptions have not opened yet.{" "}
+                  <Link href="/milk-subscription#register" className="font-semibold text-primary-dark hover:underline">
+                    Register your interest
+                  </Link>{" "}
+                  and we&apos;ll let you know as soon as deliveries start in your area.
+                </p>
+              )}
             </Panel>
           )
         ) : (

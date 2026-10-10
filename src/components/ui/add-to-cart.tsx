@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useCart } from "@/lib/cart-context";
 import { formatInr } from "@/lib/currency";
 import { DELIVERY_AREA, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/order-rules";
@@ -17,10 +17,15 @@ export function AddToCart({
   slug,
   productName,
   packSizes,
+  icon = "🍬",
+  extraNote,
 }: {
   slug: string;
   productName: string;
   packSizes: PackSize[];
+  icon?: string;
+  /** Replaces the bulk-order line under the button. */
+  extraNote?: ReactNode;
 }) {
   const { addItem } = useCart();
   const [selectedLabel, setSelectedLabel] = useState(packSizes[0]?.label ?? "");
@@ -31,7 +36,7 @@ export function AddToCart({
 
   function handleAddToCart() {
     if (!selected) return;
-    addItem({ slug, productName, packLabel: selected.label, price: selected.price, icon: "🍬" }, quantity);
+    addItem({ slug, productName, packLabel: selected.label, price: selected.price, icon }, quantity);
     setJustAdded(true);
     setQuantity(1);
   }
@@ -105,17 +110,21 @@ export function AddToCart({
         <li>
           🚚 Free delivery on orders {formatInr(FREE_DELIVERY_THRESHOLD)}+ ({formatInr(DELIVERY_FEE)} below that)
         </li>
-        <li>
-          🎉 Ordering for a function or event?{" "}
-          <a
-            href={bulkOrderHref(productName)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-primary-dark underline"
-          >
-            Ask about bulk pricing
-          </a>
-        </li>
+        {extraNote ? (
+          <li>{extraNote}</li>
+        ) : (
+          <li>
+            🎉 Ordering for a function or event?{" "}
+            <a
+              href={bulkOrderHref(productName)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary-dark underline"
+            >
+              Ask about bulk pricing
+            </a>
+          </li>
+        )}
       </ul>
     </div>
   );

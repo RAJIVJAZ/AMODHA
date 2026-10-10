@@ -43,6 +43,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const unitOpts = ((units ?? []) as { code: string; label: string }[]).map((u) => ({ value: u.code, label: u.label }));
   const priceRows = ((prices ?? []) as { item_id: string; price: number; effective_from: string; note: string | null }[]).filter((x) => skuList.some((s) => s.id === x.item_id));
   const canEdit = ops.can("catalog", "edit");
+  // Packaging for this product's kind of unit: litres go in bottles, kilograms in boxes.
+  const unitFamily = (unit: string) => (["kg", "g"].includes(unit) ? "mass" : ["l", "ml"].includes(unit) ? "volume" : unit);
+  const packagingOpts = ((configs ?? []) as { id: string; name: string; net_unit: string }[])
+    .filter((c) => unitFamily(c.net_unit) === unitFamily(p.base_unit))
+    .map((c) => ({ value: c.id, label: c.name }));
 
   return (
     <>
@@ -89,6 +94,15 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               <details className="mt-3">
                 <summary className="cursor-pointer text-sm font-semibold text-primary-dark">+ Add a pack size</summary>
                 <div className="mt-2">
+                  {made && !packagingOpts.length ? (
+                    <p className="mb-3 rounded-xl border-2 border-amber-400 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                      There is no packaging configuration in {p.base_unit} yet, so this pack size can&apos;t be saved. First add one under{" "}
+                      <a href="/ops/catalog?tab=packaging" className="font-semibold underline">
+                        Packaging configurations
+                      </a>{" "}
+                      (e.g. &ldquo;1 L glass bottle&rdquo;, type bottle, 1 {p.base_unit}), then come back here.
+                    </p>
+                  ) : null}
                   <OpsForm fn="cat_save_item" submitLabel="Add pack size" success="Pack size added">
                     <JsonObjectFields
                       name="p#json"
@@ -97,7 +111,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                         { key: "code", label: "SKU code", required: true, placeholder: `${p.code}-500G` },
                         { key: "name", label: "Name", required: true, placeholder: `${p.name} — 500 g box` },
                         ...(made
-                          ? [{ key: "packaging_config_id", label: "Packaging configuration", required: true, options: ((configs ?? []) as { id: string; name: string }[]).map((c) => ({ value: c.id, label: c.name })) }]
+                          ? [{ key: "packaging_config_id", label: "Packaging configuration", required: true, options: packagingOpts }]
                           : []),
                         { key: "net_qty", label: `Contents per pack (${p.base_unit})`, type: "number", required: true },
                         { key: "unit", label: "Counted as", required: true, options: unitOpts },

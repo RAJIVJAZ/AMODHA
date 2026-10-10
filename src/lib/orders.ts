@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getPack, getSweet } from "@/data/sweets";
+import { getShopPack } from "@/data/shop";
 import { productTax } from "@/data/tax";
-import { bestDiscountFor, deliveryFeeFor, type DiscountReason } from "@/lib/order-rules";
+import { bestDiscountFor, deliveryFeeFor, subscriberDiscountBase, type DiscountReason } from "@/lib/order-rules";
 import { normalizePhone } from "@/lib/phone";
 import { createClient } from "@/lib/supabase/server";
 
@@ -43,10 +43,9 @@ export function priceLines(items: unknown): { lines: PricedLine[]; subtotal: num
 
   const lines: PricedLine[] = [];
   for (const item of items) {
-    const sweet = getSweet(item.slug);
-    const pack = getPack(item.slug, item.packLabel);
-    if (!sweet || !pack) return { error: `${item.slug} (${item.packLabel}) is not available online` };
-    lines.push({ slug: item.slug, productName: sweet.name, packLabel: pack.label, unitPrice: pack.price, quantity: item.quantity });
+    const found = getShopPack(item.slug, item.packLabel);
+    if (!found) return { error: `${item.slug} (${item.packLabel}) is not available online` };
+    lines.push({ slug: item.slug, productName: found.productName, packLabel: found.pack.label, unitPrice: found.pack.price, quantity: item.quantity });
   }
 
   const subtotal = lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
@@ -137,13 +136,18 @@ export async function isActiveMilkSubscriber(admin: SupabaseClient, customer: Si
   return (count ?? 0) > 0;
 }
 
-export async function quoteOrder(admin: SupabaseClient | null, subtotal: number, checkoutPhone: string) {
+export async function quoteOrder(admin: SupabaseClient | null, priced: { lines: PricedLine[]; subtotal: number }, checkoutPhone: string) {
+  const { subtotal } = priced;
   const customer = await getSignedInCustomer();
   const [eligible, milkSubscriber] =
     admin && customer
       ? await Promise.all([isFirstOrder(admin, customer, checkoutPhone), isActiveMilkSubscriber(admin, customer)])
       : [false, false];
-  const { discount, reason } = bestDiscountFor(subtotal, { firstOrderEligible: eligible, milkSubscriber });
+  const { discount, reason } = bestDiscountFor(subtotal, {
+    firstOrderEligible: eligible,
+    milkSubscriber,
+    subscriberDiscountBase: subscriberDiscountBase(priced.lines.map((line) => ({ slug: line.slug, price: line.unitPrice, quantity: line.quantity }))),
+  });
   const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
   return { customer, discount, discountReason: reason, deliveryFee, milkSubscriber, total: subtotal + deliveryFee - discount };
 }

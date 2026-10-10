@@ -91,3 +91,26 @@ export const milkFaqs: FaqItem[] = [
       "Yes. If you registered while signed in, you can see, update or withdraw your registration from your account page at any time.",
   },
 ];
+
+/** The questions once customers can subscribe in the app. */
+export function milkFaqsWhenOpen(pricePerLitre: number): FaqItem[] {
+  return [
+    {
+      question: "Can I subscribe today?",
+      answer:
+        "Yes. Sign in, choose how many bottles, which days and morning or evening, and start. Nothing is charged upfront: you pay for what is delivered, on delivery or by monthly bill.",
+    },
+    {
+      question: "How much does it cost?",
+      answer: `₹${pricePerLitre} per litre, delivered in reusable glass bottles. You can also order single bottles in our shop.`,
+    },
+    {
+      question: "Can I skip a day or pause while I travel?",
+      answer:
+        "Yes. From the My milk page you can skip a day, add extra bottles or other products, change your days, or pause and resume. Changes are taken until the evening before.",
+    },
+    milkFaqs[2],
+    milkFaqs[3],
+    { question: "Which areas do you deliver to?", answer: "We deliver in Prayagraj." },
+  ];
+}

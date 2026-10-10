@@ -21,6 +21,14 @@ export function firstOrderDiscountFor(subtotal: number, eligible: boolean) {
 /** Active milk subscribers get this much off Mithai Wallah products (milk itself is excluded). */
 export const SUBSCRIBER_DISCOUNT_PERCENT = 20;
 
+/** Shop products the milk subscriber discount does not apply to. */
+export const NO_SUBSCRIBER_DISCOUNT_SLUGS = ["milk"];
+
+/** The part of a cart the milk subscriber discount applies to: everything except milk. */
+export function subscriberDiscountBase(lines: { slug: string; price: number; quantity: number }[]) {
+  return lines.filter((line) => !NO_SUBSCRIBER_DISCOUNT_SLUGS.includes(line.slug)).reduce((sum, line) => sum + line.price * line.quantity, 0);
+}
+
 export type DiscountReason = "first_order" | "milk_subscriber";
 
 export const discountLabels: Record<DiscountReason, string> = {
@@ -32,9 +40,12 @@ export const discountLabels: Record<DiscountReason, string> = {
  * The discount for an order. Offers don't stack: the customer gets whichever is bigger,
  * the ₹100 first-order offer or the milk subscriber percentage.
  */
-export function bestDiscountFor(subtotal: number, offers: { firstOrderEligible: boolean; milkSubscriber: boolean }) {
+export function bestDiscountFor(
+  subtotal: number,
+  offers: { firstOrderEligible: boolean; milkSubscriber: boolean; subscriberDiscountBase: number }
+) {
   const firstOrder = firstOrderDiscountFor(subtotal, offers.firstOrderEligible);
-  const subscriber = offers.milkSubscriber ? Math.round((subtotal * SUBSCRIBER_DISCOUNT_PERCENT) / 100) : 0;
+  const subscriber = offers.milkSubscriber ? Math.round((offers.subscriberDiscountBase * SUBSCRIBER_DISCOUNT_PERCENT) / 100) : 0;
   if (subscriber > 0 && subscriber >= firstOrder) return { discount: subscriber, reason: "milk_subscriber" as DiscountReason };
   if (firstOrder > 0) return { discount: firstOrder, reason: "first_order" as DiscountReason };
   return { discount: 0, reason: null };

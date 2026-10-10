@@ -74,7 +74,7 @@ export function Footer() {
           ) : null}
         </div>
 
-        <FooterColumn title="Dairy (Coming Soon)" links={footerNav.products} />
+        <FooterColumn title="Dairy" links={footerNav.products} />
         <FooterColumn title="Our Sweets" links={footerNav.sweets} />
         <FooterColumn title="Business" links={footerNav.business} />
         <div>

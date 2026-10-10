@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { AddToCart } from "@/components/ui/add-to-cart";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CtaSection } from "@/components/ui/cta-section";
@@ -21,8 +23,10 @@ export async function generateMetadata({
   const product = getDairyProduct(slug);
   if (!product) return {};
   return {
-    title: `${product.name} — Coming Soon | ${product.keyword}`,
-    description: `${product.shortDescription} ${siteConfig.comingSoonQuote}`,
+    title: product.inShop ? `${product.name} — Order Online | ${product.keyword}` : `${product.name} — Coming Soon | ${product.keyword}`,
+    description: product.inShop
+      ? `${product.shortDescription} Order online for delivery in Prayagraj, or subscribe for daily delivery.`
+      : `${product.shortDescription} ${siteConfig.comingSoonQuote}`,
     alternates: { canonical: `/dairy-products/${product.slug}` },
   };
 }
@@ -37,6 +41,8 @@ export default async function DairyProductPage({
   if (!product) notFound();
 
   const related = dairyProducts.filter((p) => p.slug !== product.slug).slice(0, 3);
+  const shopPacks = product.inShop ? product.packSizes.filter((size) => size.purchasable) : [];
+  const bulkPacks = product.packSizes.filter((size) => !size.purchasable);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -48,7 +54,8 @@ export default async function DairyProductPage({
     offers: {
       "@type": "Offer",
       priceCurrency: "INR",
-      availability: "https://schema.org/PreOrder",
+      ...(shopPacks.length ? { price: shopPacks[0].price } : {}),
+      availability: shopPacks.length ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
       seller: { "@type": "Organization", name: siteConfig.legalName },
     },
   };
@@ -77,8 +84,10 @@ export default async function DairyProductPage({
               >
                 <span aria-hidden="true">{product.motif}</span>
               </div>
-              <span className="font-heading sticker-shadow-sm rounded-full border-2 border-ink bg-accent px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
-                Coming Soon
+              <span
+                className={`font-heading sticker-shadow-sm rounded-full border-2 border-ink px-3 py-1.5 text-xs font-bold uppercase tracking-wide ${shopPacks.length ? "bg-primary-light text-ink" : "bg-accent text-white"}`}
+              >
+                {shopPacks.length ? "Order now" : "Coming Soon"}
               </span>
             </div>
             <h1 className="mt-6 text-4xl font-bold text-ink sm:text-5xl">{product.name}</h1>
@@ -94,22 +103,59 @@ export default async function DairyProductPage({
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6 text-center">
-              <Image
-                src="/logos/mithaiwallah.png"
-                alt="Mithai Wallah"
-                width={900}
-                height={507}
-                className="mx-auto h-12 w-auto"
-              />
-              <h2 className="font-heading mt-4 text-lg font-bold text-ink">{product.name} Is On Its Way</h2>
-              <p className="font-subheading mt-3 text-lg italic text-primary-dark">
-                &ldquo;{siteConfig.comingSoonQuote}&rdquo;
-              </p>
-              <ButtonLink href="/milk-subscription" variant="primary" className="mt-5">
-                Register Interest
-              </ButtonLink>
-            </div>
+            {shopPacks.length ? (
+              <>
+                <AddToCart
+                  slug={product.slug}
+                  productName={product.name}
+                  packSizes={shopPacks}
+                  icon={product.motif}
+                  extraNote={
+                    <>
+                      🗓️ Want it every day?{" "}
+                      <Link href="/milk-subscription" className="font-semibold text-primary-dark underline">
+                        Subscribe for daily delivery
+                      </Link>
+                    </>
+                  }
+                />
+                <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6">
+                  <h2 className="font-heading text-lg font-bold text-ink">Daily delivery, your way</h2>
+                  <p className="mt-2 text-sm text-dark/70">
+                    Subscribe and we bring fresh milk every morning or evening. Skip a day, add extra or pause while you travel — and get Milk
+                    Subscriber Benefits on our sweets.
+                  </p>
+                  <ButtonLink href="/milk-subscription" variant="primary" className="mt-4">
+                    Milk Subscription
+                  </ButtonLink>
+                  {bulkPacks.length ? (
+                    <p className="mt-4 text-xs text-dark/60">
+                      Need {bulkPacks.map((size) => size.label).join(" or ")}?{" "}
+                      <Link href="/wholesale" className="font-semibold text-primary-dark underline">
+                        Ask for bulk supply
+                      </Link>
+                    </p>
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              <div className="sticker-shadow rounded-2xl border-2 border-ink bg-blush p-6 text-center">
+                <Image
+                  src="/logos/mithaiwallah.png"
+                  alt="Mithai Wallah"
+                  width={900}
+                  height={507}
+                  className="mx-auto h-12 w-auto"
+                />
+                <h2 className="font-heading mt-4 text-lg font-bold text-ink">{product.name} Is On Its Way</h2>
+                <p className="font-subheading mt-3 text-lg italic text-primary-dark">
+                  &ldquo;{siteConfig.comingSoonQuote}&rdquo;
+                </p>
+                <ButtonLink href="/milk-subscription" variant="primary" className="mt-5">
+                  Register Interest
+                </ButtonLink>
+              </div>
+            )}
             <div className="sticker-shadow rounded-2xl border-2 border-ink bg-white p-6">
               <h2 className="font-heading text-lg font-bold text-ink">Why Choose Our {product.name}</h2>
               <ul className="mt-3 flex flex-col gap-2">
@@ -155,7 +201,7 @@ export default async function DairyProductPage({
                 description={item.shortDescription}
                 icon={item.motif}
                 color={item.color}
-                badge="Coming Soon"
+                badge={item.inShop ? "Order now" : "Coming Soon"}
               />
             ))}
           </div>
@@ -164,7 +210,11 @@ export default async function DairyProductPage({
 
       <CtaSection
         title={`Want ${product.name} for Your Business?`}
-        description="Talk to our team now about wholesale and institutional supply timelines, or wait for the retail launch."
+        description={
+          product.inShop
+            ? "Talk to our team about wholesale and institutional supply for hotels, sweet shops and kitchens."
+            : "Talk to our team now about wholesale and institutional supply timelines, or wait for the retail launch."
+        }
         primaryCta={{ label: "Contact Sales", href: "/contact" }}
         secondaryCta={{ label: "Wholesale Enquiry", href: "/wholesale" }}
       />

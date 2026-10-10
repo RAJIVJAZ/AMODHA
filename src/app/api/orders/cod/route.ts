@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "We couldn't place your order right now. Please try again shortly." }, { status: 503 });
   }
 
-  const quote = await quoteOrder(admin, priced.subtotal, customer.phone);
+  const quote = await quoteOrder(admin, priced, customer.phone);
   const saved = await saveOrder(admin, {
     customer,
     userId: quote.customer?.id ?? null,

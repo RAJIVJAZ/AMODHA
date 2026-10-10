@@ -7,6 +7,8 @@ export type PackSize = {
   purchasable: boolean;
 };
 
+import { milkSubscription } from "@/data/milk-subscription";
+
 export type DairyProduct = {
   slug: string;
   name: string;
@@ -18,6 +20,8 @@ export type DairyProduct = {
   motif: string;
   sceneCaption: string;
   color: string;
+  /** Sold in the online shop now. The rest of the range is still coming soon. */
+  inShop?: boolean;
 };
 
 export const dairyProducts: DairyProduct[] = [
@@ -108,17 +112,17 @@ export const dairyProducts: DairyProduct[] = [
     shortDescription: "Chilled, tested, and delivered from our own collection network within hours.",
     description: [
       "Every drop of our milk is collected from our partner farmers, tested at the collection centre for fat, SNF and quality, and chilled immediately to preserve freshness before it reaches our processing unit.",
-      "We offer full-cream, toned and double-toned milk options for households, and bulk chilled milk supply for hotels, sweet shops and institutional kitchens.",
+      "Order a bottle whenever you need one, or subscribe for daily delivery that you can skip, top up or pause. Hotels, sweet shops and institutional kitchens can ask us about bulk chilled milk supply.",
     ],
     highlights: [
       "Farm-to-chiller within hours of milking",
       "Fat & SNF tested at every collection centre",
-      "Full-cream, toned & double-toned variants",
+      "Delivered in reusable 1 L glass bottles",
       "Daily doorstep and bulk institutional supply",
     ],
     packSizes: [
-      { label: "500 ml", price: 35, purchasable: true },
-      { label: "1 litre", price: 65, purchasable: true },
+      // Same price as the milk subscription.
+      { label: "1 L glass bottle", price: milkSubscription.pricePerLitre, purchasable: true },
       { label: "5 litre (bulk can)", price: 300, purchasable: false },
       { label: "20 litre (institutional)", price: 1150, purchasable: false },
     ],
@@ -126,6 +130,7 @@ export const dairyProducts: DairyProduct[] = [
     motif: "🥛",
     sceneCaption: "Farm to chiller within hours — tested, then poured.",
     color: "#bfe8f5",
+    inShop: true,
   },
   {
     slug: "cream",

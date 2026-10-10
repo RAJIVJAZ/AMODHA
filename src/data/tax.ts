@@ -9,6 +9,8 @@ export type ProductTax = { hsn: string; gstRate: number };
 const SWEETMEATS: ProductTax = { hsn: "21069099", gstRate: 5 };
 
 const overrides: Record<string, ProductTax> = {
+  // Fresh milk: nil-rated.
+  milk: { hsn: "0401", gstRate: 0 },
   // Mixed dried fruits and nuts.
   "premium-dry-fruit-box": { hsn: "08135020", gstRate: 5 },
 };

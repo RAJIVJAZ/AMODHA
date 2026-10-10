@@ -15,6 +15,7 @@ import {
   FIRST_ORDER_MINIMUM,
   bestDiscountFor,
   deliveryFeeFor,
+  subscriberDiscountBase,
   discountLabels,
 } from "@/lib/order-rules";
 import type { OrderSummary } from "@/lib/orders";
@@ -63,7 +64,11 @@ export default function CheckoutPage() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const deliveryFee = deliveryFeeFor(subtotal, milkSubscriber);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
-  const { discount, reason: discountReason } = bestDiscountFor(subtotal, { firstOrderEligible, milkSubscriber });
+  const { discount, reason: discountReason } = bestDiscountFor(subtotal, {
+    firstOrderEligible,
+    milkSubscriber,
+    subscriberDiscountBase: subscriberDiscountBase(items),
+  });
   const total = subtotal + deliveryFee - discount;
   const [placed, setPlaced] = useState<PlacedOrder | null>(null);
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
