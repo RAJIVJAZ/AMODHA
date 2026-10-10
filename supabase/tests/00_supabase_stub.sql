@@ -1,7 +1,10 @@
 -- Local staging only: the parts of a Supabase database that the migrations rely on.
 -- Never run this against the live project.
 
-create extension if not exists pgcrypto;
+-- As on Supabase, extensions live in their own schema, not in public.
+create schema if not exists extensions;
+create extension if not exists pgcrypto schema extensions;
+create extension if not exists "uuid-ossp" schema extensions;
 
 do $$
 begin
