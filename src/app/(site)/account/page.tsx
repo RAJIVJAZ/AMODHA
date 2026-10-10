@@ -21,6 +21,7 @@ import {
 import { customerFilter, getSignedInCustomer, isFirstOrder } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { subscriptionsOpen } from "@/lib/subscriptions";
 
 export const metadata: Metadata = {
   title: "My Account",
@@ -85,7 +86,7 @@ export default async function AccountPage() {
   const admin = createAdminClient();
   const byContact = admin ?? supabase;
 
-  const [profileRes, ordersRes, addressesRes, wishlistRes, supportRes, pointsRes, milkRes] = await Promise.all([
+  const [profileRes, ordersRes, addressesRes, wishlistRes, supportRes, pointsRes, milkRes, subsRes, subscriptionsAreOpen] = await Promise.all([
     supabase.from("profiles").select("full_name, is_admin").eq("id", user.id).maybeSingle(),
     byContact
       .from("orders")
@@ -109,13 +110,16 @@ export default async function AccountPage() {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
+    supabase.from("subscriptions").select("status").neq("status", "cancelled"),
+    subscriptionsOpen(),
   ]);
 
   const orders = (ordersRes.data ?? []) as OrderRow[];
   const activeOrder = orders.find((order) => !["delivered", "cancelled"].includes(order.status));
   const points = (pointsRes.data ?? []).reduce((sum, row) => sum + (row.points as number), 0);
   const milk = milkRes.data;
-  const milkSubscriber = milk?.status === "active";
+  const appSubscriptions = (subsRes.data ?? []) as { status: string }[];
+  const milkSubscriber = milk?.status === "active" || appSubscriptions.some((sub) => sub.status === "active");
   const welcomeOffer = admin ? await isFirstOrder(admin, customer) : false;
 
   return (
@@ -240,6 +244,27 @@ export default async function AccountPage() {
             <Card id="wishlist" title="Wishlist">
               <WishlistList slugs={(wishlistRes.data ?? []).map((row) => row.slug as string)} />
             </Card>
+
+            {appSubscriptions.length || subscriptionsAreOpen ? (
+              <section className="sticker-shadow flex flex-col gap-3 rounded-2xl border-[2.5px] border-ink bg-primary-light/30 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+                <div>
+                  <h2 className="font-heading text-lg font-bold text-ink">
+                    🥛 {appSubscriptions.length ? "Your daily milk" : "Fresh milk deliveries are open"}
+                  </h2>
+                  <p className="mt-1 text-sm text-dark/70">
+                    {appSubscriptions.length
+                      ? "Skip a day, add extra milk or other products, or pause while you travel."
+                      : "Start a subscription and get Milk Subscriber Benefits on every order."}
+                  </p>
+                </div>
+                <Link
+                  href="/account/milk"
+                  className="font-heading sticker-shadow shrink-0 self-start rounded-full border-[2.5px] border-ink bg-ink px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white sm:self-center"
+                >
+                  {appSubscriptions.length ? "Manage deliveries" : "Subscribe"}
+                </Link>
+              </section>
+            ) : null}
 
             <Card
               id="milk"

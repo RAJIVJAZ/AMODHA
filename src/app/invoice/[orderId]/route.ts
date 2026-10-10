@@ -1,4 +1,4 @@
-import { getStaffClient } from "@/lib/admin-auth";
+import { canViewAllInvoices } from "@/lib/admin-auth";
 import { isValidInvoiceToken } from "@/lib/invoice-link";
 import { invoiceOrderColumns } from "@/lib/order-emails";
 import { customerFilter, getSignedInCustomer } from "@/lib/orders";
@@ -22,7 +22,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ orde
 
   const token = new URL(request.url).searchParams.get("t");
   let query = admin.from("orders").select(`status, ${invoiceOrderColumns}`).eq("id", orderId);
-  if (!isValidInvoiceToken(orderId, token) && !(await getStaffClient())) {
+  if (!isValidInvoiceToken(orderId, token) && !(await canViewAllInvoices())) {
     const customer = await getSignedInCustomer();
     if (!customer) return notFound();
     query = query.or(customerFilter(customer));

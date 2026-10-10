@@ -124,11 +124,12 @@ export async function isFirstOrder(admin: SupabaseClient, customer: SignedInCust
 
 /** True when this customer has a milk subscription marked active by the team. */
 export async function isActiveMilkSubscriber(admin: SupabaseClient, customer: SignedInCustomer) {
-  const { count, error } = await admin
-    .from("milk_interest")
-    .select("id", { count: "exact", head: true })
-    .or(customerFilter(customer))
-    .eq("status", "active");
+  // An active milk subscription in the app, or a registration the team has marked active.
+  const [{ data: subscribed }, { count, error }] = await Promise.all([
+    admin.rpc("is_active_milk_subscriber", { p_user_id: customer.id }),
+    admin.from("milk_interest").select("id", { count: "exact", head: true }).or(customerFilter(customer)).eq("status", "active"),
+  ]);
+  if (subscribed === true) return true;
   if (error) {
     console.error("Milk subscriber check failed:", error);
     return false;
