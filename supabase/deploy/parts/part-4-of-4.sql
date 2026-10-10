@@ -321,6 +321,10 @@ begin
     perform public._post_order_sale(r.id);
   end loop;
 end $$;
+-- Check those entries balance now, so the tables can be altered below in the same transaction;
+-- then back to checking each entry at commit, as normal.
+set constraints all immediate;
+set constraints all deferred;
 
 -- Access rules ---------------------------------------------------------------------------
 do $$
@@ -336,7 +340,6 @@ begin
   end loop;
 end $$;
 
--- ===== ops_finance_part8of8 =====
 create policy "Finance reads accounts" on public.ledger_accounts for select to authenticated
   using ((select public.has_permission('reports', 'view')) or (select public.has_permission('banking', 'view')) or (select public.has_permission('purchases', 'view'))
     or (select public.has_permission('expenses', 'view')) or (select public.has_permission('sales', 'view')));
@@ -398,7 +401,7 @@ revoke execute on function public._ist_date(timestamptz) from public, anon;
 grant execute on function public._ist_date(timestamptz) to authenticated;
 revoke execute on function public._order_party(public.orders) from public, anon, authenticated;
 
--- ===== ops_subscriptions_part1of4 =====
+-- ===== 20261010140000_ops_subscriptions =====
 -- Milk subscriptions.
 --
 -- A subscription is the customer's standing instruction. Each delivery day gets its own record
@@ -699,7 +702,6 @@ begin
 end;
 $$;
 
--- ===== ops_subscriptions_part2of4 =====
 create function public.sub_skip(p_subscription_id uuid, p_date date, p_reason text default null)
 returns void
 language plpgsql
@@ -978,8 +980,6 @@ end;
 $$;
 
 -- Price changes for subscription products: future dates only, existing open deliveries repriced, customers told.
-
--- ===== ops_subscriptions_part3of4 =====
 create function public.cat_set_item_price(p_item_id uuid, p_price numeric, p_effective_from date, p_note text default null)
 returns void
 language plpgsql
@@ -1201,8 +1201,6 @@ create policy "Customers read own subscriptions" on public.subscriptions for sel
   using (user_id = (select auth.uid()) or (select public.has_permission('subscriptions', 'view')));
 create policy "Customers read own deliveries" on public.subscription_deliveries for select to authenticated
   using (user_id = (select auth.uid()) or (select public.has_permission('subscriptions', 'view')) or (select public.has_permission('dispatch', 'view')));
-
--- ===== ops_subscriptions_part4of4 =====
 create policy "Customers read own delivery lines" on public.subscription_delivery_lines for select to authenticated
   using (exists (select 1 from public.subscription_deliveries d where d.id = delivery_id and d.user_id = (select auth.uid()))
     or (select public.has_permission('subscriptions', 'view')) or (select public.has_permission('dispatch', 'view')));

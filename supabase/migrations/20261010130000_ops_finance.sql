@@ -1969,6 +1969,10 @@ begin
     perform public._post_order_sale(r.id);
   end loop;
 end $$;
+-- Check those entries balance now, so the tables can be altered below in the same transaction;
+-- then back to checking each entry at commit, as normal.
+set constraints all immediate;
+set constraints all deferred;
 
 -- Access rules ---------------------------------------------------------------------------
 do $$

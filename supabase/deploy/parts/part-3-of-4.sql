@@ -4,6 +4,8 @@
 begin;
 set local lock_timeout = '15s';
 
+create policy "Dispatch reads dispatch lines" on public.dispatch_lines for select to authenticated
+  using ((select public.has_permission('dispatch', 'view')) or (select public.has_permission('production', 'view')) or (select public.has_permission('sales', 'view')));
 create policy "Staff read order events" on public.order_events for select to authenticated
   using ((select public.has_permission('dispatch', 'view')) or (select public.has_permission('sales', 'view')));
 create policy "Customers see their own order events" on public.order_events for select to authenticated
@@ -31,7 +33,7 @@ end $$;
 grant select on public.v_order_line_fulfilment, public.v_dispatch_queue to authenticated;
 revoke all on public.v_order_line_fulfilment, public.v_dispatch_queue from anon;
 
--- ===== ops_finance_part1of8 =====
+-- ===== 20261010130000_ops_finance =====
 -- Finance: double-entry ledger, purchases, payments, sales accounting, expenses, payroll, cash & bank, reports.
 --
 -- Every business document posts its own journal entry, once: each entry carries a unique posting key
@@ -311,8 +313,6 @@ begin
   return null;
 end;
 $$;
-
--- ===== ops_finance_part2of8 =====
 create trigger stock_movements_post_gl after insert on public.stock_movements
   for each row execute function public._gl_stock_movement();
 
@@ -545,7 +545,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part3of8 =====
 create function public.fin_cancel_purchase_invoice(p_invoice_id uuid, p_reason text)
 returns void
 language plpgsql
@@ -827,7 +826,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part4of8 =====
 create function public._post_order_sale(p_order_id uuid)
 returns uuid
 language plpgsql
@@ -1120,7 +1118,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part5of8 =====
 create function public.fin_decide_expense(p_expense_id uuid, p_approve boolean, p_note text default null)
 returns void
 language plpgsql
@@ -1408,7 +1405,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part6of8 =====
 create function public.pay_approve_run(p_run_id uuid)
 returns void
 language plpgsql
@@ -1692,7 +1688,5 @@ end;
 $$;
 
 -- Reports ------------------------------------------------------------------------------------
-
--- ===== ops_finance_part7of8 =====
 
 commit;

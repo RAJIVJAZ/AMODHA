@@ -4,18 +4,7 @@
 begin;
 set local lock_timeout = '15s';
 
--- ONE-TIME LIVE DEPLOYMENT: completes the business-app database on the live Supabase project.
---
--- The live project already has the first part of 20261010100000_ops_foundation.sql (permission tables,
--- settings) plus its access rules, applied on 10 Oct 2026. This file is everything after that point:
--- the rest of the six 20261010* migrations, in order, minus the access policies that already exist.
--- Fresh environments use supabase/migrations/ instead; do not run this file anywhere else.
---
--- It runs as a single transaction: if any statement fails, nothing is changed.
--- Backup of all existing data: schema backup_20261010 (taken before any change).
-
-
--- ===== ops_foundation_part2of3 =====
+-- ===== 20261010100000_ops_foundation (rest) =====
 -- Staff management -----------------------------------------------------------
 create function public.ops_set_user_roles(p_user_id uuid, p_role_keys text[], p_reason text default null)
 returns void
@@ -247,8 +236,6 @@ end;
 $$;
 
 -- New accounts pick up invited staff roles (and owners keep getting is_admin from staff_emails).
-
--- ===== ops_foundation_part3of3 =====
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -329,7 +316,7 @@ grant execute on function public.has_permission(text, text), public.require_perm
   public.ops_staff_directory(), public.ops_login_history(uuid, integer), public.ops_audit_log(date, date, text, text, integer), public.ops_log_export(text, integer, jsonb), public.ist_today(), public.financial_year(date)
   to authenticated;
 
--- ===== ops_inventory_manufacturing_part1of8 =====
+-- ===== 20261010110000_ops_inventory_manufacturing =====
 -- Inventory, milk procurement, products, recipes, packaging and batch manufacturing.
 --
 -- Three separate things, linked by traceable stock movements:
@@ -631,8 +618,6 @@ end;
 $$;
 
 -- Lots to take p_qty from, oldest expiry first (FEFO) or oldest receipt first (FIFO).
-
--- ===== ops_inventory_manufacturing_part2of8 =====
 create function public._stock_pick(p_item_id uuid, p_qty numeric)
 returns table (lot_id uuid, qty numeric)
 language plpgsql
@@ -959,7 +944,6 @@ begin
 end;
 $$;
 
--- ===== ops_inventory_manufacturing_part3of8 =====
 create function public.proc_cancel_collection(p_collection_id uuid, p_reason text)
 returns void
 language plpgsql
@@ -1268,8 +1252,6 @@ end;
 $$;
 
 -- Issue material to a batch: from a chosen lot, or automatically by FEFO/FIFO.
-
--- ===== ops_inventory_manufacturing_part4of8 =====
 create function public.prod_issue_material(
   p_batch_id uuid, p_item_id uuid, p_qty numeric, p_lot_id uuid default null, p_note text default null, p_key text default null
 )
@@ -1536,8 +1518,6 @@ $$;
 -- Record packs made in one packaging configuration. Packaging materials are deducted from the
 -- packaging bill of materials (including for rejected and damaged packs). Finished goods enter
 -- stock only when the batch is released.
-
--- ===== ops_inventory_manufacturing_part5of8 =====
 create function public.prod_record_packaging(
   p_batch_id uuid, p_sku_item_id uuid, p_packs_good integer, p_packs_rejected integer default 0, p_packs_damaged integer default 0,
   p_packed_by text default null, p_packed_on date default null, p_notes text default null, p_key text default null

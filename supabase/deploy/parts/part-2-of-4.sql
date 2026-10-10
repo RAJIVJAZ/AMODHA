@@ -45,8 +45,6 @@ end;
 $$;
 
 -- Dispatch progress of a released batch, from its finished-goods lots.
-
--- ===== ops_inventory_manufacturing_part6of8 =====
 create function public._batch_refresh_dispatch(p_batch_id uuid)
 returns void
 language plpgsql
@@ -302,7 +300,6 @@ begin
 end;
 $$;
 
--- ===== ops_inventory_manufacturing_part7of8 =====
 create function public.cat_save_packaging_config(p jsonb, p_bom jsonb)
 returns uuid
 language plpgsql
@@ -504,8 +501,6 @@ create policy "Production reads corrections" on public.batch_corrections for sel
   using ((select public.has_permission('production', 'view')) or (select public.has_permission('audit', 'view')));
 
 -- Internal helpers are not callable through the API.
-
--- ===== ops_inventory_manufacturing_part8of8 =====
 revoke execute on function public._claim_request_key(text, text) from public, anon, authenticated;
 revoke execute on function public._stock_post(uuid, numeric, text, text, text, text, text, numeric, boolean, bigint) from public, anon, authenticated;
 revoke execute on function public._stock_pick(uuid, numeric) from public, anon, authenticated;
@@ -558,7 +553,7 @@ grant execute on function public._text(jsonb, text) to authenticated;
 grant select on public.v_batch_materials, public.v_stock_summary to authenticated;
 revoke all on public.v_batch_materials, public.v_stock_summary from anon;
 
--- ===== ops_seed_website_catalogue_part1of2 =====
+-- ===== 20261010115000_ops_seed_website_catalogue =====
 -- The website's existing sweets catalogue as products and sellable SKUs, so website orders can be
 -- allocated to stock and dispatched. Prices and tax codes are copied from the live site's catalogue
 -- (src/data/sweets.ts, src/data/tax.ts). Recipes, shelf life and packaging materials are NOT invented:
@@ -670,8 +665,6 @@ on conflict (code) do nothing;
 insert into public.products (code, name, category, source, base_unit, description, hsn, gst_rate, pure_desi_ghee, sort_order)
 values ('KUNDA', 'Kunda', 'sweets', 'manufactured', 'kg', 'Prayagraj''s own specialty — a thick, caramelised khoya sweet, rich enough to eat by the spoon.', '21069099', 5, true, 7)
 on conflict (code) do nothing;
-
--- ===== ops_seed_website_catalogue_part2of2 =====
 insert into public.items (code, name, item_type, category, unit, product_id, packaging_config_id, net_qty, sale_price, storefront_slug, storefront_pack, is_perishable, rotation, hsn, gst_rate)
 select 'KUNDA-250G', 'Kunda — 250 g', 'finished_good', 'finished_goods', 'box', p.id, c.id, 0.25, 220, 'kunda', '250 g', true, 'FEFO', '21069099', 5
 from public.products p, public.packaging_configs c where p.code = 'KUNDA' and c.code = 'BOX-250G'
@@ -718,7 +711,7 @@ insert into public.items (code, name, item_type, category, unit, is_perishable, 
 values ('RM-MILK', 'Raw milk', 'raw_material', 'raw_milk', 'l', true, 'FEFO', 1)
 on conflict (code) do nothing;
 
--- ===== ops_dispatch_part1of3 =====
+-- ===== 20261010120000_ops_dispatch =====
 -- Orders, batch-aware stock allocation and dispatch.
 --
 -- Every order (website, app, milk subscription, staff-entered) lives in public.orders with its own lines.
@@ -988,7 +981,6 @@ begin
 end;
 $$;
 
--- ===== ops_dispatch_part2of3 =====
 create function public.disp_release_allocation(p_allocation_id uuid, p_reason text)
 returns void
 language plpgsql
@@ -1285,8 +1277,6 @@ end;
 $$;
 
 -- Cancelling an order frees any stock still reserved for it.
-
--- ===== ops_dispatch_part3of3 =====
 create function public._order_release_on_cancel()
 returns trigger
 language plpgsql
@@ -1340,7 +1330,5 @@ create policy "Dispatch reads dispatches" on public.dispatches for select to aut
   using ((select public.has_permission('dispatch', 'view')) or (select public.has_permission('sales', 'view')) or (select public.has_permission('production', 'view')));
 create policy "Customers see their own dispatches" on public.dispatches for select to authenticated
   using (exists (select 1 from public.orders o where o.id = order_id and o.user_id = (select auth.uid())));
-create policy "Dispatch reads dispatch lines" on public.dispatch_lines for select to authenticated
-  using ((select public.has_permission('dispatch', 'view')) or (select public.has_permission('production', 'view')) or (select public.has_permission('sales', 'view')));
 
 commit;

@@ -14,18 +14,7 @@
 begin;
 set local lock_timeout = '15s';
 
--- ONE-TIME LIVE DEPLOYMENT: completes the business-app database on the live Supabase project.
---
--- The live project already has the first part of 20261010100000_ops_foundation.sql (permission tables,
--- settings) plus its access rules, applied on 10 Oct 2026. This file is everything after that point:
--- the rest of the six 20261010* migrations, in order, minus the access policies that already exist.
--- Fresh environments use supabase/migrations/ instead; do not run this file anywhere else.
---
--- It runs as a single transaction: if any statement fails, nothing is changed.
--- Backup of all existing data: schema backup_20261010 (taken before any change).
-
-
--- ===== ops_foundation_part2of3 =====
+-- ===== 20261010100000_ops_foundation (rest) =====
 -- Staff management -----------------------------------------------------------
 create function public.ops_set_user_roles(p_user_id uuid, p_role_keys text[], p_reason text default null)
 returns void
@@ -257,8 +246,6 @@ end;
 $$;
 
 -- New accounts pick up invited staff roles (and owners keep getting is_admin from staff_emails).
-
--- ===== ops_foundation_part3of3 =====
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -339,7 +326,7 @@ grant execute on function public.has_permission(text, text), public.require_perm
   public.ops_staff_directory(), public.ops_login_history(uuid, integer), public.ops_audit_log(date, date, text, text, integer), public.ops_log_export(text, integer, jsonb), public.ist_today(), public.financial_year(date)
   to authenticated;
 
--- ===== ops_inventory_manufacturing_part1of8 =====
+-- ===== 20261010110000_ops_inventory_manufacturing =====
 -- Inventory, milk procurement, products, recipes, packaging and batch manufacturing.
 --
 -- Three separate things, linked by traceable stock movements:
@@ -641,8 +628,6 @@ end;
 $$;
 
 -- Lots to take p_qty from, oldest expiry first (FEFO) or oldest receipt first (FIFO).
-
--- ===== ops_inventory_manufacturing_part2of8 =====
 create function public._stock_pick(p_item_id uuid, p_qty numeric)
 returns table (lot_id uuid, qty numeric)
 language plpgsql
@@ -969,7 +954,6 @@ begin
 end;
 $$;
 
--- ===== ops_inventory_manufacturing_part3of8 =====
 create function public.proc_cancel_collection(p_collection_id uuid, p_reason text)
 returns void
 language plpgsql
@@ -1278,8 +1262,6 @@ end;
 $$;
 
 -- Issue material to a batch: from a chosen lot, or automatically by FEFO/FIFO.
-
--- ===== ops_inventory_manufacturing_part4of8 =====
 create function public.prod_issue_material(
   p_batch_id uuid, p_item_id uuid, p_qty numeric, p_lot_id uuid default null, p_note text default null, p_key text default null
 )
@@ -1546,8 +1528,6 @@ $$;
 -- Record packs made in one packaging configuration. Packaging materials are deducted from the
 -- packaging bill of materials (including for rejected and damaged packs). Finished goods enter
 -- stock only when the batch is released.
-
--- ===== ops_inventory_manufacturing_part5of8 =====
 create function public.prod_record_packaging(
   p_batch_id uuid, p_sku_item_id uuid, p_packs_good integer, p_packs_rejected integer default 0, p_packs_damaged integer default 0,
   p_packed_by text default null, p_packed_on date default null, p_notes text default null, p_key text default null
@@ -1816,8 +1796,6 @@ end;
 $$;
 
 -- Dispatch progress of a released batch, from its finished-goods lots.
-
--- ===== ops_inventory_manufacturing_part6of8 =====
 create function public._batch_refresh_dispatch(p_batch_id uuid)
 returns void
 language plpgsql
@@ -2073,7 +2051,6 @@ begin
 end;
 $$;
 
--- ===== ops_inventory_manufacturing_part7of8 =====
 create function public.cat_save_packaging_config(p jsonb, p_bom jsonb)
 returns uuid
 language plpgsql
@@ -2275,8 +2252,6 @@ create policy "Production reads corrections" on public.batch_corrections for sel
   using ((select public.has_permission('production', 'view')) or (select public.has_permission('audit', 'view')));
 
 -- Internal helpers are not callable through the API.
-
--- ===== ops_inventory_manufacturing_part8of8 =====
 revoke execute on function public._claim_request_key(text, text) from public, anon, authenticated;
 revoke execute on function public._stock_post(uuid, numeric, text, text, text, text, text, numeric, boolean, bigint) from public, anon, authenticated;
 revoke execute on function public._stock_pick(uuid, numeric) from public, anon, authenticated;
@@ -2329,7 +2304,7 @@ grant execute on function public._text(jsonb, text) to authenticated;
 grant select on public.v_batch_materials, public.v_stock_summary to authenticated;
 revoke all on public.v_batch_materials, public.v_stock_summary from anon;
 
--- ===== ops_seed_website_catalogue_part1of2 =====
+-- ===== 20261010115000_ops_seed_website_catalogue =====
 -- The website's existing sweets catalogue as products and sellable SKUs, so website orders can be
 -- allocated to stock and dispatched. Prices and tax codes are copied from the live site's catalogue
 -- (src/data/sweets.ts, src/data/tax.ts). Recipes, shelf life and packaging materials are NOT invented:
@@ -2441,8 +2416,6 @@ on conflict (code) do nothing;
 insert into public.products (code, name, category, source, base_unit, description, hsn, gst_rate, pure_desi_ghee, sort_order)
 values ('KUNDA', 'Kunda', 'sweets', 'manufactured', 'kg', 'Prayagraj''s own specialty — a thick, caramelised khoya sweet, rich enough to eat by the spoon.', '21069099', 5, true, 7)
 on conflict (code) do nothing;
-
--- ===== ops_seed_website_catalogue_part2of2 =====
 insert into public.items (code, name, item_type, category, unit, product_id, packaging_config_id, net_qty, sale_price, storefront_slug, storefront_pack, is_perishable, rotation, hsn, gst_rate)
 select 'KUNDA-250G', 'Kunda — 250 g', 'finished_good', 'finished_goods', 'box', p.id, c.id, 0.25, 220, 'kunda', '250 g', true, 'FEFO', '21069099', 5
 from public.products p, public.packaging_configs c where p.code = 'KUNDA' and c.code = 'BOX-250G'
@@ -2489,7 +2462,7 @@ insert into public.items (code, name, item_type, category, unit, is_perishable, 
 values ('RM-MILK', 'Raw milk', 'raw_material', 'raw_milk', 'l', true, 'FEFO', 1)
 on conflict (code) do nothing;
 
--- ===== ops_dispatch_part1of3 =====
+-- ===== 20261010120000_ops_dispatch =====
 -- Orders, batch-aware stock allocation and dispatch.
 --
 -- Every order (website, app, milk subscription, staff-entered) lives in public.orders with its own lines.
@@ -2759,7 +2732,6 @@ begin
 end;
 $$;
 
--- ===== ops_dispatch_part2of3 =====
 create function public.disp_release_allocation(p_allocation_id uuid, p_reason text)
 returns void
 language plpgsql
@@ -3056,8 +3028,6 @@ end;
 $$;
 
 -- Cancelling an order frees any stock still reserved for it.
-
--- ===== ops_dispatch_part3of3 =====
 create function public._order_release_on_cancel()
 returns trigger
 language plpgsql
@@ -3140,7 +3110,7 @@ end $$;
 grant select on public.v_order_line_fulfilment, public.v_dispatch_queue to authenticated;
 revoke all on public.v_order_line_fulfilment, public.v_dispatch_queue from anon;
 
--- ===== ops_finance_part1of8 =====
+-- ===== 20261010130000_ops_finance =====
 -- Finance: double-entry ledger, purchases, payments, sales accounting, expenses, payroll, cash & bank, reports.
 --
 -- Every business document posts its own journal entry, once: each entry carries a unique posting key
@@ -3420,8 +3390,6 @@ begin
   return null;
 end;
 $$;
-
--- ===== ops_finance_part2of8 =====
 create trigger stock_movements_post_gl after insert on public.stock_movements
   for each row execute function public._gl_stock_movement();
 
@@ -3654,7 +3622,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part3of8 =====
 create function public.fin_cancel_purchase_invoice(p_invoice_id uuid, p_reason text)
 returns void
 language plpgsql
@@ -3936,7 +3903,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part4of8 =====
 create function public._post_order_sale(p_order_id uuid)
 returns uuid
 language plpgsql
@@ -4229,7 +4195,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part5of8 =====
 create function public.fin_decide_expense(p_expense_id uuid, p_approve boolean, p_note text default null)
 returns void
 language plpgsql
@@ -4517,7 +4482,6 @@ begin
 end;
 $$;
 
--- ===== ops_finance_part6of8 =====
 create function public.pay_approve_run(p_run_id uuid)
 returns void
 language plpgsql
@@ -4801,8 +4765,6 @@ end;
 $$;
 
 -- Reports ------------------------------------------------------------------------------------
-
--- ===== ops_finance_part7of8 =====
 create function public.fin_trial_balance(p_to date default null)
 returns table (account_code text, name text, type text, debit numeric, credit numeric, balance numeric)
 language plpgsql
@@ -5120,6 +5082,10 @@ begin
     perform public._post_order_sale(r.id);
   end loop;
 end $$;
+-- Check those entries balance now, so the tables can be altered below in the same transaction;
+-- then back to checking each entry at commit, as normal.
+set constraints all immediate;
+set constraints all deferred;
 
 -- Access rules ---------------------------------------------------------------------------
 do $$
@@ -5135,7 +5101,6 @@ begin
   end loop;
 end $$;
 
--- ===== ops_finance_part8of8 =====
 create policy "Finance reads accounts" on public.ledger_accounts for select to authenticated
   using ((select public.has_permission('reports', 'view')) or (select public.has_permission('banking', 'view')) or (select public.has_permission('purchases', 'view'))
     or (select public.has_permission('expenses', 'view')) or (select public.has_permission('sales', 'view')));
@@ -5197,7 +5162,7 @@ revoke execute on function public._ist_date(timestamptz) from public, anon;
 grant execute on function public._ist_date(timestamptz) to authenticated;
 revoke execute on function public._order_party(public.orders) from public, anon, authenticated;
 
--- ===== ops_subscriptions_part1of4 =====
+-- ===== 20261010140000_ops_subscriptions =====
 -- Milk subscriptions.
 --
 -- A subscription is the customer's standing instruction. Each delivery day gets its own record
@@ -5498,7 +5463,6 @@ begin
 end;
 $$;
 
--- ===== ops_subscriptions_part2of4 =====
 create function public.sub_skip(p_subscription_id uuid, p_date date, p_reason text default null)
 returns void
 language plpgsql
@@ -5777,8 +5741,6 @@ end;
 $$;
 
 -- Price changes for subscription products: future dates only, existing open deliveries repriced, customers told.
-
--- ===== ops_subscriptions_part3of4 =====
 create function public.cat_set_item_price(p_item_id uuid, p_price numeric, p_effective_from date, p_note text default null)
 returns void
 language plpgsql
@@ -6000,8 +5962,6 @@ create policy "Customers read own subscriptions" on public.subscriptions for sel
   using (user_id = (select auth.uid()) or (select public.has_permission('subscriptions', 'view')));
 create policy "Customers read own deliveries" on public.subscription_deliveries for select to authenticated
   using (user_id = (select auth.uid()) or (select public.has_permission('subscriptions', 'view')) or (select public.has_permission('dispatch', 'view')));
-
--- ===== ops_subscriptions_part4of4 =====
 create policy "Customers read own delivery lines" on public.subscription_delivery_lines for select to authenticated
   using (exists (select 1 from public.subscription_deliveries d where d.id = delivery_id and d.user_id = (select auth.uid()))
     or (select public.has_permission('subscriptions', 'view')) or (select public.has_permission('dispatch', 'view')));
