@@ -1,3 +1,4 @@
+-- FILE VERSION 3 (if your copy does not start with this line, reload the page: it is an older copy)
 -- ONE-TIME LIVE DEPLOYMENT: completes the business-app database on the live Supabase project.
 -- Run once in the Supabase dashboard: SQL Editor -> New query -> paste this whole file -> Run.
 --

@@ -1,3 +1,4 @@
+-- FILE VERSION 3, part 1 of 4
 -- Part 1 of 4 of the one-time live update (same content as ../2026-10-10-ops-live-remaining.sql).
 -- Run the parts in order in the Supabase SQL Editor. Each part is one transaction: if it fails, nothing in it is applied.
 
