@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press the app icon: straight to My milk or the sweet shop. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="my_milk"
+        android:shortcutLongLabel="@string/shortcut_milk_long"
+        android:shortcutShortLabel="@string/shortcut_milk">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:data="https://mithaiwallah.shop/account/milk"
+            android:targetClass="com.google.androidbrowserhelper.trusted.LauncherActivity"
+            android:targetPackage="shop.mithaiwallah.app" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="sweets"
+        android:shortcutLongLabel="@string/shortcut_sweets"
+        android:shortcutShortLabel="@string/shortcut_sweets">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:data="https://mithaiwallah.shop/sweet-corner"
+            android:targetClass="com.google.androidbrowserhelper.trusted.LauncherActivity"
+            android:targetPackage="shop.mithaiwallah.app" />
+    </shortcut>
+</shortcuts>

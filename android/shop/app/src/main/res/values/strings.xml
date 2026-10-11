@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mithai Wallah</string>
+    <string name="launch_url">https://mithaiwallah.shop/</string>
+    <string name="provider_authority">shop.mithaiwallah.app.fileprovider</string>
+    <string name="shortcut_milk">My milk</string>
+    <string name="shortcut_milk_long">My milk deliveries</string>
+    <string name="shortcut_sweets">Shop sweets</string>
+    <!-- Chrome opens the site full screen once the site confirms this app at /.well-known/assetlinks.json. -->
+    <string name="asset_statements" translatable="false">
+        [{
+            \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+            \"target\": {\"namespace\": \"web\", \"site\": \"https://mithaiwallah.shop\"}
+        }, {
+            \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+            \"target\": {\"namespace\": \"web\", \"site\": \"https://www.mithaiwallah.shop\"}
+        }]
+    </string>
+</resources>

@@ -26,8 +26,8 @@ to install it over the old version. Its SHA-256 fingerprint is:
 
 ## Building
 
-GitHub Actions builds the app (`.github/workflows/android-ops.yml`) on every change under
-`android/ops/`, or from Actions → "Android app (MW Ops)" → Run workflow. The APK and the Play Store
+GitHub Actions builds the app (`.github/workflows/android-apps.yml`) on every change under
+`android/ops/`, or from Actions → "Android apps" → Run workflow. The APK and the Play Store
 bundle (AAB) appear on the repository's Releases page.
 
 To have the builds signed automatically, add these repository secrets once

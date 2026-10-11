@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same colours as the website: dark top bar, blush background. -->
+    <color name="statusBar">#16323F</color>
+    <color name="navigationBar">#FFFFFF</color>
+    <color name="navigationBarDivider">#1F16323F</color>
+    <color name="splashBackground">#FFF0F0</color>
+    <color name="iconBackground">#FDE3E2</color>
+</resources>

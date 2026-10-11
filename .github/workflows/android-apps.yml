@@ -1,16 +1,17 @@
-name: Android app (MW Ops)
+name: Android apps
 
-# Builds the MW Ops Android app (android/ops). Signed when the signing secrets are set
-# (MW_OPS_KEYSTORE_BASE64, MW_OPS_KEYSTORE_PASSWORD, MW_OPS_KEY_ALIAS, MW_OPS_KEY_PASSWORD);
+# Builds the Android apps: MW Ops for staff (android/ops) and Mithai Wallah for customers
+# (android/shop). Signed when the signing secrets are set (MW_OPS_KEYSTORE_BASE64,
+# MW_OPS_KEYSTORE_PASSWORD, MW_OPS_KEY_ALIAS, MW_OPS_KEY_PASSWORD; one key signs both apps);
 # otherwise the files are unsigned and need signing before they can be installed.
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "android/ops/**"
-      - "!android/ops/**/*.md"
-      - ".github/workflows/android-ops.yml"
+      - "android/**"
+      - "!android/**/*.md"
+      - ".github/workflows/android-apps.yml"
 
 permissions:
   contents: write
@@ -19,6 +20,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: ops
+            name: mw-ops
+            title: MW Ops
+          - project: shop
+            name: mithai-wallah
+            title: Mithai Wallah
     steps:
       - uses: actions/checkout@v4
 
@@ -32,15 +43,15 @@ jobs:
           KEYSTORE_BASE64: ${{ secrets.MW_OPS_KEYSTORE_BASE64 }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/mw-ops.p12"
-            echo "MW_OPS_KEYSTORE=$RUNNER_TEMP/mw-ops.p12" >> "$GITHUB_ENV"
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release-key.p12"
+            echo "MW_OPS_KEYSTORE=$RUNNER_TEMP/release-key.p12" >> "$GITHUB_ENV"
             echo "SIGNED=signed" >> "$GITHUB_ENV"
           else
             echo "SIGNED=unsigned" >> "$GITHUB_ENV"
           fi
 
       - name: Build APK and app bundle
-        working-directory: android/ops
+        working-directory: android/${{ matrix.project }}
         env:
           MW_OPS_KEYSTORE_PASSWORD: ${{ secrets.MW_OPS_KEYSTORE_PASSWORD }}
           MW_OPS_KEY_ALIAS: ${{ secrets.MW_OPS_KEY_ALIAS }}
@@ -50,14 +61,14 @@ jobs:
       - name: Collect files
         run: |
           mkdir out
-          cp android/ops/app/build/outputs/apk/release/*.apk "out/mw-ops-${SIGNED}.apk"
-          cp android/ops/app/build/outputs/bundle/release/*.aab "out/mw-ops-${SIGNED}.aab"
-          rm -f "$RUNNER_TEMP/mw-ops.p12"
+          cp android/${{ matrix.project }}/app/build/outputs/apk/release/*.apk "out/${{ matrix.name }}-${SIGNED}.apk"
+          cp android/${{ matrix.project }}/app/build/outputs/bundle/release/*.aab "out/${{ matrix.name }}-${SIGNED}.aab"
+          rm -f "$RUNNER_TEMP/release-key.p12"
           ls -l out
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mw-ops-android
+          name: ${{ matrix.name }}-android
           path: out/
 
       # Also stored as a tag holding just the built files, so they can be fetched with git.
@@ -69,14 +80,14 @@ jobs:
           git init -q
           git add .
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit -q -m "MW Ops Android build ${{ github.run_number }} (${SIGNED}) from ${{ github.sha }}"
-          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" "HEAD:refs/tags/mw-ops-android-${{ github.run_number }}-files"
+            commit -q -m "${{ matrix.title }} Android build ${{ github.run_number }} (${SIGNED}) from ${{ github.sha }}"
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" "HEAD:refs/tags/android-${{ matrix.name }}-${{ github.run_number }}-files"
 
       - name: Publish to a release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "mw-ops-android-${{ github.run_number }}" out/* \
+          gh release create "android-${{ matrix.name }}-${{ github.run_number }}" out/* \
             --target "${{ github.sha }}" --prerelease \
-            --title "MW Ops Android build ${{ github.run_number }} (${SIGNED})" \
+            --title "${{ matrix.title }} Android build ${{ github.run_number }} (${SIGNED})" \
             --notes "Built from ${{ github.sha }} on ${{ github.ref_name }}."
