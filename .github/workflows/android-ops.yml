@@ -59,6 +59,18 @@ jobs:
           name: mw-ops-android
           path: out/
 
+      # Also stored as a tag holding just the built files, so they can be fetched with git.
+      - name: Store the files as a tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out
+          git init -q
+          git add .
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "MW Ops Android build ${{ github.run_number }} (${SIGNED}) from ${{ github.sha }}"
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" "HEAD:refs/tags/mw-ops-android-${{ github.run_number }}-files"
+
       - name: Publish to a release
         env:
           GH_TOKEN: ${{ github.token }}
