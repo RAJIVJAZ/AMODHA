@@ -40,3 +40,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Android builds and signing keys (signing keys never go in the repository)
+android/**/build/
+android/**/.gradle/
+android/**/local.properties
+*.jks
+*.keystore
+*.p12

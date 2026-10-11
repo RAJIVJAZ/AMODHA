@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same colours as the web app: dark top bar, white tab bar. -->
+    <color name="statusBar">#16323F</color>
+    <color name="navigationBar">#FFFFFF</color>
+    <color name="navigationBarDivider">#1F16323F</color>
+    <color name="splashBackground">#022738</color>
+    <color name="iconBackground">#022738</color>
+</resources>
