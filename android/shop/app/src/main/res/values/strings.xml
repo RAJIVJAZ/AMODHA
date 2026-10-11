@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">Mithai Wallah</string>
     <string name="launch_url">https://mithaiwallah.shop/</string>
-    <string name="provider_authority">shop.mithaiwallah.app.fileprovider</string>
     <string name="shortcut_milk">My milk</string>
     <string name="shortcut_milk_long">My milk deliveries</string>
     <string name="shortcut_sweets">Shop sweets</string>

@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">MW Ops</string>
     <string name="launch_url">https://mithaiwallah.shop/ops/today</string>
-    <string name="provider_authority">shop.mithaiwallah.ops.fileprovider</string>
     <!-- Chrome opens the site full screen once the site confirms this app at /.well-known/assetlinks.json. -->
     <string name="asset_statements" translatable="false">
         [{
