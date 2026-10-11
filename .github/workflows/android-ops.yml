@@ -9,6 +9,7 @@ on:
   push:
     paths:
       - "android/ops/**"
+      - "!android/ops/**/*.md"
       - ".github/workflows/android-ops.yml"
 
 permissions:

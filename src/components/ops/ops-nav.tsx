@@ -124,6 +124,10 @@ export function OpsNav({ groups, user, tabs, actions }: { groups: NavGroup[]; us
           </div>
           <InstallAppButton className="mb-5 px-1" />
           {links}
+          <a href="/downloads/mw-ops.apk" download className="mx-3 mt-6 block rounded-xl bg-white/10 px-4 py-3 text-sm font-semibold text-white">
+            🤖 Download the Android app (APK)
+            <span className="mt-0.5 block text-xs font-normal text-white/60">For staff phones. Allow &ldquo;install unknown apps&rdquo; when asked.</span>
+          </a>
           <div className="mt-6 border-t border-white/10 px-3 pt-4">{userBlock}</div>
         </div>
       ) : null}

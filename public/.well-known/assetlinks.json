@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "shop.mithaiwallah.ops",
+      "sha256_cert_fingerprints": ["92:2D:71:D0:D8:19:77:DD:BC:0F:39:D8:D0:25:20:A5:9D:22:28:B8:0B:11:72:D2:1A:F1:A5:20:06:95:A2:32"]
+    }
+  }
+]
