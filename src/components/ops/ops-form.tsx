@@ -19,6 +19,8 @@ type Props = {
   variant?: "primary" | "secondary" | "danger" | "quiet";
   className?: string;
   inline?: boolean;
+  /** A full-width, taller button for the main action on a phone screen. */
+  large?: boolean;
 };
 
 const buttonStyles = {
@@ -40,6 +42,7 @@ export function OpsForm({
   variant = "primary",
   className = "",
   inline = false,
+  large = false,
 }: Props) {
   const [state, action, pending] = useActionState<OpsActionState, FormData>(opsAction, null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -74,7 +77,7 @@ export function OpsForm({
         <button
           type="submit"
           disabled={pending}
-          className={`rounded-lg px-4 py-2 text-sm font-semibold transition disabled:opacity-60 ${buttonStyles[variant]}`}
+          className={`rounded-lg font-semibold transition disabled:opacity-60 ${large ? "w-full px-4 py-3 text-base" : "px-4 py-2 text-sm"} ${buttonStyles[variant]}`}
         >
           {pending ? "Working…" : submitLabel}
         </button>

@@ -129,3 +129,61 @@ h1, h2, h3, h4 {
     scroll-behavior: auto !important;
   }
 }
+
+/* Business app tables on phones: each row is a card, each cell labelled with its column. */
+@media (max-width: 639px) {
+  .ops-cards thead {
+    display: none;
+  }
+  .ops-cards table,
+  .ops-cards tbody {
+    display: block;
+  }
+  .ops-cards tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .ops-cards tbody > tr {
+    display: block;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+    border-radius: 0.875rem;
+    background: #fbfbfc;
+    padding: 0.5rem 0.75rem;
+  }
+  .ops-cards tbody > tr > td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+    text-align: right;
+  }
+  .ops-cards tbody > tr > td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-dark) 55%, transparent);
+  }
+  .ops-cards tbody > tr > td:first-child {
+    display: block;
+    text-align: left;
+    font-size: 0.9375rem;
+  }
+  .ops-cards tbody > tr > td:first-child::before,
+  .ops-cards tbody > tr > td[data-label=""]::before,
+  .ops-cards tbody > tr > td:not([data-label])::before {
+    content: none;
+  }
+  .ops-cards tbody > tr > td[data-label=""],
+  .ops-cards tbody > tr > td:not([data-label]) {
+    justify-content: flex-end;
+  }
+  .ops-cards tbody > tr > td:empty {
+    display: none;
+  }
+}

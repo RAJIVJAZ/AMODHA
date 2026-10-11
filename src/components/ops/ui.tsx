@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Children, cloneElement, isValidElement, type ReactElement } from "react";
 
 // Shared building blocks for the business app. Plain, fast and readable on a factory phone.
 
@@ -85,10 +86,26 @@ export function Empty({ children }: { children: React.ReactNode }) {
   return <p className="rounded-xl bg-ink/5 px-4 py-6 text-center text-sm text-dark/60">{children}</p>;
 }
 
-export function Table({ head, children, compact }: { head: React.ReactNode[]; children: React.ReactNode; compact?: boolean }) {
+/**
+ * A table on wider screens. On phones each row becomes a card, every cell labelled with its column
+ * heading (the first cell is the card's title); pass cards={false} to keep a scrolling table instead.
+ */
+export function Table({ head, children, compact, cards = true }: { head: React.ReactNode[]; children: React.ReactNode; compact?: boolean; cards?: boolean }) {
+  const labels = head.map((h) => (typeof h === "string" ? h : ""));
+  const rows = cards
+    ? Children.map(children, (row) => {
+        if (!isValidElement(row) || row.type !== "tr") return row;
+        const tr = row as ReactElement<{ children?: React.ReactNode }>;
+        return cloneElement(tr, {
+          children: Children.map(tr.props.children, (cell, i) =>
+            isValidElement(cell) ? cloneElement(cell as ReactElement<{ "data-label"?: string }>, { "data-label": labels[i] ?? "" }) : cell
+          ),
+        });
+      })
+    : children;
   return (
-    <div className="-mx-4 overflow-x-auto sm:mx-0">
-      <table className={`w-full min-w-[560px] border-collapse text-left ${compact ? "text-xs" : "text-sm"}`}>
+    <div className={cards ? "ops-cards sm:-mx-0 sm:overflow-x-auto" : "-mx-4 overflow-x-auto sm:mx-0"}>
+      <table className={`w-full min-w-[560px] border-collapse text-left ${cards ? "max-sm:min-w-0" : ""} ${compact ? "text-xs" : "text-sm"}`}>
         <thead>
           <tr className="border-b-2 border-ink/10 text-xs uppercase tracking-wide text-dark/55">
             {head.map((h, i) => (
@@ -98,14 +115,20 @@ export function Table({ head, children, compact }: { head: React.ReactNode[]; ch
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-ink/5">{children}</tbody>
+        <tbody className="divide-y divide-ink/5">{rows}</tbody>
       </table>
     </div>
   );
 }
 
-export function Td({ children, className = "", right }: { children?: React.ReactNode; className?: string; right?: boolean }) {
-  return <td className={`px-3 py-2 align-top first:pl-4 sm:first:pl-3 ${right ? "text-right tabular-nums" : ""} ${className}`}>{children}</td>;
+export function Td({ children, className = "", right, ...rest }: { children?: React.ReactNode; className?: string; right?: boolean; "data-label"?: string }) {
+  const empty = children === null || children === undefined || children === false || children === "";
+  return (
+    <td className={`px-3 py-2 align-top first:pl-4 sm:first:pl-3 ${right ? "text-right tabular-nums" : ""} ${className}`} {...rest}>
+      {/* One box per cell, so a phone card keeps a cell's lines together beside its label. */}
+      {empty ? null : <div className="min-w-0">{children}</div>}
+    </td>
+  );
 }
 
 // Form fields ---------------------------------------------------------------------------

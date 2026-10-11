@@ -1,28 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { OpsNav, type NavGroup } from "@/components/ops/ops-nav";
-import { getOps, type OpsModule } from "@/lib/ops/context";
+import { OpsNav, type AppTab, type NavGroup, type QuickAction } from "@/components/ops/ops-nav";
+import { getOps, type Ops, type OpsModule } from "@/lib/ops/context";
 
 export const metadata: Metadata = {
   title: { default: "Mithai Wallah Ops", template: "%s · Mithai Wallah Ops" },
   robots: { index: false, follow: false },
   manifest: "/ops/manifest.webmanifest",
-  appleWebApp: { title: "MW Ops", capable: true, statusBarStyle: "default" },
+  appleWebApp: { title: "MW Ops", capable: true, statusBarStyle: "black-translucent" },
+  icons: { apple: "/icons/ops-192.png" },
 };
 
-export const viewport: Viewport = { themeColor: "#16323f" };
+export const viewport: Viewport = { themeColor: "#16323f", viewportFit: "cover" };
 
-const nav: { label: string; items: { href: string; label: string; module: OpsModule }[] }[] = [
+const nav: { label: string; items: { href: string; label: string; module: OpsModule | "*" }[] }[] = [
   {
     label: "Overview",
-    items: [{ href: "/ops", label: "Dashboard", module: "dashboard" }],
+    items: [
+      { href: "/ops/today", label: "Today", module: "*" },
+      { href: "/ops", label: "Dashboard", module: "dashboard" },
+    ],
   },
   {
     label: "Factory",
     items: [
       { href: "/ops/production", label: "Production", module: "production" },
-      { href: "/ops/procurement", label: "Milk collection", module: "procurement" },
+      { href: "/ops/procurement/entry", label: "Record milk", module: "procurement" },
+      { href: "/ops/procurement", label: "Milk collection register", module: "procurement" },
       { href: "/ops/inventory", label: "Inventory", module: "inventory" },
       { href: "/ops/dispatch", label: "Orders & dispatch", module: "dispatch" },
+      { href: "/ops/deliveries", label: "Delivery run", module: "dispatch" },
       { href: "/ops/subscriptions", label: "Milk subscriptions", module: "subscriptions" },
     ],
   },
@@ -49,20 +55,60 @@ const nav: { label: string; items: { href: string; label: string; module: OpsMod
   },
 ];
 
+// The phone tab bar: Today, then the first three of these the person can use, then "More".
+const tabChoices: (AppTab & { show: (ops: Ops) => boolean })[] = [
+  { href: "/ops/deliveries", label: "Deliveries", icon: "truck", match: ["/ops/deliveries", "/ops/dispatch"], show: (o) => o.can("dispatch") },
+  { href: "/ops/procurement/entry", label: "Milk", icon: "milk", match: ["/ops/procurement"], show: (o) => o.can("procurement") },
+  { href: "/ops/production", label: "Production", icon: "pot", match: ["/ops/production"], show: (o) => o.can("production") },
+  {
+    href: "/ops/finance/sales",
+    label: "Money",
+    icon: "rupee",
+    match: ["/ops/finance"],
+    show: (o) => o.can("sales"),
+  },
+];
+
+const quickActions: (QuickAction & { show: (ops: Ops) => boolean })[] = [
+  { href: "/ops/procurement/entry", label: "Record milk", hint: "From a farmer", icon: "milk", show: (o) => o.can("procurement", "create") },
+  { href: "/ops/deliveries", label: "Delivery run", hint: "Mark delivered, collect cash", icon: "truck", show: (o) => o.can("dispatch", "edit") },
+  { href: "/ops/dispatch/new", label: "Phone order", hint: "Phone or walk-in", icon: "phone", show: (o) => o.can("dispatch", "create") },
+  { href: "/ops/production/new", label: "Start a batch", hint: "Plan production", icon: "pot", show: (o) => o.can("production", "create") },
+  { href: "/ops/subscriptions?tab=bottles", label: "Bottles", hint: "Given, returned, broken", icon: "bottle", show: (o) => o.can("subscriptions") && o.can("dispatch", "edit") },
+  { href: "/ops/finance/expenses?tab=new", label: "Add expense", hint: "Bills and spending", icon: "receipt", show: (o) => o.can("expenses", "create") },
+  { href: "/ops/finance/sales?tab=actions", label: "Customer payment", hint: "Received against an invoice", icon: "cash", show: (o) => o.can("sales", "create") },
+  { href: "/ops/finance/purchases/pay", label: "Pay a supplier", hint: "Farmers and vendors", icon: "rupee", show: (o) => o.can("purchases", "edit") },
+  { href: "/ops/inventory", label: "Check stock", hint: "What we have", icon: "box", show: (o) => o.can("inventory") },
+];
+
 export default async function OpsLayout({ children }: { children: React.ReactNode }) {
   const ops = await getOps();
   const groups: NavGroup[] = ops
     ? nav
-        .map((g) => ({ label: g.label, items: g.items.filter((i) => ops.can(i.module)).map(({ href, label }) => ({ href, label })) }))
+        .map((g) => ({
+          label: g.label,
+          items: g.items.filter((i) => i.module === "*" || ops.can(i.module)).map(({ href, label }) => ({ href, label })),
+        }))
         .filter((g) => g.items.length > 0)
     : [];
   const name = ops?.profile?.full_name || ops?.profile?.email || "";
   const role = ops?.profile?.is_admin ? "Owner" : ops?.profile?.job_title || "Staff";
+  const staff = Boolean(ops && ops.granted.size > 0);
+  const tabs: AppTab[] = ops
+    ? [
+        { href: "/ops/today", label: "Today", icon: "today", match: ["/ops/today"] },
+        ...tabChoices
+          .filter((t) => t.show(ops))
+          .slice(0, 3)
+          .map(({ href, label, icon, match }) => ({ href, label, icon, match })),
+      ]
+    : [];
+  const actions: QuickAction[] = ops ? quickActions.filter((a) => a.show(ops)).map(({ href, label, hint, icon }) => ({ href, label, hint, icon })) : [];
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f6f7] lg:flex-row">
-      {groups.length > 0 ? <OpsNav groups={groups} user={{ name, role }} /> : null}
-      <main id="main-content" className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      {staff ? <OpsNav groups={groups} user={{ name, role }} tabs={tabs} actions={actions} /> : null}
+      <main id="main-content" className={`min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:pb-6 ${staff ? "pb-36" : ""}`}>
         {children}
       </main>
     </div>
