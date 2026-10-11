@@ -16,7 +16,8 @@ android {
 
     defaultConfig {
         applicationId 'shop.mithaiwallah.ops'
-        minSdk 21
+        // Android 7.0+: the APK carries only the v2 signature (current Chrome needs Android 10+ anyway).
+        minSdk 24
         targetSdk 36
         versionCode 1
         versionName '1.0.0'
