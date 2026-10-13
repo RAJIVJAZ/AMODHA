@@ -19,7 +19,12 @@ export type OpsModule =
   | "payroll"
   | "banking"
   | "reports"
-  | "audit";
+  | "audit"
+  | "b2b_customers"
+  | "field_sales"
+  | "pricing"
+  | "sales_team"
+  | "marketing";
 export type OpsAction = "view" | "create" | "edit" | "approve" | "export" | "delete";
 
 /**

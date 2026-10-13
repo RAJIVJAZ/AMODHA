@@ -14,6 +14,10 @@ New environments: apply `supabase/migrations/` in order. Local tests: `supabase/
 - `20261011100000_subscriber_app.sql` (customer schedule change and monthly milk statement) — applied
   to live on 10 October 2026; function bodies and permissions checked identical to the tested build.
 
+- `20261013100000_b2b_sales_wholesale.sql` (B2B wholesale: Sales app, Wholesale app, customer master, pricing,
+  CRM, consent, unified order workflow) — **not yet applied to live.** Back up first, apply to a staging copy and run
+  `supabase/tests/run-tests.sh`, then apply to live. See `docs/b2b-wholesale.md`.
+
 ## Live data changes
 
 - 10 October 2026: milk set up for sale — packaging configuration `GLASS-BOTTLE-1L` (1 L glass bottle) and

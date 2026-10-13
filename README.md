@@ -9,6 +9,12 @@ database, authentication or portals. Enquiries (wholesale, corporate gifting, we
 contact) are captured via forms that hand off to WhatsApp and email — there is no server-side
 order/lead storage yet.
 
+## B2B wholesale (Sales app and Wholesale app)
+
+Field sales (`/sales`), the sweet-shop ordering app (`/trade`) and the operations / admin screens (`/ops/b2b`)
+share one customer master, price engine, order queue, stock, dispatch and ledger. See
+[`docs/b2b-wholesale.md`](docs/b2b-wholesale.md).
+
 ## Stack
 
 - [Next.js](https://nextjs.org) (App Router, TypeScript)

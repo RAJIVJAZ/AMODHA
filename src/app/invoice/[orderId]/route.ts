@@ -3,6 +3,7 @@ import { isValidInvoiceToken } from "@/lib/invoice-link";
 import { invoiceOrderColumns } from "@/lib/order-emails";
 import { customerFilter, getSignedInCustomer } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { invoicePageHtml, type InvoiceOrder } from "@/lib/tax-invoice";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -21,16 +22,20 @@ export async function GET(request: Request, { params }: { params: Promise<{ orde
   if (!admin) return notFound();
 
   const token = new URL(request.url).searchParams.get("t");
-  let query = admin.from("orders").select(`status, ${invoiceOrderColumns}`).eq("id", orderId);
+  let query = admin.from("orders").select(`status, b2b_customer_id, ${invoiceOrderColumns}`).eq("id", orderId);
   if (!isValidInvoiceToken(orderId, token) && !(await canViewAllInvoices())) {
     const customer = await getSignedInCustomer();
     if (!customer) return notFound();
-    query = query.or(customerFilter(customer));
+    // Wholesale customers (and their salesperson) open B2B invoices through the B2B access check.
+    const { data: b2bAllowed } = await (await createClient()).rpc("b2b_can_view_order", { p_order_id: orderId });
+    if (b2bAllowed !== true) query = query.or(customerFilter(customer));
   }
 
   const { data } = await query.maybeSingle();
   if (!data || data.status === "pending_payment") return notFound();
-  let order = data as unknown as InvoiceOrder & { status: string };
+  let order = data as unknown as InvoiceOrder & { status: string; b2b_customer_id: string | null };
+  // B2B orders are invoiced when the goods are dispatched, never early by opening this page.
+  if (order.b2b_customer_id && !order.invoice_number) return notFound();
 
   // Orders confirmed before invoicing (or whose email hasn't gone out yet) get their number now.
   if (!order.invoice_number && order.status !== "cancelled") {

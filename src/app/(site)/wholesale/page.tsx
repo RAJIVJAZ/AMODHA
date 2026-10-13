@@ -50,6 +50,20 @@ export default function WholesalePage() {
               We supply consistent, high-quality dairy and mithai in bulk to sweet shop owners,
               distributors, hotels, restaurants and retail chains.
             </p>
+            <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
+              <a
+                href="/trade"
+                className="font-heading sticker-shadow-sm rounded-full border-[2.5px] border-ink bg-accent px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white"
+              >
+                Order in the Wholesale app
+              </a>
+              <a
+                href="/trade"
+                className="font-heading rounded-full border-[2.5px] border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink"
+              >
+                Register your shop
+              </a>
+            </div>
           </div>
           <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">
             <Image

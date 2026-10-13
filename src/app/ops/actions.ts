@@ -31,6 +31,13 @@ const ALLOWED = new Set([
   "fin_credit_note", "fin_record_expense", "fin_decide_expense", "pay_save_employee", "pay_record_advance", "pay_create_run",
   "pay_update_line", "pay_approve_run", "pay_mark_paid", "fin_transfer", "fin_reconcile", "fin_cash_count", "fin_manual_journal",
   "fin_reverse_entry", "fin_retry_postings",
+  // B2B wholesale: customers, orders, operations, pricing, sales team, finance, marketing
+  "b2b_create_customer", "b2b_decide_customer", "b2b_update_customer", "b2b_set_terms", "b2b_set_status", "b2b_assign_customers",
+  "b2b_grant_login", "b2b_decide_login", "b2b_log_activity", "b2b_record_consent", "b2b_confirm_order", "b2b_accept_order",
+  "b2b_amend_order", "b2b_cancel_order", "ops_set_order_priority", "ops_record_packing", "b2b_receive_payment",
+  "fs_request_price", "pr_decide_price_request", "pr_save_price", "pr_end_price", "pr_save_item_wholesale", "pr_set_item_access",
+  "pr_save_category", "st_save_salesperson", "st_save_territory", "st_set_target",
+  "mkt_save_campaign", "mkt_approve_campaign", "mkt_mark_sent",
   // customer subscription actions
   "sub_create", "sub_skip", "sub_unskip", "sub_set_extra", "sub_set_addons", "sub_pause", "sub_resume", "sub_cancel",
   "sub_change_quantity", "sub_change_address", "sub_change_schedule",
@@ -38,16 +45,33 @@ const ALLOWED = new Set([
 
 class InputError extends Error {}
 
+/** Exposes one form field under another name, so nested fields reuse the same parsing. */
+class FormDataLike extends FormData {
+  constructor(source: FormData, from: string, to: string) {
+    super();
+    for (const value of source.getAll(from)) this.append(to, value);
+  }
+}
+
 /**
  * Turns form fields into function arguments. Field names are "p_name#type"; type is one of
  * text (default), num, int, date, ist (date-time in India time), json, bool, uuid, list (comma-separated text) or intlist.
  * Empty fields are left out so the function's own default applies.
+ * "p.field#type" (or "p_name.field#type") collects fields into one JSON argument, for functions that take an object.
  */
 function argsFrom(formData: FormData) {
   const args: Record<string, unknown> = {};
   for (const key of new Set(formData.keys())) {
-    if (!(key.startsWith("p_") || key === "p" || key.startsWith("p#"))) continue;
-    const [name, type = "text"] = key.split("#");
+    if (!(key.startsWith("p_") || key === "p" || key.startsWith("p#") || key.startsWith("p."))) continue;
+    const [path, type = "text"] = key.split("#");
+    const [name, field] = path.split(".");
+    if (field) {
+      const nested = argsFrom(new FormDataLike(formData, key, `p_${field}#${type}`));
+      const obj = (args[name] ??= {}) as Record<string, unknown>;
+      // An emptied field inside an object is sent as "" so the function can clear it.
+      obj[field] = `p_${field}` in nested ? nested[`p_${field}`] : type === "list" || type === "intlist" ? [] : "";
+      continue;
+    }
     const values = formData.getAll(key).map((v) => String(v));
     if (type === "bool") {
       args[name] = values.includes("true") || values.includes("on");

@@ -33,6 +33,18 @@ const nav: { label: string; items: { href: string; label: string; module: OpsMod
     ],
   },
   {
+    label: "Wholesale (B2B)",
+    items: [
+      { href: "/ops/b2b", label: "Order operations", module: "dispatch" },
+      { href: "/ops/b2b/customers", label: "B2B customers & CRM", module: "b2b_customers" },
+      { href: "/ops/b2b/pricing", label: "Wholesale pricing", module: "pricing" },
+      { href: "/ops/b2b/team", label: "Sales team", module: "sales_team" },
+      { href: "/ops/b2b/planning", label: "Production requirements", module: "production" },
+      { href: "/ops/b2b/reports", label: "Sales performance", module: "sales_team" },
+      { href: "/ops/b2b/marketing", label: "Marketing & consent", module: "marketing" },
+    ],
+  },
+  {
     label: "Finance",
     items: [
       { href: "/ops/finance/purchases", label: "Purchases", module: "purchases" },
@@ -73,6 +85,8 @@ const quickActions: (QuickAction & { show: (ops: Ops) => boolean })[] = [
   { href: "/ops/procurement/entry", label: "Record milk", hint: "From a farmer", icon: "milk", show: (o) => o.can("procurement", "create") },
   { href: "/ops/deliveries", label: "Delivery run", hint: "Mark delivered, collect cash", icon: "truck", show: (o) => o.can("dispatch", "edit") },
   { href: "/ops/dispatch/new", label: "Phone order", hint: "Phone or walk-in", icon: "phone", show: (o) => o.can("dispatch", "create") },
+  { href: "/ops/b2b?filter=new", label: "New B2B orders", hint: "Accept and allocate", icon: "box", show: (o) => o.can("dispatch", "approve") },
+  { href: "/sales", label: "Sales app", hint: "Shops, visits, orders", icon: "phone", show: (o) => o.can("field_sales") },
   { href: "/ops/production/new", label: "Start a batch", hint: "Plan production", icon: "pot", show: (o) => o.can("production", "create") },
   { href: "/ops/subscriptions?tab=bottles", label: "Bottles", hint: "Given, returned, broken", icon: "bottle", show: (o) => o.can("subscriptions") && o.can("dispatch", "edit") },
   { href: "/ops/finance/expenses?tab=new", label: "Add expense", hint: "Bills and spending", icon: "receipt", show: (o) => o.can("expenses", "create") },

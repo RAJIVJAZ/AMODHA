@@ -22,11 +22,12 @@ export default async function TracePage({ params }: { params: Promise<{ id: stri
   const t = data as Trace | null;
   if (error || !t?.batch) notFound();
 
-  // Which customer orders received this batch.
-  const dispatchIds = [...new Set(t.outgoing.filter((o) => o.doc_type === "dispatch").map((o) => o.doc_id))];
-  const { data: dispatches } = dispatchIds.length
-    ? await ops.supabase.from("dispatches").select("id, dispatch_no, status, dispatched_at, orders(id, order_number, customer_name, pincode)").in("id", dispatchIds)
-    : { data: [] };
+  // Which customer orders (retail and B2B) received this batch, line by line.
+  const { data: received } = await ops.supabase.rpc("ops_batch_customers", { p_batch_id: id });
+  const lines = (received ?? []) as {
+    dispatch_no: string; dispatched_at: string; dispatch_status: string; order_id: string; order_no: string; customer: string;
+    customer_code: string | null; phone: string; sku: string; item: string; lot_code: string; qty: number; qty_returned: number;
+  }[];
 
   return (
     <>
@@ -110,22 +111,31 @@ export default async function TracePage({ params }: { params: Promise<{ id: stri
           )}
         </Card>
         <Card title="4. Customers who received it">
-          {(dispatches ?? []).length ? (
-            <Table head={["Dispatch", "Order", "Customer", "Pincode", "Status", "When"]} compact>
-              {((dispatches ?? []) as unknown as { id: string; dispatch_no: string; status: string; dispatched_at: string; orders: { id: string; order_number: number; customer_name: string; pincode: string } | null }[]).map((d) => (
-                <tr key={d.id}>
+          {lines.length ? (
+            <Table head={["Dispatch", "Order", "Customer", "Pack (SKU)", "Lot", "Qty", "Status", "When"]} compact>
+              {lines.map((d, i) => (
+                <tr key={i}>
                   <Td>{d.dispatch_no}</Td>
                   <Td>
-                    {d.orders ? (
-                      <Link href={`/ops/dispatch/${d.orders.id}`} className="font-semibold text-primary-dark hover:underline">
-                        #{d.orders.order_number}
-                      </Link>
-                    ) : null}
+                    <Link href={d.customer_code ? `/ops/b2b/orders/${d.order_id}` : `/ops/dispatch/${d.order_id}`} className="font-semibold text-primary-dark hover:underline">
+                      {d.order_no}
+                    </Link>
                   </Td>
-                  <Td>{d.orders?.customer_name}</Td>
-                  <Td>{d.orders?.pincode}</Td>
                   <Td>
-                    <StatusBadge status={d.status} />
+                    {d.customer}
+                    {d.customer_code ? <div className="text-xs text-dark/55">{d.customer_code}</div> : null}
+                  </Td>
+                  <Td>
+                    {d.item}
+                    <div className="text-xs text-dark/55">{d.sku}</div>
+                  </Td>
+                  <Td>{d.lot_code}</Td>
+                  <Td right>
+                    {qty(d.qty)}
+                    {Number(d.qty_returned) ? <div className="text-xs text-accent-dark">{qty(d.qty_returned)} returned</div> : null}
+                  </Td>
+                  <Td>
+                    <StatusBadge status={d.dispatch_status} />
                   </Td>
                   <Td>{dateTime(d.dispatched_at)}</Td>
                 </tr>
