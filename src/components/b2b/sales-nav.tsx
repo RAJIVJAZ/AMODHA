@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { usePathname } from "next/navigation";
+import { staffSignOut } from "@/components/staff/session-guard";
 
 const tabs = [
   { href: "/sales", label: "Home", icon: "🏠", exact: true },
@@ -15,13 +15,10 @@ const tabs = [
 /** Phone-first frame for the Sales app: top bar and a bottom tab bar with the big Order button. */
 export function SalesNav({ name, code }: { name: string; code: string }) {
   const pathname = usePathname();
-  const router = useRouter();
   const active = (href: string, exact?: boolean) => (exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
 
   async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/login?next=/sales");
-    router.refresh();
+    await staffSignOut("manual");
   }
 
   return (

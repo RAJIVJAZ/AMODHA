@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { InstallAppButton, OpsAppBoot } from "@/components/ops/app-install";
 import { Icon, type IconName } from "@/components/ops/icons";
-import { createClient } from "@/lib/supabase/client";
+import { staffSignOut } from "@/components/staff/session-guard";
 
 export type NavGroup = { label: string; items: { href: string; label: string }[] };
 export type AppTab = { href: string; label: string; icon: IconName; match: string[] };
@@ -19,7 +19,6 @@ const matches = (pathname: string, prefix: string) => pathname === prefix || pat
  */
 export function OpsNav({ groups, user, tabs, actions }: { groups: NavGroup[]; user: { name: string; role: string }; tabs: AppTab[]; actions: QuickAction[] }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [sheet, setSheet] = useState<"more" | "actions" | null>(null);
   const isActive = (href: string) => (href === "/ops" ? pathname === "/ops" : matches(pathname, href));
 
@@ -36,10 +35,9 @@ export function OpsNav({ groups, user, tabs, actions }: { groups: NavGroup[]; us
     return () => window.removeEventListener("keydown", onKey);
   }, [sheet]);
 
+  // Saves drafts and records the sign-out on the server before leaving.
   async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/login?next=/ops/today");
-    router.refresh();
+    await staffSignOut("manual");
   }
 
   const links = (

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { SaveStatusText, useAutosave } from "@/lib/staff/autosave";
 import { b2bCall } from "@/lib/b2b/actions";
 import { customerTypes } from "@/lib/b2b/labels";
 
@@ -50,7 +51,12 @@ export function CustomerForm({
   const [done, setDone] = useState<string | null>(null);
   const key = useRef<string | null>(null);
   const req = new Set([...required, "shop_name", "owner_name", "mobile"]);
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setV((cur) => ({ ...cur, [k]: e.target.value }));
+  const read = useCallback(() => (v.shop_name || v.mobile || v.owner_name ? v : null), [v]);
+  const draft = useAutosave(mode === "register" ? null : `new-customer:${mode}`, read);
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setV((cur) => ({ ...cur, [k]: e.target.value }));
+    draft.changed();
+  };
 
   async function checkDuplicates() {
     if (mode === "register") return;
@@ -92,6 +98,7 @@ export function CustomerForm({
         p_source: `Asked in person when registering the shop (${mode === "sales" ? "salesperson" : "staff"})`,
       });
     }
+    await draft.discard();
     router.push(`${doneBase}/${res.data}`);
   }
 
@@ -111,6 +118,17 @@ export function CustomerForm({
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
+      {draft.restorable ? (
+        <p className="rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          You have an unfinished new customer saved earlier.{" "}
+          <button type="button" className="font-semibold underline" onClick={() => (setV(draft.restorable?.data as Record<string, string>), draft.dismissRestore())}>
+            Restore
+          </button>{" "}
+          <button type="button" className="underline" onClick={() => void draft.discard()}>
+            Discard
+          </button>
+        </p>
+      ) : null}
       <section className="grid gap-3 rounded-2xl bg-white p-4 sm:grid-cols-2">
         <Field label="Shop name" required>
           <input className={input} value={v.shop_name ?? ""} onChange={set("shop_name")} onBlur={checkDuplicates} required maxLength={120} />
@@ -233,6 +251,7 @@ export function CustomerForm({
         </label>
       ) : null}
       {error ? <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-900">{error}</p> : null}
+      <SaveStatusText status={draft.status} savedAt={draft.savedAt} />
       <button type="submit" disabled={busy} className="rounded-xl bg-accent px-4 py-3.5 text-base font-bold text-white disabled:opacity-60">
         {busy ? "Saving…" : mode === "register" ? "Submit for approval" : "Save as lead (pending approval)"}
       </button>

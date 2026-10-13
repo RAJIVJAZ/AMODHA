@@ -6,7 +6,7 @@ export const metadata = { title: "Not set up" };
 
 export default async function NotSetUp() {
   const s = await getSales();
-  if (!s) redirect("/login?next=/sales");
+  if (!s) redirect("/sales/login");
   if (s.salesperson) redirect("/sales");
   return (
     <div className="mx-auto mt-10 max-w-md rounded-2xl bg-white p-6 text-center">

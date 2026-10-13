@@ -4,7 +4,7 @@ import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export type OpsActionState = { ok: boolean; message: string; data?: unknown; at: number; okAt?: number } | null;
+export type OpsActionState = { ok: boolean; message: string; data?: unknown; at: number; okAt?: number; ended?: boolean } | null;
 
 // Database functions the business app may call. Each one checks the caller's permission itself
 // (and the signed-in user could already call them through the API); this list just keeps the
@@ -38,6 +38,8 @@ const ALLOWED = new Set([
   "fs_request_price", "pr_decide_price_request", "pr_save_price", "pr_end_price", "pr_save_item_wholesale", "pr_set_item_access",
   "pr_save_category", "st_save_salesperson", "st_save_territory", "st_set_target",
   "mkt_save_campaign", "mkt_approve_campaign", "mkt_mark_sent",
+  // staff monitoring
+  "staff_revoke_session", "staff_set_shift",
   // customer subscription actions
   "sub_create", "sub_skip", "sub_unskip", "sub_set_extra", "sub_set_addons", "sub_pause", "sub_resume", "sub_cancel",
   "sub_change_quantity", "sub_change_address", "sub_change_schedule",
@@ -152,7 +154,11 @@ export async function opsAction(prev: OpsActionState, formData: FormData): Promi
   }
 
   const { data, error } = await supabase.rpc(fn, args);
-  if (error) return { ok: false, message: friendly(error.message), at: Date.now(), okAt };
+  if (error) {
+    // Refused actions are recorded for the audit trail (no form contents are sent, only the error).
+    await supabase.rpc("staff_log_failure", { p_action: fn, p_message: error.message, p_path: String(formData.get("_path") ?? "") || null });
+    return { ok: false, message: friendly(error.message), at: Date.now(), okAt, ended: /session has ended/i.test(error.message) };
+  }
 
   const go = String(formData.get("_redirect") ?? "");
   if (go && /^\/(ops|account)(\/|$|\?)/.test(go)) {

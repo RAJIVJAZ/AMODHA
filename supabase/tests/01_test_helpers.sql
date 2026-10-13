@@ -4,7 +4,39 @@
 create schema if not exists test;
 grant usage on schema test to authenticated, service_role;
 
+-- Signs in as a test user the way the app does: an auth session (the JWT's session_id), a staff session
+-- record for staff, and an interaction "now" (the person is using the app). An ended session is never reused.
 create or replace function test.login(p_email text)
+returns void
+language plpgsql
+as $$
+declare
+  uid uuid;
+  sid uuid;
+begin
+  select id into uid from auth.users where email = p_email;
+  if uid is null then
+    raise exception 'No test user %', p_email;
+  end if;
+  select s.auth_session_id into sid from public.staff_sessions s
+  where s.user_id = uid and s.status = 'active' and exists (select 1 from auth.sessions a where a.id = s.auth_session_id)
+  order by s.started_at desc limit 1;
+  if sid is null then
+    select a.id into sid from auth.sessions a where a.user_id = uid
+      and not exists (select 1 from public.staff_sessions s where s.auth_session_id = a.id) order by a.created_at desc limit 1;
+  end if;
+  if sid is null then
+    sid := gen_random_uuid();
+    insert into auth.sessions (id, user_id, user_agent) values (sid, uid, 'test-runner');
+  end if;
+  perform test.as_session(p_email, sid);
+  update public.staff_sessions set last_interaction_at = now(), last_seen_at = now() where auth_session_id = sid and status = 'active';
+  perform set_config('role', 'authenticated', false);
+end;
+$$;
+
+-- Claims for a given auth session (used directly by the session tests); starts the staff session record.
+create or replace function test.as_session(p_email text, p_session uuid)
 returns void
 language plpgsql
 as $$
@@ -12,11 +44,8 @@ declare
   uid uuid;
 begin
   select id into uid from auth.users where email = p_email;
-  if uid is null then
-    raise exception 'No test user %', p_email;
-  end if;
-  perform set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated', 'email', p_email)::text, false);
-  perform set_config('role', 'authenticated', false);
+  perform set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated', 'email', p_email, 'session_id', p_session)::text, false);
+  perform public.staff_session_start('ops', '/ops/today');
 end;
 $$;
 

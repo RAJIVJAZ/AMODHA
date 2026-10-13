@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { OpsNav, type AppTab, type NavGroup, type QuickAction } from "@/components/ops/ops-nav";
+import { MonitoringNotice } from "@/components/staff/monitoring-notice";
+import { SessionGuard } from "@/components/staff/session-guard";
 import { getOps, type Ops, type OpsModule } from "@/lib/ops/context";
+import { monitoringSettings } from "@/lib/staff/settings";
 
 export const metadata: Metadata = {
   title: { default: "Mithai Wallah Ops", template: "%s · Mithai Wallah Ops" },
@@ -63,6 +66,8 @@ const nav: { label: string; items: { href: string; label: string; module: OpsMod
       { href: "/ops/admin/users", label: "Users & roles", module: "users" },
       { href: "/ops/admin/settings", label: "Settings", module: "settings" },
       { href: "/ops/admin/audit", label: "Audit log", module: "audit" },
+      { href: "/ops/admin/activity", label: "Staff activity & audit", module: "staff_monitoring" },
+      { href: "/ops/policy", label: "Monitoring notice", module: "*" },
     ],
   },
 ];
@@ -119,12 +124,22 @@ export default async function OpsLayout({ children }: { children: React.ReactNod
     : [];
   const actions: QuickAction[] = ops ? quickActions.filter((a) => a.show(ops)).map(({ href, label, hint, icon }) => ({ href, label, hint, icon })) : [];
 
+  const session = ops?.session;
+  const live = staff && session?.state === "active";
+  const needsNotice = live && !session?.acknowledged;
+  const { retentionDays } = needsNotice && ops ? await monitoringSettings(ops.supabase) : { retentionDays: 365 };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f6f7] lg:flex-row">
       {staff ? <OpsNav groups={groups} user={{ name, role }} tabs={tabs} actions={actions} /> : null}
       <main id="main-content" className={`min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:pb-6 ${staff ? "pb-36" : ""}`}>
-        {children}
+        {needsNotice ? (
+          <MonitoringNotice version={session?.policy_version ?? "1"} timeoutMinutes={Math.round((session?.timeout_seconds ?? 300) / 60)} retentionDays={retentionDays} acknowledged={false} />
+        ) : (
+          children
+        )}
       </main>
+      {live ? <SessionGuard timeoutSeconds={session?.timeout_seconds ?? 300} warningSeconds={session?.warning_seconds ?? 30} /> : null}
     </div>
   );
 }

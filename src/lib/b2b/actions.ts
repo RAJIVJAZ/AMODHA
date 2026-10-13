@@ -30,7 +30,10 @@ export async function b2bCall<T = unknown>(fn: string, args: Record<string, unkn
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, message: "Your session has ended. Please sign in again." };
   const { data, error } = await supabase.rpc(fn, args);
-  if (error) return { ok: false, message: friendly(error.message) };
+  if (error) {
+    await supabase.rpc("staff_log_failure", { p_action: fn, p_message: error.message, p_path: null });
+    return { ok: false, message: friendly(error.message) };
+  }
   if (options.refresh) refresh();
   return { ok: true, data: data as T };
 }

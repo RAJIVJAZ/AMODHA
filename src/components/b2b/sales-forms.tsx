@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { SaveStatusText, useAutosave } from "@/lib/staff/autosave";
 import { b2bCall } from "@/lib/b2b/actions";
 import { activityKinds, outcomes } from "@/lib/b2b/labels";
 
@@ -38,7 +39,12 @@ export function ActivityForm({ customerId, products }: { customerId: string; pro
   const [v, setV] = useState<Record<string, string>>({ kind: "visit", outcome: "" });
   const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
   const [locMsg, setLocMsg] = useState<string | null>(null);
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setV((c) => ({ ...c, [k]: e.target.value }));
+  const read = useCallback(() => (Object.entries(v).some(([k, x]) => k !== "kind" && x) ? v : null), [v]);
+  const draft = useAutosave(`crm-visit:${customerId}`, read);
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setV((c) => ({ ...c, [k]: e.target.value }));
+    draft.changed();
+  };
 
   function addLocation() {
     if (!navigator.geolocation) return setLocMsg("Location is not available on this phone");
@@ -68,11 +74,23 @@ export function ActivityForm({ customerId, products }: { customerId: string; pro
             setV({ kind: "visit", outcome: "" });
             setLoc(null);
             setLocMsg(null);
+            void draft.discard();
           }
         );
       }}
       className="grid gap-3"
     >
+      {draft.restorable ? (
+        <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          Unfinished visit note saved earlier.{" "}
+          <button type="button" className="font-semibold underline" onClick={() => (setV(draft.restorable?.data as Record<string, string>), draft.dismissRestore())}>
+            Restore
+          </button>{" "}
+          <button type="button" className="underline" onClick={() => void draft.discard()}>
+            Discard
+          </button>
+        </p>
+      ) : null}
       <div className="grid grid-cols-2 gap-2">
         <select className={input} value={v.kind} onChange={set("kind")} aria-label="Type">
           {Object.entries(activityKinds).map(([k, l]) => (
@@ -118,6 +136,7 @@ export function ActivityForm({ customerId, products }: { customerId: string; pro
       <button disabled={busy} className="rounded-xl bg-ink px-4 py-3 font-semibold text-white disabled:opacity-60">
         {busy ? "Saving…" : "Save"}
       </button>
+      <SaveStatusText status={draft.status} savedAt={draft.savedAt} />
       {note}
     </form>
   );

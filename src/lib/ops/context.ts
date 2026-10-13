@@ -24,7 +24,18 @@ export type OpsModule =
   | "field_sales"
   | "pricing"
   | "sales_team"
-  | "marketing";
+  | "marketing"
+  | "staff_monitoring";
+export type StaffSession = {
+  state: "active" | "ended" | "not_staff" | "signed_out";
+  reason?: string;
+  session_ref?: string;
+  timeout_seconds?: number;
+  warning_seconds?: number;
+  policy_version?: string;
+  acknowledged?: boolean;
+};
+
 export type OpsAction = "view" | "create" | "edit" | "approve" | "export" | "delete";
 
 /**
@@ -38,6 +49,12 @@ export const getOps = cache(async () => {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
+  // Start (or check) this sign-in's staff session before anything else: an ended session — inactivity,
+  // revocation, account switched off — is signed out here and never revived. Not counted as interaction.
+  const { data: started } = await supabase.rpc("staff_session_start", { p_portal: "ops" });
+  const session = (started ?? { state: "not_staff" }) as StaffSession;
+  if (session.state === "ended") redirect(`/auth/session-ended?reason=${encodeURIComponent(session.reason ?? "expired")}`);
+
   const [{ data: perms }, { data: profile }] = await Promise.all([
     supabase.rpc("my_permissions"),
     supabase.from("profiles").select("full_name, email, is_admin, ops_active, job_title").eq("id", user.id).maybeSingle(),
@@ -48,6 +65,7 @@ export const getOps = cache(async () => {
     user,
     profile: profile as { full_name: string | null; email: string | null; is_admin: boolean; ops_active: boolean; job_title: string | null } | null,
     granted,
+    session,
     can: (module: OpsModule, action: OpsAction = "view") => granted.has(`${module}.${action}`),
   };
 });

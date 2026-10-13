@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import type { StaffSession } from "@/lib/ops/context";
 import { createClient } from "@/lib/supabase/server";
 
 export type Salesperson = {
@@ -19,6 +20,10 @@ export const getSales = cache(async () => {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return null;
+  // Same staff session rules as the Ops app (inactivity timeout, revocation); never revives an ended one.
+  const { data: started } = await supabase.rpc("staff_session_start", { p_portal: "sales" });
+  const session = (started ?? { state: "not_staff" }) as StaffSession;
+  if (session.state === "ended") redirect(`/auth/session-ended?reason=${encodeURIComponent(session.reason ?? "expired")}&next=/sales`);
   const [{ data: sp }, { data: canUse }] = await Promise.all([
     supabase
       .from("salespeople")
@@ -27,13 +32,13 @@ export const getSales = cache(async () => {
       .maybeSingle(),
     supabase.rpc("has_permission", { p_module: "field_sales", p_action: "view" }),
   ]);
-  return { supabase, user, salesperson: canUse === true && sp?.is_active ? (sp as Salesperson) : null };
+  return { supabase, user, session, salesperson: canUse === true && sp?.is_active ? (sp as Salesperson) : null };
 });
 
 /** For Sales app pages: a signed-in, active salesperson. */
 export async function requireSales() {
   const s = await getSales();
-  if (!s) redirect("/login?next=/sales");
+  if (!s) redirect("/sales/login");
   if (!s.salesperson) redirect("/sales/not-set-up");
   return { ...s, salesperson: s.salesperson };
 }

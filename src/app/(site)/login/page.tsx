@@ -19,6 +19,17 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const params = await searchParams;
   const next = safeNext(params.next);
   const linkExpired = params.link === "expired";
+  const ended = Array.isArray(params.ended) ? params.ended[0] : params.ended;
+  const saveFailed = params.save === "failed";
+  const endedText: Record<string, string> = {
+    idle_timeout: "Your session has expired because no activity was detected for 5 minutes. Your saved work is secure. Please log in again to continue.",
+    expired: "Your session ended because no activity was detected. Please log in again to continue.",
+    revoked: "Your session was ended by an administrator. Please log in again, or contact your manager.",
+    deactivated: "This staff account has been switched off. Please contact your manager.",
+    absolute_timeout: "Your session reached its maximum length. Please log in again to continue.",
+    security: "Your session was ended for security reasons. Please log in again.",
+    invalid: "Your session is no longer valid. Please log in again.",
+  };
   const isEmail = siteConfig.loginMethod === "email";
 
   const supabase = await createClient();
@@ -34,6 +45,12 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             Track orders, save addresses and keep a wishlist. We&rsquo;ll {isEmail ? "email" : "text"} you a one-time
             code{isEmail ? "" : " on your mobile"}.
           </p>
+          {ended ? (
+            <p role="alert" className="mt-4 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900">
+              {endedText[ended] ?? endedText.expired}
+              {saveFailed ? " Some unfinished work could not be saved to the server; it is kept on that device and will be offered again when you sign in there." : ""}
+            </p>
+          ) : null}
           {linkExpired ? (
             <p role="alert" className="mt-4 rounded-xl bg-blush px-3 py-2 text-sm text-accent-dark">
               That sign-in link didn&rsquo;t work here. Links only open in the same browser you requested them

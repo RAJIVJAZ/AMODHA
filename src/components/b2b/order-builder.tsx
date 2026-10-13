@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { b2bCall } from "@/lib/b2b/actions";
+import { registerFlusher } from "@/lib/staff/autosave";
 import { approvalReasons, availabilityLabels, paymentMethods, productImage, statusTone } from "@/lib/b2b/labels";
 import type { CatalogueItem, PlaceOrderResult, Quote } from "@/lib/b2b/types";
 
@@ -67,6 +68,49 @@ export function OrderBuilder({
   const lines: Line[] = Object.entries(qty)
     .map(([item_id, v]) => ({ item_id, qty: Number(v) }))
     .filter((l) => Number.isFinite(l.qty) && l.qty > 0);
+
+  // Autosave the unfinished order as this shop's draft (a draft is never an order), and save it before
+  // any sign-out. "Pending" means the last change has not reached the server yet.
+  const [autoState, setAutoState] = useState<"idle" | "saving" | "saved" | "pending">("idle");
+  const latest = useRef({ lines, notes });
+  const dirty = useRef(false);
+  const linesKey = JSON.stringify(lines);
+  useEffect(() => {
+    latest.current = { lines: JSON.parse(linesKey) as Line[], notes };
+  }, [linesKey, notes]);
+  useEffect(() => {
+    if (step === "done") return;
+    const save = async (): Promise<"saved" | "failed" | "nothing_pending"> => {
+      if (!dirty.current) return "nothing_pending";
+      setAutoState("saving");
+      const res = await b2bCall("b2b_save_draft", { p_customer_id: customerId, p_lines: latest.current.lines, p_notes: latest.current.notes || null }).catch(() => null);
+      if (res && res.ok) {
+        dirty.current = false;
+        setAutoState("saved");
+        return "saved";
+      }
+      setAutoState("pending");
+      return "failed";
+    };
+    return registerFlusher(save);
+  }, [customerId, step]);
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (step === "done") return;
+    dirty.current = true;
+    const t = setTimeout(async () => {
+      if (!dirty.current) return;
+      setAutoState("saving");
+      const res = await b2bCall("b2b_save_draft", { p_customer_id: customerId, p_lines: JSON.parse(linesKey), p_notes: notes || null }).catch(() => null);
+      if (res && res.ok) dirty.current = false;
+      setAutoState(res && res.ok ? "saved" : "pending");
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [linesKey, notes, customerId, step]);
   const estimate = lines.reduce((sum, l) => sum + (known.get(l.item_id)?.price ?? 0) * l.qty, 0);
   const categories = Array.from(new Map(catalogue.map((c) => [c.category, c.category_label ?? c.category])).entries());
 
@@ -435,7 +479,10 @@ export function OrderBuilder({
 
       <div className="sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-20 flex items-center gap-2 rounded-2xl bg-ink p-2 pl-4 text-white shadow-xl lg:bottom-4">
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-white/70">{lines.length} product(s)</p>
+          <p className="text-xs text-white/70">
+            {lines.length} product(s)
+            {autoState === "saved" ? " · draft saved" : autoState === "saving" ? " · saving…" : autoState === "pending" ? " · not saved yet" : ""}
+          </p>
           <p className="font-heading text-lg font-bold">≈ {inr(estimate)}</p>
         </div>
         <button type="button" onClick={saveDraft} disabled={busy || !lines.length} className="rounded-xl bg-white/15 px-3 py-3 text-sm font-semibold disabled:opacity-40">
