@@ -44,9 +44,14 @@ export default async function SalesLogin({ searchParams }: { searchParams: Promi
           no password. Please don&rsquo;t share your account: every order and visit is recorded under your name.
         </p>
         <OtpLogin next="/sales" method={siteConfig.loginMethod} />
-        <p className="mt-5 text-xs text-dark/55">
-          Not set up yet? Ask your sales manager to add you in the business app under Wholesale (B2B) → Sales team. You will be signed out after 5 minutes without
-          activity; unfinished orders and visit notes are saved as drafts.
+        <p className="mt-5 text-sm">
+          New to the sales team?{" "}
+          <a href="/sales/register" className="font-semibold text-primary-dark">
+            Register here
+          </a>
+        </p>
+        <p className="mt-2 text-xs text-dark/55">
+          You will be signed out after 5 minutes without activity; unfinished orders and visit notes are saved as drafts.
         </p>
       </div>
     </div>

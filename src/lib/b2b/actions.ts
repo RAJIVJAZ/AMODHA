@@ -11,7 +11,7 @@ export type B2BResult<T = unknown> = { ok: true; data: T } | { ok: false; messag
 const ALLOWED = new Set([
   "b2b_quote", "b2b_place_order", "b2b_reorder_lines", "b2b_confirm_order", "b2b_cancel_order", "b2b_amend_order",
   "b2b_find_matches", "b2b_create_customer", "b2b_register", "b2b_update_customer", "b2b_log_activity", "b2b_record_consent",
-  "b2b_save_draft", "b2b_get_draft", "b2b_mark_notifications_read", "b2b_catalogue", "fs_request_price",
+  "b2b_save_draft", "b2b_get_draft", "b2b_mark_notifications_read", "b2b_catalogue", "fs_request_price", "fs_apply",
 ]);
 
 function friendly(message: string) {

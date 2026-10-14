@@ -36,7 +36,7 @@ const ALLOWED = new Set([
   "b2b_grant_login", "b2b_decide_login", "b2b_log_activity", "b2b_record_consent", "b2b_confirm_order", "b2b_accept_order",
   "b2b_amend_order", "b2b_cancel_order", "ops_set_order_priority", "ops_record_packing", "b2b_receive_payment",
   "fs_request_price", "pr_decide_price_request", "pr_save_price", "pr_end_price", "pr_save_item_wholesale", "pr_set_item_access",
-  "pr_save_category", "st_save_salesperson", "st_save_territory", "st_set_target",
+  "pr_save_category", "st_save_salesperson", "st_save_territory", "st_set_target", "st_decide_application",
   "mkt_save_campaign", "mkt_approve_campaign", "mkt_mark_sent",
   // staff monitoring
   "staff_revoke_session", "staff_set_shift",

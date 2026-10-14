@@ -1,5 +1,5 @@
--- Part 3 of 5 — B2B wholesale: app read models, pricing and team admin
--- Run in the Supabase SQL Editor, in order (1 → 5). Each part must finish with "Success" before the next.
+-- Part 3 of 6 — B2B wholesale: app read models, pricing and team admin
+-- Run in the Supabase SQL Editor, in order (1 → 6). Each part must finish with "Success" before the next.
 -- Source: supabase/migrations/20261013100000_b2b_sales_wholesale.sql (lines 2117–2926)
 
 -- Read models for the apps --------------------------------------------------------------------------

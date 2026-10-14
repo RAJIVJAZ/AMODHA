@@ -16,7 +16,10 @@ export default async function NotSetUp() {
         You are signed in as <strong>{s.user.email ?? s.user.phone}</strong>, but this account is not set up as an active salesperson. Ask your
         sales manager to add you under Sales team in the business app, using this email address.
       </p>
-      <Link href="/ops/today" className="mt-4 inline-block font-semibold text-primary-dark">
+      <Link href="/sales/register" className="mt-4 block rounded-xl bg-accent px-4 py-3 font-semibold text-white">
+        Register as a salesperson
+      </Link>
+      <Link href="/ops/today" className="mt-3 inline-block text-sm font-semibold text-primary-dark">
         Go to the business app
       </Link>
     </div>

@@ -1,5 +1,5 @@
--- Part 5 of 5 — Staff sessions, 5-minute inactivity sign-out and activity monitoring
--- Run in the Supabase SQL Editor, in order (1 → 5). Each part must finish with "Success" before the next.
+-- Part 5 of 6 — Staff sessions, 5-minute inactivity sign-out and activity monitoring
+-- Run in the Supabase SQL Editor, in order (1 → 6). Each part must finish with "Success" before the next.
 -- Source: supabase/migrations/20261014100000_staff_activity_monitoring.sql
 
 -- Staff sessions, inactivity timeout, activity and audit monitoring.

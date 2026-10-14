@@ -1,5 +1,5 @@
--- Part 2 of 5 — B2B wholesale: order workflow and customer master
--- Run in the Supabase SQL Editor, in order (1 → 5). Each part must finish with "Success" before the next.
+-- Part 2 of 6 — B2B wholesale: order workflow and customer master
+-- Run in the Supabase SQL Editor, in order (1 → 6). Each part must finish with "Success" before the next.
 -- Source: supabase/migrations/20261013100000_b2b_sales_wholesale.sql (lines 1019–2116)
 
 -- Order workflow -------------------------------------------------------------------------------------

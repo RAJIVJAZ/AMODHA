@@ -1,5 +1,5 @@
--- Part 1 of 5 — B2B wholesale: tables, permissions, pricing engine
--- Run in the Supabase SQL Editor, in order (1 → 5). Each part must finish with "Success" before the next.
+-- Part 1 of 6 — B2B wholesale: tables, permissions, pricing engine
+-- Run in the Supabase SQL Editor, in order (1 → 6). Each part must finish with "Success" before the next.
 -- Source: supabase/migrations/20261013100000_b2b_sales_wholesale.sql (lines 1–1018)
 
 -- B2B wholesale: the field sales app (Mithai Wallah Sales), the wholesale customer app (Mithai Wallah

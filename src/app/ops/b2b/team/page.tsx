@@ -2,7 +2,7 @@ import Link from "next/link";
 import { OpsForm } from "@/components/ops/ops-form";
 import { Badge, Card, Checkbox, Empty, Grid, Input, NumberInput, PageHeader, Select, Table, Td } from "@/components/ops/ui";
 import { requireOps } from "@/lib/ops/context";
-import { inr, todayIST } from "@/lib/ops/format";
+import { dateTime, inr, todayIST } from "@/lib/ops/format";
 import type { Salesperson, Territory } from "../_lib";
 
 export const metadata = { title: "Sales team" };
@@ -52,11 +52,13 @@ function SalespersonFields({ s, territories }: { s?: Salesperson; territories: T
 export default async function TeamPage() {
   const ops = await requireOps("sales_team");
   const month = `${todayIST().slice(0, 8)}01`;
-  const [{ data: sp }, { data: tr }, { data: tg }] = await Promise.all([
+  const [{ data: sp }, { data: tr }, { data: tg }, { data: ap }] = await Promise.all([
     ops.supabase.from("salespeople").select("*").order("full_name"),
     ops.supabase.from("sales_territories").select("*").order("name"),
     ops.supabase.from("sales_targets").select("*").eq("month", month),
+    ops.supabase.from("salesperson_applications").select("*").eq("status", "pending").order("created_at"),
   ]);
+  const applications = (ap ?? []) as { id: string; email: string; full_name: string; phone: string; city: string; areas: string | null; experience: string | null; created_at: string }[];
   const people = (sp ?? []) as Salesperson[];
   const territories = (tr ?? []) as Territory[];
   const targets = new Map(((tg ?? []) as Target[]).map((t) => [t.salesperson_id, t]));
@@ -66,10 +68,55 @@ export default async function TeamPage() {
     <>
       <PageHeader
         title="Sales team"
-        description="Each salesperson signs in with their own email (one person, one account). Their app is at /sales."
+        description="Each salesperson signs in with their own email (one person, one account). New people can register at /sales/register; their app is at /sales."
         actions={<Link href="/ops/b2b/reports" className="rounded-lg border-2 border-ink/20 bg-white px-3 py-1.5 text-sm font-semibold text-ink">Sales performance</Link>}
       />
       <div className="flex flex-col gap-4">
+        {applications.length ? (
+          <Card title={`Applications to join (${applications.length})`} description="People who registered at /sales/register. Approving creates their salesperson account and opens the Sales app for them.">
+            <div className="flex flex-col gap-3">
+              {applications.map((a) => (
+                <div key={a.id} className="rounded-xl border border-ink/10 p-3 text-sm">
+                  <p className="font-semibold text-ink">
+                    {a.full_name} · {a.phone} · {a.email}
+                  </p>
+                  <p className="text-dark/65">
+                    {a.city}
+                    {a.areas ? ` · areas: ${a.areas}` : ""} · applied {dateTime(a.created_at)}
+                  </p>
+                  {a.experience ? <p className="mt-1 text-dark/75">“{a.experience}”</p> : null}
+                  {ops.can("sales_team", "create") ? (
+                    <div className="mt-2 flex flex-col gap-2">
+                      <OpsForm fn="st_decide_application" submitLabel="Approve" success="Approved — they can now sign in to the Sales app" autosave={false}>
+                        <input type="hidden" name="p_application_id" value={a.id} />
+                        <input type="hidden" name="p_approve#bool" value="true" />
+                        <Grid cols={3}>
+                          <Input label="Employee code" name="p_employee_code" required placeholder="MW-S05" />
+                          <Input label="Note" name="p_note" />
+                        </Grid>
+                        <fieldset className="flex flex-wrap gap-3">
+                          <legend className="mb-1 font-semibold text-ink">Territories</legend>
+                          <input type="hidden" name="p_territories#list" value="" />
+                          {territories.map((t) => (
+                            <label key={t.code} className="flex items-center gap-2">
+                              <input type="checkbox" name="p_territories#list" value={t.code} className="h-4 w-4 accent-ink" />
+                              {t.name}
+                            </label>
+                          ))}
+                        </fieldset>
+                      </OpsForm>
+                      <OpsForm fn="st_decide_application" submitLabel="Reject" variant="secondary" inline success="Rejected" autosave={false}>
+                        <input type="hidden" name="p_application_id" value={a.id} />
+                        <input type="hidden" name="p_approve#bool" value="false" />
+                        <Input label="Reason" name="p_note" required />
+                      </OpsForm>
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </Card>
+        ) : null}
         <Card title="Salespeople">
           {people.length ? (
             <Table head={["Name", "Code", "Territories", "Login", "Target this month", "Incentive", ""]}>
