@@ -20,7 +20,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "shop.mithaiwallah.sales",
-      "sha256_cert_fingerprints": ["92:2D:71:D0:D8:19:77:DD:BC:0F:39:D8:D0:25:20:A5:9D:22:28:B8:0B:11:72:D2:1A:F1:A5:20:06:95:A2:32"]
+      "sha256_cert_fingerprints": ["48:D4:1C:65:39:9E:DB:E4:E5:BC:7F:56:DA:B4:86:D4:9C:90:38:CF:D1:7B:1E:AF:8D:87:2B:B9:27:3D:6E:30"]
     }
   },
   {
@@ -28,7 +28,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "shop.mithaiwallah.wholesale",
-      "sha256_cert_fingerprints": ["92:2D:71:D0:D8:19:77:DD:BC:0F:39:D8:D0:25:20:A5:9D:22:28:B8:0B:11:72:D2:1A:F1:A5:20:06:95:A2:32"]
+      "sha256_cert_fingerprints": ["48:D4:1C:65:39:9E:DB:E4:E5:BC:7F:56:DA:B4:86:D4:9C:90:38:CF:D1:7B:1E:AF:8D:87:2B:B9:27:3D:6E:30"]
     }
   }
 ]

@@ -36,6 +36,9 @@ export function SalesNav({ name, code }: { name: string; code: string }) {
               <Link href="/ops/today" className="font-semibold text-primary-dark">
                 Business app (Ops)
               </Link>
+              <a href="/downloads/mw-sales.apk" download className="font-semibold text-primary-dark">
+                Android app (download)
+              </a>
               <button type="button" onClick={signOut} className="text-left font-semibold text-accent-dark">
                 Sign out
               </button>

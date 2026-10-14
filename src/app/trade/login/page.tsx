@@ -28,6 +28,9 @@ export default async function TradeLogin({ searchParams }: { searchParams: Promi
         <li>• Use the {via} your salesperson registered for your shop, so we can link you to your account.</li>
         <li>• Wholesale is for sweet shops and trade buyers in and around Prayagraj.</li>
       </ul>
+      <a href="/downloads/mw-wholesale.apk" download className="mt-5 flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-sm font-semibold text-ink ring-1 ring-ink/10">
+        📲 Download the Android app (MW Wholesale)
+      </a>
       <p className="mt-5 text-sm text-dark/60">
         <Link href="/trade" className="inline-flex min-h-11 items-center font-semibold text-primary-dark">
           ← Back

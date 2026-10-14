@@ -37,6 +37,14 @@ the same Supabase database, the same orders, stock, dispatch and ledger. Nothing
   Credit orders post no receipt. Receipts (`b2b_receive_payment`) settle the oldest invoices. Outstanding and
   overdue amounts are always derived from the ledger.
 
+## Android apps
+
+Both apps are also Android apps (Trusted Web Activities that open the website full screen):
+**MW Sales** (`shop.mithaiwallah.sales`, `/downloads/mw-sales.apk`, project `android/sales`) and
+**MW Wholesale** (`shop.mithaiwallah.wholesale`, `/downloads/mw-wholesale.apk`, project `android/trade`).
+Download links are on the Sales and Wholesale sign-in pages, the Sales app menu and the wholesale page.
+They are signed with their own key (not the MW Ops key); see `android/sales/README.md`.
+
 ## Order workflow
 
 1. Shop (Wholesale app) or salesperson (Sales app) submits → `b2b_place_order` validates customer status, product

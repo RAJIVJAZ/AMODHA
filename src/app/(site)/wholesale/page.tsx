@@ -63,6 +63,13 @@ export default function WholesalePage() {
               >
                 Register your shop
               </a>
+              <a
+                href="/downloads/mw-wholesale.apk"
+                download
+                className="font-heading rounded-full border-[2.5px] border-ink bg-white px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink"
+              >
+                Android app
+              </a>
             </div>
           </div>
           <div className="sticker-shadow relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-[2.5px] border-ink">

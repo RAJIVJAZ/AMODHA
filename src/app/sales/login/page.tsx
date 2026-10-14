@@ -50,6 +50,9 @@ export default async function SalesLogin({ searchParams }: { searchParams: Promi
             Register here
           </a>
         </p>
+        <a href="/downloads/mw-sales.apk" download className="mt-4 flex min-h-11 items-center justify-center rounded-xl bg-ink/5 px-4 text-sm font-semibold text-ink">
+          📲 Download the Android app (MW Sales)
+        </a>
         <p className="mt-2 text-xs text-dark/55">
           You will be signed out after 5 minutes without activity; unfinished orders and visit notes are saved as drafts.
         </p>

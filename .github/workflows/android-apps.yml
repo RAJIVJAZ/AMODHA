@@ -2,9 +2,12 @@ name: Android apps
 
 # Builds the Android apps: MW Ops for staff (android/ops), Mithai Wallah for customers
 # (android/shop), MW Sales for the field sales team (android/sales) and MW Wholesale for sweet
-# shops (android/trade). Signed when the signing secrets are set (MW_OPS_KEYSTORE_BASE64,
-# MW_OPS_KEYSTORE_PASSWORD, MW_OPS_KEY_ALIAS, MW_OPS_KEY_PASSWORD; one key signs all the apps);
-# otherwise the files are unsigned and need signing before they can be installed.
+# shops (android/trade). Signed when the signing secrets are set; otherwise the files are unsigned
+# and need signing before they can be installed. Two keys:
+# - MW Ops and Mithai Wallah: MW_OPS_KEYSTORE_BASE64, MW_OPS_KEYSTORE_PASSWORD, MW_OPS_KEY_ALIAS,
+#   MW_OPS_KEY_PASSWORD.
+# - MW Sales and MW Wholesale: MW_B2B_KEYSTORE_BASE64, MW_B2B_KEYSTORE_PASSWORD, MW_B2B_KEY_ALIAS,
+#   MW_B2B_KEY_PASSWORD.
 
 on:
   workflow_dispatch:
@@ -26,15 +29,19 @@ jobs:
       matrix:
         include:
           - project: ops
+            key: ops
             name: mw-ops
             title: MW Ops
           - project: shop
+            key: ops
             name: mithai-wallah
             title: Mithai Wallah
           - project: sales
+            key: b2b
             name: mw-sales
             title: MW Sales
           - project: trade
+            key: b2b
             name: mw-wholesale
             title: MW Wholesale
     steps:
@@ -47,8 +54,11 @@ jobs:
 
       - name: Signing key
         env:
-          KEYSTORE_BASE64: ${{ secrets.MW_OPS_KEYSTORE_BASE64 }}
+          KEY: ${{ matrix.key }}
+          OPS_KEYSTORE_BASE64: ${{ secrets.MW_OPS_KEYSTORE_BASE64 }}
+          B2B_KEYSTORE_BASE64: ${{ secrets.MW_B2B_KEYSTORE_BASE64 }}
         run: |
+          if [ "$KEY" = "b2b" ]; then KEYSTORE_BASE64="$B2B_KEYSTORE_BASE64"; else KEYSTORE_BASE64="$OPS_KEYSTORE_BASE64"; fi
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release-key.p12"
             echo "MW_OPS_KEYSTORE=$RUNNER_TEMP/release-key.p12" >> "$GITHUB_ENV"
@@ -59,10 +69,11 @@ jobs:
 
       - name: Build APK and app bundle
         working-directory: android/${{ matrix.project }}
+        # The Gradle projects read MW_OPS_* for whichever key this app uses.
         env:
-          MW_OPS_KEYSTORE_PASSWORD: ${{ secrets.MW_OPS_KEYSTORE_PASSWORD }}
-          MW_OPS_KEY_ALIAS: ${{ secrets.MW_OPS_KEY_ALIAS }}
-          MW_OPS_KEY_PASSWORD: ${{ secrets.MW_OPS_KEY_PASSWORD }}
+          MW_OPS_KEYSTORE_PASSWORD: ${{ matrix.key == 'b2b' && secrets.MW_B2B_KEYSTORE_PASSWORD || secrets.MW_OPS_KEYSTORE_PASSWORD }}
+          MW_OPS_KEY_ALIAS: ${{ matrix.key == 'b2b' && secrets.MW_B2B_KEY_ALIAS || secrets.MW_OPS_KEY_ALIAS }}
+          MW_OPS_KEY_PASSWORD: ${{ matrix.key == 'b2b' && secrets.MW_B2B_KEY_PASSWORD || secrets.MW_OPS_KEY_PASSWORD }}
         run: ./gradlew --no-daemon assembleRelease bundleRelease
 
       - name: Collect files
