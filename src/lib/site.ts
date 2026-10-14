@@ -107,6 +107,8 @@ export const footerNav = {
     { label: "Corporate Gifting", href: "/corporate-gifting" },
     { label: "Wedding Gifting", href: "/wedding-gifting" },
     { label: "Wholesale & Dealer Enquiry", href: "/wholesale" },
+    { label: "Wholesale (B2B) Login & Ordering", href: "/trade" },
+    { label: "Sales Team Login", href: "/sales/login" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy-policy" },
