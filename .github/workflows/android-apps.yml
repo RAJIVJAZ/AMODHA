@@ -1,8 +1,9 @@
 name: Android apps
 
-# Builds the Android apps: MW Ops for staff (android/ops) and Mithai Wallah for customers
-# (android/shop). Signed when the signing secrets are set (MW_OPS_KEYSTORE_BASE64,
-# MW_OPS_KEYSTORE_PASSWORD, MW_OPS_KEY_ALIAS, MW_OPS_KEY_PASSWORD; one key signs both apps);
+# Builds the Android apps: MW Ops for staff (android/ops), Mithai Wallah for customers
+# (android/shop), MW Sales for the field sales team (android/sales) and MW Wholesale for sweet
+# shops (android/trade). Signed when the signing secrets are set (MW_OPS_KEYSTORE_BASE64,
+# MW_OPS_KEYSTORE_PASSWORD, MW_OPS_KEY_ALIAS, MW_OPS_KEY_PASSWORD; one key signs all the apps);
 # otherwise the files are unsigned and need signing before they can be installed.
 
 on:
@@ -30,6 +31,12 @@ jobs:
           - project: shop
             name: mithai-wallah
             title: Mithai Wallah
+          - project: sales
+            name: mw-sales
+            title: MW Sales
+          - project: trade
+            name: mw-wholesale
+            title: MW Wholesale
     steps:
       - uses: actions/checkout@v4
 

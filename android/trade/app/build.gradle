@@ -1,0 +1,56 @@
+plugins {
+    id 'com.android.application'
+}
+
+// MW Wholesale: the B2B ordering app for sweet shops at https://mithaiwallah.shop/trade, opened full screen in Chrome
+// (a Trusted Web Activity). Everything the app shows comes from the website; the start
+// address and the site it trusts are in res/values/strings.xml.
+def host = 'mithaiwallah.shop'
+
+// Release signing comes from the environment (a CI secret or a local file), never from the repository.
+def keystorePath = System.getenv('MW_OPS_KEYSTORE')
+
+android {
+    namespace 'shop.mithaiwallah.wholesale'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'shop.mithaiwallah.wholesale'
+        // Android 7.0+: the APK carries only the v2 signature (current Chrome needs Android 10+ anyway).
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '1.0.0'
+
+        manifestPlaceholders = [host: host]
+    }
+
+    signingConfigs {
+        if (keystorePath) {
+            release {
+                storeFile file(keystorePath)
+                storePassword System.getenv('MW_OPS_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('MW_OPS_KEY_ALIAS')
+                keyPassword System.getenv('MW_OPS_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (keystorePath) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+}

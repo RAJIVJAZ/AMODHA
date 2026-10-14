@@ -13,12 +13,12 @@ export function GET() {
       theme_color: "#16323f",
       categories: ["business", "shopping"],
       icons: [
-        { src: "/icons/app-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
-        { src: "/icons/app-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" },
+        { src: "/icons/trade-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: "/icons/trade-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" },
       ],
       shortcuts: [
-        { name: "Quick order", url: "/trade/quick-order", icons: [{ src: "/icons/app-192.png", sizes: "192x192" }] },
-        { name: "Orders", url: "/trade/orders", icons: [{ src: "/icons/app-192.png", sizes: "192x192" }] },
+        { name: "Quick order", url: "/trade/quick-order", icons: [{ src: "/icons/trade-192.png", sizes: "192x192" }] },
+        { name: "Orders", url: "/trade/orders", icons: [{ src: "/icons/trade-192.png", sizes: "192x192" }] },
       ],
     },
     { headers: { "Content-Type": "application/manifest+json", "Cache-Control": "public, max-age=3600" } }
