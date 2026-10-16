@@ -8,7 +8,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { getSweet } from "@/data/sweets";
 
 export const metadata: Metadata = {
-  title: "Wedding Sweet Boxes | Premium Wedding Gifting & Return Gifts",
+  title: "Wedding Sweet Boxes & Return Gifts",
   description:
     "Premium wedding hampers from Mithai Wallah — bride & groom name customisation, theme-matched packaging and memorable wedding return gifts, made fresh in Prayagraj.",
   alternates: { canonical: "/wedding-gifting" },

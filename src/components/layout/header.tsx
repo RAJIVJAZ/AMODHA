@@ -18,8 +18,8 @@ export function Header() {
           <Image
             src="/logos/mithaiwallah.png"
             alt="Mithai Wallah"
-            width={900}
-            height={507}
+            width={142}
+            height={80}
             priority
             className="h-11 w-auto sm:h-12"
           />

@@ -8,8 +8,8 @@ import { dairyProducts } from "@/data/dairy-products";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Mithai Wallah Dairy — Farm Fresh Milk in Prayagraj",
-  description: `Order farm-fresh milk in 1 L glass bottles or subscribe for daily delivery in Prayagraj. The rest of Mithai Wallah's dairy range is coming soon. ${siteConfig.comingSoonQuote}`,
+  title: "Farm Fresh Milk & Dairy in Prayagraj",
+  description: "Order farm-fresh milk in 1 L glass bottles or subscribe for daily delivery in Prayagraj. The rest of Mithai Wallah's dairy range is coming soon.",
   alternates: { canonical: "/dairy-products" },
 };
 
@@ -27,14 +27,14 @@ export default function DairyProductsPage() {
               <Image
                 src="/logos/mithaiwallah.png"
                 alt="Mithai Wallah"
-                width={900}
-                height={507}
+                width={284}
+                height={160}
                 priority
                 className="h-16 w-auto sm:h-20"
               />
             </div>
           </div>
-          <SectionHeading
+          <SectionHeading as="h1"
             eyebrow="Mithai Wallah Dairy"
             title="Farm-Fresh Dairy, Starting With Milk"
             description="Farm-fresh milk is here: order a bottle or subscribe for daily delivery. Everything else below will follow, made from the same milk collected fresh from around 100 local farmers near Prayagraj — the milk behind our sweets."

@@ -6,9 +6,9 @@ import { CtaSection } from "@/components/ui/cta-section";
 import { processSteps } from "@/data/process";
 
 export const metadata: Metadata = {
-  title: "How We Make Our Sweets: Pure Desi Ghee, Traceable Batches",
+  title: "How We Make Our Sweets: Pure Desi Ghee",
   description:
-    "How Mithai Wallah makes sweets in Prayagraj: milk from ~100 local farmers, quality testing, traditional recipes, 100% pure desi ghee, hygienic packing and traceable batches.",
+    "How Mithai Wallah makes sweets in Prayagraj: milk from ~100 local farmers, quality testing, traditional recipes, 100% pure desi ghee and traceable batches.",
   alternates: { canonical: "/our-process" },
 };
 
@@ -18,7 +18,7 @@ export default function OurProcessPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Our Process" }]} />
 
       <section className="container-site py-14 sm:py-20">
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Transparency by Design"
           title="How We Make Our Sweets"
           description="Six steps from fresh farm milk to a sealed box at your door — every batch recorded and traceable."

@@ -19,7 +19,8 @@ export async function generateMetadata({
   const post = getBlogPost(slug);
   if (!post) return {};
   return {
-    title: post.title,
+    // Long headlines skip the " | Mithai Wallah" suffix so search results show them in full.
+    title: post.title.length > 45 ? { absolute: post.title } : post.title,
     description: post.excerpt,
     alternates: { canonical: `/blog/${post.slug}` },
   };

@@ -8,7 +8,7 @@ import { FaqAccordion } from "@/components/ui/faq-accordion";
 import { dealerFaqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
-  title: "Wholesale & Distributor Program | Sweet Wholesale Supplier",
+  title: "Wholesale Sweets & Dairy Supplier, Prayagraj",
   description:
     "Become a Mithai Wallah dealer or distributor. Wholesale supply of pure desi ghee mithai for sweet shops, hotels, restaurants and retailers.",
   alternates: { canonical: "/wholesale" },

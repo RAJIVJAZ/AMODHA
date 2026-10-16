@@ -80,8 +80,8 @@ export default function HomePage() {
               <Image
                 src="/logos/mithaiwallah.png"
                 alt={siteConfig.name}
-                width={900}
-                height={507}
+                width={284}
+                height={160}
                 priority
                 className="h-24 w-auto sm:h-28"
               />
@@ -125,6 +125,7 @@ export default function HomePage() {
                 alt="Mithai Wallah sweet box with Milk Cake, Kalakand, Chocolate Barfi, Doda Barfi and Peda made in pure desi ghee"
                 width={1370}
                 height={1148}
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
                 className="h-auto w-full object-cover"
               />

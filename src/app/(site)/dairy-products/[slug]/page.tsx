@@ -23,7 +23,7 @@ export async function generateMetadata({
   const product = getDairyProduct(slug);
   if (!product) return {};
   return {
-    title: product.inShop ? `${product.name} — Order Online | ${product.keyword}` : `${product.name} — Coming Soon | ${product.keyword}`,
+    title: product.inShop ? `${product.name} in Prayagraj — Order Online` : `${product.name} in Prayagraj — Coming Soon`,
     description: product.inShop
       ? `${product.shortDescription} Order online for delivery in Prayagraj, or subscribe for daily delivery.`
       : `${product.shortDescription} ${siteConfig.comingSoonQuote}`,
@@ -143,8 +143,8 @@ export default async function DairyProductPage({
                 <Image
                   src="/logos/mithaiwallah.png"
                   alt="Mithai Wallah"
-                  width={900}
-                  height={507}
+                  width={142}
+                  height={80}
                   className="mx-auto h-12 w-auto"
                 />
                 <h2 className="font-heading mt-4 text-lg font-bold text-ink">{product.name} Is On Its Way</h2>

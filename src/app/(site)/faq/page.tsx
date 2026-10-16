@@ -29,7 +29,7 @@ export default function FaqPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "FAQs" }]} />
 
       <section className="container-site py-14 sm:py-20">
-        <SectionHeading eyebrow="Support" title="Frequently Asked Questions" align="left" />
+        <SectionHeading as="h1" eyebrow="Support" title="Frequently Asked Questions" align="left" />
         <div className="mt-10 max-w-3xl">
           <FaqAccordion items={generalFaqs} />
         </div>

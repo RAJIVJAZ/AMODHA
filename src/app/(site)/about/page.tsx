@@ -41,7 +41,7 @@ export default function AboutPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
 
       <section className="container-site py-14 sm:py-20">
-        <SectionHeading
+        <SectionHeading as="h1"
           align="left"
           eyebrow={`Our Story · Est. ${siteConfig.founded}`}
           title="Honest Mithai, Made Fresh in Prayagraj"

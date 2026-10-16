@@ -33,8 +33,8 @@ export function Footer() {
           <Image
             src="/logos/mithaiwallah.png"
             alt="Mithai Wallah"
-            width={900}
-            height={507}
+            width={142}
+            height={80}
             className="h-14 w-auto"
           />
           <p className="font-subheading mt-3 text-lg italic text-primary-light">{siteConfig.tagline}</p>

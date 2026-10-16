@@ -40,7 +40,7 @@ export default function ContactPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
 
       <section className="container-site py-14 sm:py-20">
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Get in Touch"
           title="We'd Love to Hear From You"
           description="Whether you're a retail customer, sweet shop owner, hotel, or planning a corporate or wedding order — our team is here to help."

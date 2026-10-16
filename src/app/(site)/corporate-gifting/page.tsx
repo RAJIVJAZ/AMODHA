@@ -8,9 +8,9 @@ import { ProductCard } from "@/components/ui/product-card";
 import { getSweet } from "@/data/sweets";
 
 export const metadata: Metadata = {
-  title: "Corporate Sweet Gift Boxes | Custom Branding & Bulk Orders",
+  title: "Corporate Sweet Gift Boxes & Bulk Orders",
   description:
-    "Custom-branded mithai boxes from Mithai Wallah, Prayagraj — made with 100% pure desi ghee in traceable batches. Bulk orders for client gifting, employee rewards and festive gifting.",
+    "Custom-branded mithai boxes from Mithai Wallah, Prayagraj, made with 100% pure desi ghee. Bulk orders for client gifts, employee rewards and festivals.",
   alternates: { canonical: "/corporate-gifting" },
 };
 

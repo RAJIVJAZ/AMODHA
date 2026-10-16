@@ -17,7 +17,7 @@ export default function BlogPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blog" }]} />
 
       <section className="container-site py-14 sm:py-20">
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Insights"
           title="Dairy & Mithai Insights"
           description="Stories on traditional craftsmanship, quality, and gifting guides from our team."
