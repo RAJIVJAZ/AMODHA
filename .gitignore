@@ -48,3 +48,6 @@ android/**/local.properties
 *.jks
 *.keystore
 *.p12
+
+# Security audit register: a map of weaknesses, never committed in this public repository
+.security-audit/
