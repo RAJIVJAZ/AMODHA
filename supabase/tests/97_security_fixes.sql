@@ -105,3 +105,51 @@ begin
   perform test.eq('no audit row written', (select count(*)::int from public.audit_log where action = 'b2b_customer.terms'), n);
 end $$;
 reset role;
+
+-- SEC-010: the shop sees its own profile without the sales team's internal notes; the sales team still sees them.
+do $$
+begin
+  update public.b2b_customers set business_notes = 'Slow payer, push for advance' where id = test.id('custA');
+  perform test.login('shop1@test.local');
+  perform test.eq('shop does not see internal notes', public.b2b_customer_profile(test.id('custA')) -> 'customer' ? 'business_notes', false);
+  perform test.eq('shop still sees its own details', public.b2b_customer_profile(test.id('custA')) -> 'customer' ->> 'shop_name' is not null, true);
+  reset role;
+  perform test.login('smgr@test.local');
+  perform test.eq('sales manager still sees notes', public.b2b_customer_profile(test.id('custA')) -> 'customer' ->> 'business_notes', 'Slow payer, push for advance');
+end $$;
+reset role;
+
+-- SEC-009: a non-owner administrator cannot sign an owner out of every device.
+do $$
+declare
+  owner_id uuid := (select id from auth.users where email = 'owner@test.local');
+begin
+  perform test.login('admin2@test.local');
+  perform test.fails('only an owner can reset an owner''s sign-in',
+    format('select public.ops_reset_user_sessions(%L, %L)', owner_id, 'x'), 'Only an owner');
+end $$;
+reset role;
+
+-- SEC-015: bottle charges only for subscribers, deliveries must match the customer; unverified email cannot apply.
+do $$
+declare
+  nosub uuid := test.make_user('nosub@test.local');
+begin
+  perform test.login('owner@test.local');
+  perform test.fails('no bottle charge for a non-subscriber',
+    format('select public.sub_record_bottles(%L, 0, 0, 2)', nosub), 'no milk subscription');
+  perform test.fails('no negative bottle counts',
+    format('select public.sub_record_bottles(%L, -1, 0, 0)', test.id('cust')), 'negative');
+end $$;
+reset role;
+
+do $$
+declare
+  uid uuid := test.make_user('unverified@test.local');
+begin
+  update auth.users set email_confirmed_at = null where id = uid;
+  perform test.login('unverified@test.local');
+  perform test.fails('unverified email cannot apply to the sales team',
+    $q$select public.fs_apply('{"full_name":"No Verify","phone":"9876512345"}')$q$, 'Sign in with your email');
+end $$;
+reset role;

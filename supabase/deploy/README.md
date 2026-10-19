@@ -22,6 +22,9 @@ New environments: apply `supabase/migrations/` in order. Local tests: `supabase/
   a delivery, cash-collected corrections post exact differences, credit notes capped at the order total, dismissed staff
   cannot be re-activated through salesperson approval, only owners can switch off owners, customer terms need a permission)
   — **not yet applied to live.** Run `2026-10-19-security-fixes.sql` in the SQL Editor after the 2026-10-14 parts 1–6.
+- `20261019110000_security_fixes_low.sql` (owners' sign-in reset, wholesale customers no longer see internal sales notes,
+  sales applications need a verified email, bottle charges only for subscribers) — **not yet applied to live.** Run
+  `2026-10-19-security-fixes-2.sql` right after `2026-10-19-security-fixes.sql`.
 
 ## Live data changes
 

@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { canViewAllInvoices } from "@/lib/admin-auth";
 import { isValidInvoiceToken } from "@/lib/invoice-link";
 import { invoiceOrderColumns } from "@/lib/order-emails";
@@ -21,10 +22,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ orde
   const admin = createAdminClient();
   if (!admin) return notFound();
 
-  const token = new URL(request.url).searchParams.get("t");
+  const requestUrl = new URL(request.url);
+  const token = requestUrl.searchParams.get("t");
   let query = admin.from("orders").select(`status, b2b_customer_id, ${invoiceOrderColumns}`).eq("id", orderId);
-  if (!isValidInvoiceToken(orderId, token) && !(await canViewAllInvoices())) {
+  if (!isValidInvoiceToken(orderId, token, requestUrl.searchParams.get("e")) && !(await canViewAllInvoices())) {
     const customer = await getSignedInCustomer();
+    // An expired email link: sign in, then come straight back to the invoice.
+    if (!customer && token) return NextResponse.redirect(new URL(`/login?next=${encodeURIComponent(`/invoice/${orderId}`)}`, requestUrl.origin));
     if (!customer) return notFound();
     // Wholesale customers (and their salesperson) open B2B invoices through the B2B access check.
     const { data: b2bAllowed } = await (await createClient()).rpc("b2b_can_view_order", { p_order_id: orderId });
