@@ -25,13 +25,18 @@ export type PricedLine = {
   quantity: number;
 };
 
+// Upper limits for one online order; bigger orders go through the wholesale team.
+const MAX_LINES = 30;
+const MAX_QUANTITY = 50;
+
 export function isOrderLine(value: unknown): value is OrderLineInput {
   const line = value as OrderLineInput;
   return (
     typeof line?.slug === "string" &&
     typeof line?.packLabel === "string" &&
     Number.isInteger(line?.quantity) &&
-    line.quantity > 0
+    line.quantity > 0 &&
+    line.quantity <= MAX_QUANTITY
   );
 }
 
@@ -40,6 +45,7 @@ export function priceLines(items: unknown): { lines: PricedLine[]; subtotal: num
   if (!Array.isArray(items) || items.length === 0 || !items.every(isOrderLine)) {
     return { error: "Your cart is empty or invalid" };
   }
+  if (items.length > MAX_LINES) return { error: "That's a large order. Please call or WhatsApp us and we'll arrange it." };
 
   const lines: PricedLine[] = [];
   for (const item of items) {
@@ -66,8 +72,29 @@ export function parseCustomer(value: unknown): CustomerDetails | { error: string
   if (!name || !address || !city || !pincode) return { error: "Please fill in your name and full delivery address" };
   if (!phone) return { error: "Please enter a valid 10-digit mobile number" };
   const email = text(input.email, 200)?.toLowerCase() ?? null;
+  // Exactly one address: the confirmation is emailed to it, so a list ("a@x, b@y") must not get through.
+  if (email && !/^[^\s@,;<>"'()]+@[^\s@,;<>"'()]+\.[a-z]{2,}$/.test(email)) return { error: "Please enter a valid email address" };
   return { name, phone, email, address, city, pincode, notes: text(input.notes, 500) };
 }
+
+/**
+ * Public order endpoints need no sign-in, so they are throttled per phone number and email address:
+ * by default at most 5 orders an hour for a phone and 10 a day to an email. Stops scripts flooding the order
+ * book or using the order confirmation email to send messages to strangers.
+ */
+export async function tooManyRecentOrders(admin: SupabaseClient, customer: CustomerDetails, perHour = 5): Promise<boolean> {
+  const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const byPhone = await admin.from("orders").select("id", { count: "exact", head: true }).eq("phone", customer.phone).gte("created_at", hourAgo);
+  if ((byPhone.count ?? 0) >= perHour) return true;
+  if (customer.email) {
+    const byEmail = await admin.from("orders").select("id", { count: "exact", head: true }).eq("email", customer.email).gte("created_at", dayAgo);
+    if ((byEmail.count ?? 0) >= 10) return true;
+  }
+  return false;
+}
+
+export const TOO_MANY_ORDERS = "You've placed several orders in a short time. Please call or WhatsApp us to place another.";
 
 /** A signed-in customer. Phone and email are set only when Supabase has verified them. */
 export type SignedInCustomer = { id: string; phone: string | null; email: string | null };

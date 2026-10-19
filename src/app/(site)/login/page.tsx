@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { OtpLogin } from "@/components/account/otp-login";
 import { createClient } from "@/lib/supabase/server";
+import { safeNext } from "@/lib/safe-next";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -10,14 +11,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-function safeNext(value: string | string[] | undefined) {
-  const next = Array.isArray(value) ? value[0] : value;
-  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/account";
-}
-
 export default async function LoginPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
-  const next = safeNext(params.next);
+  const next = safeNext(params.next, "/account");
   const linkExpired = params.link === "expired";
   const ended = Array.isArray(params.ended) ? params.ended[0] : params.ended;
   const saveFailed = params.save === "failed";

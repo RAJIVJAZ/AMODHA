@@ -163,7 +163,7 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) {
         setPaymentError(data?.error ?? "Could not place the order. Please try again.");
-        if (res.status >= 500) setFallbackUrl(whatsAppFallbackUrl());
+        if (res.status >= 500 || res.status === 429) setFallbackUrl(whatsAppFallbackUrl());
         return;
       }
       setPlaced({ summary: data as OrderSummary, payment: "Cash / UPI on delivery" });

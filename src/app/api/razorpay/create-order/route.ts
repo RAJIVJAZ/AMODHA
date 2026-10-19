@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
-import { orderSummary, parseCustomer, priceLines, quoteOrder, saveOrder } from "@/lib/orders";
+import { TOO_MANY_ORDERS, orderSummary, parseCustomer, priceLines, quoteOrder, saveOrder, tooManyRecentOrders } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
@@ -18,6 +18,8 @@ export async function POST(req: Request) {
   }
 
   const admin = createAdminClient();
+  // A little higher than cash on delivery: a failed or cancelled payment leaves an unpaid order behind.
+  if (admin && (await tooManyRecentOrders(admin, customer, 10))) return NextResponse.json({ error: TOO_MANY_ORDERS }, { status: 429 });
   const quote = await quoteOrder(admin, priced, customer.phone);
 
   const razorpay = new Razorpay({

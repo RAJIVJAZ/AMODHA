@@ -26,6 +26,9 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "amodha-cart";
 
+// Same per-line limit the server enforces for one online order (src/lib/orders.ts).
+export const MAX_LINE_QUANTITY = 50;
+
 function makeKey(slug: string, packLabel: string) {
   return `${slug}::${packLabel}`;
 }
@@ -62,16 +65,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => {
       const existing = prev.find((i) => i.key === key);
       if (existing) {
-        return prev.map((i) => (i.key === key ? { ...i, quantity: i.quantity + quantity } : i));
+        return prev.map((i) => (i.key === key ? { ...i, quantity: Math.min(i.quantity + quantity, MAX_LINE_QUANTITY) } : i));
       }
-      return [...prev, { ...item, key, quantity }];
+      return [...prev, { ...item, key, quantity: Math.min(quantity, MAX_LINE_QUANTITY) }];
     });
   }, []);
 
   const updateQuantity = useCallback((key: string, quantity: number) => {
     setItems((prev) => {
       if (quantity <= 0) return prev.filter((i) => i.key !== key);
-      return prev.map((i) => (i.key === key ? { ...i, quantity } : i));
+      return prev.map((i) => (i.key === key ? { ...i, quantity: Math.min(quantity, MAX_LINE_QUANTITY) } : i));
     });
   }, []);
 

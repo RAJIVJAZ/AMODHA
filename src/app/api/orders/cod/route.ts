@@ -1,6 +1,6 @@
 import { NextResponse, after } from "next/server";
 import { sendOrderEmails } from "@/lib/order-emails";
-import { orderSummary, parseCustomer, priceLines, quoteOrder, saveOrder } from "@/lib/orders";
+import { TOO_MANY_ORDERS, orderSummary, parseCustomer, priceLines, quoteOrder, saveOrder, tooManyRecentOrders } from "@/lib/orders";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // Places a Cash on Delivery / UPI on delivery order, then emails the invoice to the
@@ -19,6 +19,8 @@ export async function POST(req: Request) {
     console.error("COD order: SUPABASE_SECRET_KEY is not set, so the order can't be saved");
     return NextResponse.json({ error: "We couldn't place your order right now. Please try again shortly." }, { status: 503 });
   }
+
+  if (await tooManyRecentOrders(admin, customer)) return NextResponse.json({ error: TOO_MANY_ORDERS }, { status: 429 });
 
   const quote = await quoteOrder(admin, priced, customer.phone);
   const saved = await saveOrder(admin, {
