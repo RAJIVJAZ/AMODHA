@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="2 October 2026"
+      updated="27 October 2026"
       sections={[
         {
           heading: "1. Introduction",
@@ -38,6 +38,7 @@ export default function PrivacyPolicyPage() {
           heading: "4. How We Share Your Information",
           body: [
             "We do not sell your personal information to third parties. We may share your information with logistics and delivery partners solely to fulfil your order, or where required by law.",
+            "Our shop pages use the Meta Pixel (Meta Platforms, the company behind Facebook and Instagram). It uses cookies to record which pages are visited, so we can measure and improve our advertising on Facebook and Instagram. It does not receive your name, address or order details from us. You can limit this through your Facebook ad settings, by blocking third-party cookies in your browser, or by using an ad blocker. Our staff, sales and wholesale apps do not use it.",
           ],
         },
         {
