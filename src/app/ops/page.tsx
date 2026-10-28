@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RemindersPanel } from "@/components/ops/reminders-panel";
 import { Card, Empty, Notice, PageHeader, Stat, Table, Td } from "@/components/ops/ui";
 import { requireOps } from "@/lib/ops/context";
 import { inr, param, qty, todayIST } from "@/lib/ops/format";
@@ -68,6 +69,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </div>
       ) : null}
       {error ? <Notice tone="bad">{error.message}</Notice> : null}
+      <div className="mb-6">
+        <RemindersPanel ops={ops} />
+      </div>
 
       <form className="mb-6 flex flex-wrap items-end gap-2">
         {all.map((x) => (

@@ -40,6 +40,9 @@ const ALLOWED = new Set([
   "mkt_save_campaign", "mkt_approve_campaign", "mkt_mark_sent",
   // staff monitoring
   "staff_revoke_session", "staff_set_shift",
+  // documents & licences, machinery & equipment
+  "cmp_save_document", "cmp_renew_document", "cmp_set_applicable",
+  "eq_save_equipment", "eq_record_check", "eq_record_service", "eq_replace",
   // customer subscription actions
   "sub_create", "sub_skip", "sub_unskip", "sub_set_extra", "sub_set_addons", "sub_pause", "sub_resume", "sub_cancel",
   "sub_change_quantity", "sub_change_address", "sub_change_schedule",

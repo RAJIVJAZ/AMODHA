@@ -33,6 +33,7 @@ const nav: { label: string; items: { href: string; label: string; module: OpsMod
       { href: "/ops/dispatch", label: "Orders & dispatch", module: "dispatch" },
       { href: "/ops/deliveries", label: "Delivery run", module: "dispatch" },
       { href: "/ops/subscriptions", label: "Milk subscriptions", module: "subscriptions" },
+      { href: "/ops/equipment", label: "Machinery & equipment", module: "equipment" },
     ],
   },
   {
@@ -63,6 +64,7 @@ const nav: { label: string; items: { href: string; label: string; module: OpsMod
     items: [
       { href: "/ops/catalog", label: "Products & recipes", module: "catalog" },
       { href: "/ops/reports", label: "Operational reports", module: "dashboard" },
+      { href: "/ops/admin/documents", label: "Documents & licences", module: "compliance" },
       { href: "/ops/admin/users", label: "Users & roles", module: "users" },
       { href: "/ops/admin/settings", label: "Settings", module: "settings" },
       { href: "/ops/admin/audit", label: "Audit log", module: "audit" },
@@ -98,6 +100,7 @@ const quickActions: (QuickAction & { show: (ops: Ops) => boolean })[] = [
   { href: "/ops/finance/sales?tab=actions", label: "Customer payment", hint: "Received against an invoice", icon: "cash", show: (o) => o.can("sales", "create") },
   { href: "/ops/finance/purchases/pay", label: "Pay a supplier", hint: "Farmers and vendors", icon: "rupee", show: (o) => o.can("purchases", "edit") },
   { href: "/ops/inventory", label: "Check stock", hint: "What we have", icon: "box", show: (o) => o.can("inventory") },
+  { href: "/ops/equipment", label: "Machine check", hint: "Working or not", icon: "pot", show: (o) => o.can("equipment", "edit") },
 ];
 
 export default async function OpsLayout({ children }: { children: React.ReactNode }) {

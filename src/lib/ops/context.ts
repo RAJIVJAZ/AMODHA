@@ -25,7 +25,9 @@ export type OpsModule =
   | "pricing"
   | "sales_team"
   | "marketing"
-  | "staff_monitoring";
+  | "staff_monitoring"
+  | "compliance"
+  | "equipment";
 export type StaffSession = {
   state: "active" | "ended" | "not_staff" | "signed_out";
   reason?: string;

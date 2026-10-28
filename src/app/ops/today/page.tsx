@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { InstallBanner } from "@/components/ops/app-install";
 import { Icon, type IconName } from "@/components/ops/icons";
+import { RemindersPanel } from "@/components/ops/reminders-panel";
 import { StatusBadge } from "@/components/ops/ui";
 import { getOps } from "@/lib/ops/context";
 import { inr, qty, todayIST } from "@/lib/ops/format";
@@ -149,6 +150,8 @@ export default async function TodayPage() {
       </div>
 
       <InstallBanner />
+
+      <RemindersPanel ops={ops} />
 
       {can("dispatch") ? (
         <Section title="Deliveries" icon="truck" href="/ops/deliveries" linkLabel="Delivery run">

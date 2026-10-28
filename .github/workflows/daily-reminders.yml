@@ -1,0 +1,31 @@
+name: Daily reminders
+
+# Every morning at 8:00 India time, asks the website to email the documents due for renewal and the
+# machines needing attention (see src/app/api/cron/reminders/route.ts). The website sends at most one
+# email a day, so a manual re-run is safe. Needs the repository secret CRON_SECRET, with the same value
+# set as CRON_SECRET in the website's hosting environment variables.
+
+on:
+  schedule:
+    - cron: "30 2 * * *" # 02:30 UTC = 08:00 IST
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Send today's reminder email
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::Add the CRON_SECRET repository secret (and the same value in the website's environment variables)."
+            exit 1
+          fi
+          status=$(curl -sS -o response.json -w "%{http_code}" --retry 3 --retry-delay 20 \
+            -H "Authorization: Bearer ${CRON_SECRET}" https://mithaiwallah.shop/api/cron/reminders)
+          cat response.json; echo
+          test "$status" = "200"

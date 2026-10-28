@@ -26,6 +26,10 @@ New environments: apply `supabase/migrations/` in order. Local tests: `supabase/
   sales applications need a verified email, bottle charges only for subscribers) — **not yet applied to live.** Run
   `2026-10-19-security-fixes-2.sql` right after `2026-10-19-security-fixes.sql`.
 
+- `20261028100000_compliance_and_equipment.sql` (Documents & licences with renewal reminders, Machinery & equipment
+  register with checks, warranty, services and repair costs) — **not yet applied to live.** Run
+  `2026-10-28-documents-and-equipment.sql` once, after the 2026-10-19 security files. See `docs/documents-and-equipment.md`.
+
 ## Live data changes
 
 - 10 October 2026: milk set up for sale — packaging configuration `GLASS-BOTTLE-1L` (1 L glass bottle) and
