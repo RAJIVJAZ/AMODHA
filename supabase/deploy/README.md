@@ -28,7 +28,7 @@ New environments: apply `supabase/migrations/` in order. Local tests: `supabase/
 
 - `20261028100000_compliance_and_equipment.sql` (Documents & licences with renewal reminders, Machinery & equipment
   register with checks, warranty, services and repair costs) — **not yet applied to live.** Run
-  `2026-10-28-documents-and-equipment.sql` once, after the 2026-10-19 security files. See `docs/documents-and-equipment.md`.
+  `2026-10-28-documents-and-equipment.sql` once (it does not depend on the 2026-10-14 / 2026-10-19 files). See `docs/documents-and-equipment.md`.
 
 ## Live data changes
 

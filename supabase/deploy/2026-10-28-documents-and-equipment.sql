@@ -1,5 +1,6 @@
 -- LIVE UPDATE 2026-10-28: Documents & licences (renewal reminders) and Machinery & equipment.
--- Run in Supabase -> SQL Editor AFTER the 2026-10-14 parts 1-6 and both 2026-10-19 security files.
+-- Run in Supabase -> SQL Editor. It does not need the 2026-10-14 or 2026-10-19 files (checked on a copy of the
+-- live database as of 11 October), but run those too when you can.
 -- Paste this whole file and click Run (run it once).
 -- Same content as supabase/migrations/20261028100000_compliance_and_equipment.sql.
 
