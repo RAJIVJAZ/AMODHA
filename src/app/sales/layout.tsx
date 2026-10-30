@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   manifest: "/sales/manifest.webmanifest",
   appleWebApp: { title: "MW Sales", capable: true, statusBarStyle: "black-translucent" },
-  icons: { apple: "/icons/ops-192.png" },
+  icons: { apple: "/icons/sales-apple-180.png" },
 };
 
 export const viewport: Viewport = { themeColor: "#16323f", viewportFit: "cover" };

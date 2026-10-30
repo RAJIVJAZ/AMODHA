@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   manifest: "/trade/manifest.webmanifest",
   appleWebApp: { title: "MW Wholesale", capable: true, statusBarStyle: "black-translucent" },
-  icons: { apple: "/icons/app-192.png" },
+  icons: { apple: "/icons/trade-apple-180.png" },
 };
 
 export const viewport: Viewport = { themeColor: "#16323f", viewportFit: "cover" };

@@ -1,0 +1,46 @@
+# MW Ops for iPhone and iPad. The Xcode project is generated from this file with XcodeGen
+# (`brew install xcodegen && xcodegen generate`); the generated MWOps.xcodeproj is not committed.
+name: MWOps
+options:
+  bundleIdPrefix: shop.mithaiwallah
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  MWOps:
+    type: application
+    platform: iOS
+    sources: [MWOps]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: shop.mithaiwallah.ops
+        PRODUCT_NAME: MW Ops
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_PREVIEWS: NO
+    info:
+      path: MWOps/Info.plist
+      properties:
+        CFBundleDisplayName: MW Ops
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        LSApplicationQueriesSchemes: [whatsapp, tel, mailto]
+        NSCameraUsageDescription: Take photos of bills, deliveries and documents to attach in MW Ops.
+        NSPhotoLibraryUsageDescription: Choose photos of bills and documents to attach in MW Ops.
+        NSPhotoLibraryAddUsageDescription: Save invoices and reports from MW Ops to your photos.
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UIViewControllerBasedStatusBarAppearance: false
+        UIRequiresFullScreen: false
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+    scheme:
+      testTargets: []

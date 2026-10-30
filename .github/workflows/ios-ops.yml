@@ -1,0 +1,78 @@
+name: iOS app (MW Ops)
+
+# Builds the MW Ops iPhone/iPad app (ios/ops) on a GitHub Mac. Every run checks that the app compiles.
+# When the Apple secrets below are set, it also signs the app and uploads it to App Store Connect, where it
+# appears in TestFlight for the team. TestFlight builds expire after 90 days, so a fresh one is uploaded
+# on the 1st of every month.
+#
+# Secrets (Settings -> Secrets and variables -> Actions), all from the Apple Developer / App Store Connect account:
+#   APPLE_TEAM_ID       10-character Team ID (developer.apple.com -> Membership)
+#   ASC_KEY_ID          App Store Connect API key ID (App Store Connect -> Users and Access -> Integrations -> Keys)
+#   ASC_ISSUER_ID       the Issuer ID shown on the same page
+#   ASC_KEY_P8_BASE64   the downloaded AuthKey_XXXX.p8 file, base64-encoded
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 1 * *"
+  push:
+    paths:
+      - "ios/**"
+      - "!ios/**/*.md"
+      - ".github/workflows/ios-ops.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: ios/ops
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Generate the Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+          xcodebuild -version
+
+      - name: Build (check that it compiles)
+        run: |
+          xcodebuild -project MWOps.xcodeproj -scheme MWOps -configuration Release \
+            -sdk iphonesimulator -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO build | tail -n 40
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Sign and upload to TestFlight
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          if [ -z "$APPLE_TEAM_ID" ] || [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_KEY_P8_BASE64" ]; then
+            echo "Apple secrets are not set: the app was built and checked but not uploaded."
+            exit 0
+          fi
+          KEY="$RUNNER_TEMP/AuthKey_${ASC_KEY_ID}.p8"
+          echo "$ASC_KEY_P8_BASE64" | base64 --decode > "$KEY"
+          AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+          xcodebuild -project MWOps.xcodeproj -scheme MWOps -configuration Release -destination "generic/platform=iOS" \
+            -archivePath "$RUNNER_TEMP/MWOps.xcarchive" DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="$BUILD_NUMBER" "${AUTH[@]}" archive | tail -n 40
+          test "${PIPESTATUS[0]}" -eq 0
+          cp ExportOptions.plist "$RUNNER_TEMP/ExportOptions.plist"
+          plutil -insert teamID -string "$APPLE_TEAM_ID" "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/MWOps.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" "${AUTH[@]}" | tail -n 40
+          status=${PIPESTATUS[0]}
+          rm -f "$KEY"
+          test "$status" -eq 0
+          echo "Uploaded build $BUILD_NUMBER to App Store Connect; it appears in TestFlight after Apple's processing (10-30 minutes)."
