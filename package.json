@@ -15,8 +15,7 @@
     "nodemailer": "^10.0.13",
     "razorpay": "^2.9.8",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "three": "0.170.0"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -24,7 +23,6 @@
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/three": "0.170.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "tailwindcss": "^4",

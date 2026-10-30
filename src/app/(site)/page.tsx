@@ -7,7 +7,6 @@ import { TrustBar } from "@/components/ui/trust-bar";
 import { CtaSection } from "@/components/ui/cta-section";
 import { FaqAccordion } from "@/components/ui/faq-accordion";
 import { GheeSeal } from "@/components/ui/ghee-seal";
-import { SweetStory } from "@/components/story/sweet-story";
 import { generalFaqs } from "@/data/faqs";
 import { milkSubscriberBenefits, milkSubscription } from "@/data/milk-subscription";
 import { processSteps } from "@/data/process";
@@ -15,6 +14,8 @@ import { reviews } from "@/data/reviews";
 import { sweets, hamperCategories } from "@/data/sweets";
 import { formatInr } from "@/lib/currency";
 import {
+  FIRST_ORDER_DISCOUNT,
+  FIRST_ORDER_MINIMUM,
   SUBSCRIBER_DISCOUNT_PERCENT,
   SUBSCRIBER_FREE_DELIVERY_MINIMUM,
 } from "@/lib/order-rules";
@@ -70,7 +71,72 @@ const hygienePoints = [
 export default function HomePage() {
   return (
     <>
-      <SweetStory accountsLive={siteConfig.accountsLive} />
+      <section className="relative overflow-hidden bg-blush py-20 sm:py-28">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-primary-light/50 blur-3xl" />
+        <div className="container-site relative flex flex-col items-center gap-6 text-center">
+          <div className="flex flex-col items-center gap-2">
+            <div className="sticker-shadow rounded-2xl border-[2.5px] border-ink bg-white p-3">
+              <Image
+                src="/logos/mithaiwallah.png"
+                alt={siteConfig.name}
+                width={284}
+                height={160}
+                priority
+                className="h-24 w-auto sm:h-28"
+              />
+            </div>
+            <p className="font-subheading text-xl italic text-ink sm:text-2xl">{siteConfig.tagline}</p>
+          </div>
+          <span className="font-heading sticker-shadow-sm inline-block rounded-full border-2 border-ink bg-white px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink">
+            Made fresh in Prayagraj since {siteConfig.founded}
+          </span>
+          {siteConfig.accountsLive ? (
+            <Link
+              href="/login?next=/checkout"
+              className="font-heading sticker-shadow rounded-2xl border-[2.5px] border-ink bg-[#f3d27a] px-5 py-3 text-base font-bold text-ink transition-transform hover:-translate-y-0.5 sm:text-lg"
+            >
+              🎉 Get {formatInr(FIRST_ORDER_DISCOUNT)} OFF on Your First Order Above {formatInr(FIRST_ORDER_MINIMUM)}
+              <span className="block text-xs font-semibold text-ink/70 sm:text-sm">Sign up with your email in a minute</span>
+            </Link>
+          ) : null}
+          <h1 className="text-balance max-w-4xl text-4xl font-bold leading-tight text-ink sm:text-5xl md:text-6xl">
+            Pure Desi Ghee Sweets, Made Fresh in Prayagraj
+          </h1>
+          <p className="text-balance max-w-2xl text-lg text-ink/70 sm:text-xl">
+            Fresh milk from around 100 local farmers, cooked in 100% pure desi ghee in a hygienic
+            kitchen — every batch recorded and traceable. Delivered across Prayagraj, free on orders ₹999+.
+          </p>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
+            <ButtonLink href="#catalog" variant="primary">
+              Order Sweets
+            </ButtonLink>
+            <ButtonLink href="/corporate-gifting" variant="outline">
+              Corporate Gifting
+            </ButtonLink>
+            <ButtonLink href="/wedding-gifting" variant="outline">
+              Wedding Gifting
+            </ButtonLink>
+          </div>
+          <div className="relative mt-6 w-full max-w-xl">
+            <div className="sticker-shadow overflow-hidden rounded-3xl border-[2.5px] border-ink">
+              <Image
+                src="/images/sweet-corner/assorted-gift-box.webp"
+                alt="Mithai Wallah sweet box with Milk Cake, Kalakand, Chocolate Barfi, Doda Barfi and Peda made in pure desi ghee"
+                width={1370}
+                height={1148}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                className="h-auto w-full object-cover"
+              />
+            </div>
+            <GheeSeal
+              idPrefix="hero-seal"
+              className="absolute -right-3 -top-10 h-24 w-24 rotate-[-10deg] drop-shadow-md sm:-right-12 sm:-top-12 sm:h-36 sm:w-36"
+            />
+          </div>
+        </div>
+      </section>
 
       <TrustBar />
 
