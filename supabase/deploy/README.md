@@ -30,6 +30,10 @@ New environments: apply `supabase/migrations/` in order. Local tests: `supabase/
   register with checks, warranty, services and repair costs) — **not yet applied to live.** Run
   `2026-10-28-documents-and-equipment.sql` once (it does not depend on the 2026-10-14 / 2026-10-19 files). See `docs/documents-and-equipment.md`.
 
+- `20261031100000_ops_bootstrap.sql` (faster staff screens: session check, permissions and profile in one call) —
+  **not yet applied to live.** Run `2026-10-31-faster-staff-screens.sql` after the 2026-10-14 parts 1–6. The app works
+  without it (it falls back to three calls), just slower.
+
 ## Live data changes
 
 - 10 October 2026: milk set up for sale — packaging configuration `GLASS-BOTTLE-1L` (1 L glass bottle) and

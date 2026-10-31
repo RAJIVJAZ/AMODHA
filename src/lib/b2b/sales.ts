@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import type { StaffSession } from "@/lib/ops/context";
+import { bootstrap } from "@/lib/ops/context";
 import { createClient } from "@/lib/supabase/server";
 
 export type Salesperson = {
@@ -21,18 +21,18 @@ export const getSales = cache(async () => {
   } = await supabase.auth.getUser();
   if (!user) return null;
   // Same staff session rules as the Ops app (inactivity timeout, revocation); never revives an ended one.
-  const { data: started } = await supabase.rpc("staff_session_start", { p_portal: "sales" });
-  const session = (started ?? { state: "not_staff" }) as StaffSession;
-  if (session.state === "ended") redirect(`/auth/session-ended?reason=${encodeURIComponent(session.reason ?? "expired")}&next=/sales`);
-  const [{ data: sp }, { data: canUse }] = await Promise.all([
+  // The salesperson record is read at the same time as the session check, to save a round trip.
+  const [{ session, perms }, { data: sp }] = await Promise.all([
+    bootstrap(supabase, user.id, "sales"),
     supabase
       .from("salespeople")
       .select("id, full_name, employee_code, territories, can_view_outstanding, can_view_credit, is_active")
       .eq("user_id", user.id)
       .maybeSingle(),
-    supabase.rpc("has_permission", { p_module: "field_sales", p_action: "view" }),
   ]);
-  return { supabase, user, session, salesperson: canUse === true && sp?.is_active ? (sp as Salesperson) : null };
+  if (session.state === "ended") redirect(`/auth/session-ended?reason=${encodeURIComponent(session.reason ?? "expired")}&next=/sales`);
+  const canUse = perms.some((p) => p.module === "field_sales" && p.action === "view");
+  return { supabase, user, session, salesperson: canUse && sp?.is_active ? (sp as Salesperson) : null };
 });
 
 /** For Sales app pages: a signed-in, active salesperson. */
