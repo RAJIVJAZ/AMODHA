@@ -58,11 +58,7 @@ export function OtpLogin({ next, method }: { next: string; method: "email" | "ph
 
     if (result.error) {
       console.error("Sending code failed:", result.error);
-      setError(
-        result.error.status === 429
-          ? "Too many codes requested. Please wait a few minutes and try again."
-          : "We couldn't send the code right now. Please try again in a minute."
-      );
+      setError(sendErrorText(result.error));
       return;
     }
     setStep("code");
@@ -164,4 +160,20 @@ export function OtpLogin({ next, method }: { next: string; method: "email" | "ph
       </p>
     </form>
   );
+}
+
+/** A plain explanation of why the code was not sent, with the sign-in service's own reason so it can be fixed. */
+function sendErrorText(error: { status?: number; message?: string; code?: string }) {
+  const reason = (error.message ?? "").trim();
+  const detail = reason ? ` (${error.status ? `${error.status}: ` : ""}${reason.slice(0, 120)})` : "";
+  if (error.status === 429 || /rate limit|too many/i.test(reason)) {
+    return "Too many codes requested. Please wait a few minutes and try again.";
+  }
+  if (/sending|smtp|email.*(send|deliver)/i.test(reason)) {
+    return `Our email service could not send the code. Please try again shortly or contact us${detail}.`;
+  }
+  if (/database error|saving new user/i.test(reason)) {
+    return `We couldn't create your account just now. Please contact us${detail}.`;
+  }
+  return `We couldn't send the code right now. Please try again in a minute${detail}.`;
 }
